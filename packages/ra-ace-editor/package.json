@@ -11,7 +11,7 @@
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com/smartcommunitylab"
+        "registry": "https://npm.pkg.github.com"
     },
     "files": [
         "dist",
