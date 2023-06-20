@@ -7,11 +7,10 @@ export const BackButton = (props: ButtonProps) => {
     const navigate = useNavigate();
     const { label = 'ra.action.back', ...rest } = props;
     return (
-        <Button
-            label={label}
-            startIcon={ArrowBackIcon}
-            onClick={() => navigate(-1)}
-            {...rest}
-        ></Button>
+        <Button label={label} onClick={() => navigate(-1)} {...rest}>
+            <ArrowBackIcon />
+        </Button>
     );
 };
+
+export default BackButton;
