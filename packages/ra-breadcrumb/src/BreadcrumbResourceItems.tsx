@@ -1,26 +1,8 @@
-import { Breadcrumbs, Typography } from '@mui/material';
+import { Breadcrumbs } from '@mui/material';
 import { useTranslate, useResourceContext } from 'react-admin';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { BreadcrumbProps } from './Breadcrumb';
-import React from 'react';
-
-export const BreadcrumbItem = ({ name, to }: { name: string; to?: string }) => {
-    const translate = useTranslate();
-    return to ? (
-        <Link key={name} to={to} style={{ textDecoration: 'none' }}>
-            <Typography
-                color="text.secondary"
-                sx={{ '&:hover': { textDecoration: 'underline' } }}
-            >
-                {translate(name)}
-            </Typography>
-        </Link>
-    ) : (
-        <Typography key={name} color="text.primary">
-            {translate(name)}
-        </Typography>
-    );
-};
+import { BreadcrumbItem } from './BreadcrumbItem';
 
 export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
     const { ...rest } = props;
@@ -117,3 +99,5 @@ export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
         </Breadcrumbs>
     );
 };
+
+export default BreadcrumbResourceItems;

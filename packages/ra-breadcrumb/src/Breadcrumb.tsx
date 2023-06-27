@@ -1,9 +1,9 @@
-import { Breadcrumbs, SxProps, Theme } from '@mui/material';
-import { BreadcrumbResourceItems } from './breadcrumbUtils';
-import React from 'react';
+import { Breadcrumbs } from '@mui/material';
+import { BreadcrumbResourceItems } from './BreadcrumbResourceItems';
+import { SxProps, Theme } from '@mui/material/styles';
 
 export type BreadcrumbProps = {
-    children?: any;
+    children?: React.ReactNode;
     sx?: SxProps<Theme>;
 };
 
