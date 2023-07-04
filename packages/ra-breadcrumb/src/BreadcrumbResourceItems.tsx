@@ -5,7 +5,13 @@ import { BreadcrumbProps } from './Breadcrumb';
 import { BreadcrumbItem } from './BreadcrumbItem';
 
 export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
-    const { ...rest } = props;
+    const {
+        children,
+        separator = '/',
+        maxItems = 6,
+        sx = { paddingTop: '10px' },
+        ...rest
+    } = props;
     const translate = useTranslate();
     const location = useLocation();
     const resource = useResourceContext();
@@ -92,7 +98,9 @@ export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
     return (
         <Breadcrumbs
             aria-label="breadcrumb"
-            sx={{ paddingTop: '10px' }}
+            sx={sx}
+            separator={separator}
+            maxItems={maxItems}
             {...rest}
         >
             {links}
