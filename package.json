@@ -1,62 +1,66 @@
 {
-    "name": "react-admin-packages",
-    "version": "0.1.0",
-    "private": true,
-    "author": {
-        "name": "Matteo Saloni",
-        "email": "msaloni@fbk.eu"
-      },
-    "repository": "https://github.com/smartcommunitylab/ra-ace-editor",
-    "license": "MIT",
-    "workspaces": [
-        "examples/*",
-        "packages/*"
+  "name": "react-admin-packages",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Alberto Carotti, Erica Tomaselli",
+  "repository": "https://github.com/smartcommunitylab/react-admin-packages",
+  "license": "MIT",
+  "workspaces": [
+    "examples/*",
+    "packages/*",
+    "stories/*"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "watch": "lerna run --parallel watch",
+    "lint": "eslint --ext .js,.ts,.tsx \"./packages/**/src/**/*.{js,ts,tsx}\" ",
+    "prettier": "prettier --config ./.prettierrc.js --write --list-different \"packages/*/src/**/*.{js,ts,tsx,css}\"",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "deploy-storybook": "storybook-to-ghpages"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.5",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@storybook/addon-essentials": "^7.0.23",
+    "@storybook/addon-interactions": "^7.0.23",
+    "@storybook/addon-links": "^7.0.23",
+    "@storybook/blocks": "^7.0.23",
+    "@storybook/react": "^7.0.23",
+    "@storybook/react-webpack5": "^7.0.23",
+    "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.18",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-storybook": "^0.6.12",
+    "lerna": "^6.3.0",
+    "prettier": "^2.8.1",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-router-dom": "^6.7.0",
+    "storybook": "^7.0.23",
+    "typescript": "^4.4.0",
+    "webpack": "^5.70.0"
+  },
+  "main": "index.js",
+  "eslintConfig": {
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
     ],
-    "scripts": {
-        "build": "lerna run build",
-        "watch": "lerna run --parallel watch",
-        "lint": "eslint --ext .js,.ts,.tsx \"./packages/**/src/**/*.{js,ts,tsx}\" ",
-        "prettier": "prettier --config ./.prettierrc.js --write --list-different \"packages/*/src/**/*.{js,ts,tsx,css}\"",
-        "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook",
-        "deploy-storybook": "storybook-to-ghpages"
-    },
-    "devDependencies": {
-        "@storybook/addon-actions": "^6.5.15",
-        "@storybook/addon-essentials": "^6.5.15",
-        "@storybook/addon-interactions": "^6.5.15",
-        "@storybook/addon-links": "^6.5.15",
-        "@storybook/builder-webpack5": "^6.5.15",
-        "@storybook/node-logger": "^6.5.15",
-        "@storybook/preset-create-react-app": "^3.2.0",
-        "@storybook/react": "^6.5.15",
-        "@storybook/storybook-deployer": "^2.8.16",
-        "@storybook/testing-library": "^0.0.13",
-        "@types/react": "^17.0.20",
-        "@types/react-dom": "^17.0.18",
-        "eslint": "^8.31.0",
-        "eslint-config-prettier": "^8.6.0",
-        "eslint-config-react-app": "^7.0.1",
-        "eslint-plugin-prettier": "^4.2.1",
-        "lerna": "^6.3.0",
-        "prettier": "^2.8.1",
-        "react": "^17.0.0",
-        "react-dom": "^17.0.0",
-        "typescript": "^4.4.0",
-        "webpack": "^5.70.0"
-    },
-    "main": "index.js",
-    "dependencies": {},
-    "eslintConfig": {
-        "overrides": [
-            {
-                "files": [
-                    "**/*.stories.*"
-                ],
-                "rules": {
-                    "import/no-anonymous-default-export": "off"
-                }
-            }
-        ]
-    }
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  },
+  "dependencies": {}
 }
