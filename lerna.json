@@ -1,5 +1,10 @@
 {
-  "npmClient": "yarn",
-  "useWorkspaces": true,
-  "version": "independent"
+    "npmClient": "yarn",
+    "useWorkspaces": true,
+    "version": "independent",
+    "command": {
+        "publish": {
+            "registry": "https://gitlab.com/api/v4/projects/5085/packages/npm/"
+        }
+    }
 }

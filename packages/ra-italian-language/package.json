@@ -1,5 +1,5 @@
 {
-    "name": "@smartcommunitylab/ra-language-italian",
+    "name": "@msaloni/ra-language-italian",
     "version": "1.0.0",
     "author": {
         "name": "Matteo Saloni",
@@ -7,10 +7,11 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/smartcommunitylab/react-admin-packages"
+        "url": "https://gitlab.fbk.eu/msaloni/react-admin-packages.git"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "registry": "https://gitlab.fbk.eu/api/v4/projects/5085/packages/npm",
+        "public": true
     },
     "license": "MIT",
     "files": [
