@@ -10,7 +10,6 @@
         "url": "https://gitlab.fbk.eu/msaloni/react-admin-packages.git"
     },
     "publishConfig": {
-        "registry": "https://gitlab.fbk.eu/api/v4/projects/5085/packages/npm",
         "public": true
     },
     "license": "MIT",
@@ -32,8 +31,8 @@
         "react": " ^17.0.0 || ^18.0.0",
         "react-admin": "^4.11.0",
         "react-dom": "^17.0.0 || ^18.0.0",
-        "react-router-dom": "^6.7.0",
-        "react-router": "^6.7.0"
+        "react-router": "^6.7.0",
+        "react-router-dom": "^6.7.0"
     },
     "dependencies": {
         "ra-core": "^4.11.0"
@@ -41,5 +40,6 @@
     "devDependencies": {
         "rimraf": "^3.0.2",
         "typescript": "^4.4.0"
-    }
+    },
+    "gitHead": "1539ed54d85cfb45cae5ee350b584705479c6ce4"
 }

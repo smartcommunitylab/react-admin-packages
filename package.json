@@ -7,9 +7,6 @@
         "email": "msaloni@fbk.eu"
     },
     "repository": "https://gitlab.fbk.eu/msaloni/react-admin-packages.git",
-    "publishConfig": {
-        "registry": "https://gitlab.fbk.eu/api/v4/projects/5085/packages/npm"
-    },
     "license": "MIT",
     "workspaces": [
         "examples/*",
@@ -18,7 +15,7 @@
     "scripts": {
         "build": "lerna run build",
         "watch": "lerna run --parallel watch",
-        "publish": "lern publish",
+        "distribute": "lerna publish from-package --yes ",
         "lint": "eslint --ext .js,.ts,.tsx \"./packages/**/src/**/*.{js,ts,tsx}\" ",
         "prettier": "prettier --config ./.prettierrc.js --write --list-different \"packages/*/src/**/*.{js,ts,tsx,css}\""
     },
