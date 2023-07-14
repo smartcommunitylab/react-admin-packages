@@ -5,8 +5,8 @@
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
-      },
-    "repository": "https://github.com/smartcommunitylab/ra-ace-editor",
+    },
+    "repository": "https://github.com/smartcommunitylab/react-admin-packages",
     "license": "MIT",
     "workspaces": [
         "examples/*",
@@ -16,22 +16,9 @@
         "build": "lerna run build",
         "watch": "lerna run --parallel watch",
         "lint": "eslint --ext .js,.ts,.tsx \"./packages/**/src/**/*.{js,ts,tsx}\" ",
-        "prettier": "prettier --config ./.prettierrc.js --write --list-different \"packages/*/src/**/*.{js,ts,tsx,css}\"",
-        "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook",
-        "deploy-storybook": "storybook-to-ghpages"
+        "prettier": "prettier --config ./.prettierrc.js --write --list-different \"packages/*/src/**/*.{js,ts,tsx,css}\""
     },
     "devDependencies": {
-        "@storybook/addon-actions": "^6.5.15",
-        "@storybook/addon-essentials": "^6.5.15",
-        "@storybook/addon-interactions": "^6.5.15",
-        "@storybook/addon-links": "^6.5.15",
-        "@storybook/builder-webpack5": "^6.5.15",
-        "@storybook/node-logger": "^6.5.15",
-        "@storybook/preset-create-react-app": "^3.2.0",
-        "@storybook/react": "^6.5.15",
-        "@storybook/storybook-deployer": "^2.8.16",
-        "@storybook/testing-library": "^0.0.13",
         "@types/react": "^17.0.20",
         "@types/react-dom": "^17.0.18",
         "eslint": "^8.31.0",
@@ -47,16 +34,5 @@
     },
     "main": "index.js",
     "dependencies": {},
-    "eslintConfig": {
-        "overrides": [
-            {
-                "files": [
-                    "**/*.stories.*"
-                ],
-                "rules": {
-                    "import/no-anonymous-default-export": "off"
-                }
-            }
-        ]
-    }
+    "eslintConfig": {}
 }
