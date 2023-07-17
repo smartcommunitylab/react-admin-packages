@@ -1,16 +1,14 @@
 {
-    "name": "@smartcommunitylab/ra-breadcrumb",
+    "name": "@dslab/ra-breadcrumb",
     "version": "1.0.0",
-    "author": {
-        "name": "Matteo Saloni",
-        "email": "msaloni@fbk.eu"
-    },
+    "author": "Matteo Saloni <msaloni@fbk.eu>",
+    "contributors": ["Erica Tomaselli", "Alberto Carotti"],    
     "repository": {
         "type": "git",
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "public": true
     },
     "license": "MIT",
     "files": [
