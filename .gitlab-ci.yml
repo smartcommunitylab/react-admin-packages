@@ -22,6 +22,8 @@ before_script:
 
 build:
   stage: build
+  only:
+    - master
   script:
     - yarn install --frozen-lockfile
     - yarn build
@@ -42,7 +44,7 @@ release:
     - cd "packages/$PKG" && npm publish --registry ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/   
     # - yarn release --loglevel debug --registry ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/    
   rules:
-    # Only publish if tag given 
+    # Only publish if tag given, format is `package/RELEASE-`. Only one is supported!
     - if: '$CI_COMMIT_TAG'
 
   
