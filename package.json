@@ -6,7 +6,7 @@
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
     },
-    "repository": "https://gitlab.fbk.eu/msaloni/react-admin-packages.git",
+    "repository": "https://gitlab.fbk.eu/dslab/react-admin-packages.git",
     "license": "MIT",
     "workspaces": [
         "examples/*",
