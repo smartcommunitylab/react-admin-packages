@@ -2,30 +2,47 @@ image: node:16.15.0
 
 stages:
   - build
+  - release
+
+before_script:
+  - |
+    if [[ ! -f .npmrc ]]; then
+      echo 'No .npmrc found! Creating one now. Please review the following link for more information: https://docs.gitlab.com/ee/user/packages/npm_registry/index.html#project-level-npm-endpoint-1'
+      {
+        echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
+        echo "${CI_API_V4_URL#http*:}/packages/npm/:_authToken=${CI_JOB_TOKEN}"
+        echo "${CI_API_V4_URL#http*:}/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}"
+      } >> .npmrc
+    fi
+  - echo "Created the following .npmrc:"; cat .npmrc
+  - git config user.email $GITLAB_USER_EMAIL
+  - git config user.name $GITLAB_USER_NAME
+  - git remote set-url origin "https://gitlab-ci-token:$GL_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
+  # - git checkout $CI_COMMIT_BRANCH
 
 build:
   stage: build
-  only:
-    - gitlab
-  before_script:
-    - |
-      if [[ ! -f .npmrc ]]; then
-        echo 'No .npmrc found! Creating one now. Please review the following link for more information: https://docs.gitlab.com/ee/user/packages/npm_registry/index.html#project-level-npm-endpoint-1'
-        {
-          echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
-          echo "${CI_API_V4_URL#http*:}/packages/npm/:_authToken=${CI_JOB_TOKEN}"
-          echo "${CI_API_V4_URL#http*:}/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}"
-        } >> .npmrc
-      fi
-    - echo "Created the following .npmrc:"; cat .npmrc
-    - git config user.email $GITLAB_USER_EMAIL
-    - git config user.name $GITLAB_USER_NAME
-    - git remote set-url origin "https://gitlab-ci-token:$GL_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
-    # - git checkout $CI_COMMIT_BRANCH
   script:
     - yarn install --frozen-lockfile
     - yarn build
-    - yarn release --loglevel debug --registry ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/
+  artifacts:
+    paths:
+    - packages/*/dist/
+    - examples/*/dist/    
+    expire_in: 1 week
 
+
+release:
+  stage: release
+  dependencies:
+    - build  
+  script:
+    - PKG=${CI_COMMIT_TAG%%/*}
+    - echo "Release ${PKG}..."
+    - cd "packages/$PKG" && npm publish --registry ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/   
+    # - yarn release --loglevel debug --registry ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/    
+  rules:
+    # Only publish if tag given 
+    - if: '$CI_COMMIT_TAG'
 
   
