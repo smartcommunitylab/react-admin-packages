@@ -15,7 +15,7 @@
     "scripts": {
         "build": "lerna run build",
         "watch": "lerna run --parallel watch",
-        "distribute": "lerna publish from-package --yes ",
+        "release": "lerna publish from-package --yes ",
         "lint": "eslint --ext .js,.ts,.tsx \"./packages/**/src/**/*.{js,ts,tsx}\" ",
         "prettier": "prettier --config ./.prettierrc.js --write --list-different \"packages/*/src/**/*.{js,ts,tsx,css}\""
     },
