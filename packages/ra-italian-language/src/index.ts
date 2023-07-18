@@ -8,9 +8,9 @@ const italianMessages: TranslationMessages = {
             back: 'Indietro',
             bulk_actions:
                 '1 elemento selezionato |||| %{smart_count} elementi selezionati',
-            cancel: 'Cancella',
-            clear_array_input: 'Pulisci la lista',
-            clear_input_value: 'Pulisci valore',
+            cancel: 'Annulla',
+            clear_array_input: 'Svuota la lista',
+            clear_input_value: 'Svuota valore',
             clone: 'Clona',
             confirm: 'Conferma',
             create: 'Crea',
@@ -43,7 +43,7 @@ const italianMessages: TranslationMessages = {
             select_columns: 'Colonne',
         },
         boolean: {
-            true: 'Si',
+            true: 'Sì',
             false: 'No',
             null: ' ',
         },
@@ -73,11 +73,11 @@ const italianMessages: TranslationMessages = {
                     'Trascina una immagine per caricarla, o clicca per selezionare.',
             },
             references: {
-                all_missing: 'Impossibile trovare i dati referenziati',
+                all_missing: 'Impossibile trovare i dati correlati',
                 many_missing:
-                    'Almeno uno dei dati referenziati sembra non essere disponibile.',
+                    'Almeno uno dei dati correlati sembra non essere disponibile.',
                 single_missing:
-                    'Il dato referenziato sembra non essere più disponibile.',
+                    'Il dato correlato sembra non essere più disponibile.',
             },
             password: {
                 toggle_visible: 'Nascondi password',
@@ -107,29 +107,29 @@ const italianMessages: TranslationMessages = {
             loading: 'La pagina si sta caricando, solo un momento per favore',
             no: 'No',
             not_found:
-                'O hai digitato un URL sbagliato o hai seguito un link non valido.',
-            yes: 'Si',
+                'Hai digitato un URL sbagliato o seguito un link non valido.',
+            yes: 'Sì',
             unsaved_changes:
-                'Alcune delle tue modifiche non sono state salvate. Sei sicuro di volerle ignorare?',
+                'Alcune modifiche non sono state salvate. Sei sicuro di volerle ignorare?',
         },
         navigation: {
             no_results: 'Nessun risultato trovato',
             no_more_results:
-                'Il numero di pagina %{page} è fuori dai limiti. Prova la pagina precedente.',
+                'Il numero di pagina %{page} è oltre il limite. Prova la pagina precedente.',
             page_out_of_boundaries:
-                'La pagina numero %{page} è fuori dai limiti',
+                'La pagina numero %{page} è oltre il limite',
             page_out_from_end: "Impossibile andare oltre l'ultima pagina",
             page_out_from_begin:
                 'Impossibile andare indietro dalla prima pagina',
             page_range_info: '%{offsetBegin}-%{offsetEnd} di %{total}',
             partial_page_range_info:
-                '%{offsetBegin}-%{offsetEnd} di più di %{offsetEnd}',
+                '%{offsetBegin}-%{offsetEnd} di oltre %{offsetEnd}',
             current_page: 'Pagina %{page}',
             page: 'Vai a pagina %{page}',
             first: 'Vai alla prima pagina',
             last: "Vai all'ultima pagina",
-            next: 'Vai alla pagina successiva',
-            previous: 'Vai alla pagina precedente',
+            next: 'Pagina successiva',
+            previous: 'Pagina precedente',
             page_rows_per_page: 'Elementi per pagina:',
             skip_nav: 'Salta al contenuto',
         },
@@ -153,24 +153,24 @@ const italianMessages: TranslationMessages = {
             created: 'Elemento creato',
             deleted: 'Elemento rimosso |||| %{smart_count} elementi rimossi',
             bad_item: 'Elemento non valido',
-            item_doesnt_exist: 'Elemento non esistente',
+            item_doesnt_exist: 'Elemento inesistente',
             http_error: 'Errore di comunicazione con il server',
             data_provider_error:
-                'dataProvider error. Check the console for details.',
+                'Errore nel data provider. Visualizza la console per ulteriori informazioni.',
             i18n_error:
                 'Impossibile caricare le traduzioni per il linguaggio richiesto',
-            canceled: 'Azione cancellata',
+            canceled: 'Azione annullata',
             logged_out: 'La sessione è terminata, prego riconnettersi.',
             not_authorized: 'Non sei autorizzato ad accedere a questa risorsa.',
         },
         validation: {
             required: 'Campo obbligatorio',
-            minLength: 'Deve essere almeno %{min} caratteri',
-            maxLength: 'Deve essere %{max} caratteri o meno',
+            minLength: 'Almeno %{min} caratteri richiesti',
+            maxLength: 'Non oltre %{max} caratteri',
             minValue: 'Deve essere almeno %{min}',
             maxValue: 'Deve essere %{max} o meno',
             number: 'Deve essere un numero',
-            email: 'Deve essere una email valida',
+            email: 'Deve essere una e-mail valida',
             oneOf: 'Deve essere uno tra: %{options}',
             regex: 'Deve corrispondere al formato (regexp): %{pattern}',
         },
@@ -184,15 +184,15 @@ const italianMessages: TranslationMessages = {
             remove_dialog_title: 'Eliminare la ricerca salvata?',
             remove_message:
                 'Sei sicuro di voler rimuovere questo elemento dalla lista di ricerche salvate?',
-            help: 'Filtra la lista e salva questa query per utilizzi futuri',
+            help: 'Filtra la lista e salva questa ricerca per utilizzi futuri',
         },
         configurable: {
             customize: 'Personalizza',
             configureMode: 'Configura la pagina',
             inspector: {
                 title: 'Inspector',
-                content: 'Hover the application UI elements to configure them',
-                reset: 'Reset Settings',
+                content: "Porta il cursore sugli elementi dell'interfaccia per configurarli",
+                reset: 'Ripristina impostazioni',
                 hideAll: 'Nascondi tutto',
                 showAll: 'Mostra tutto',
             },
