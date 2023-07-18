@@ -25,13 +25,16 @@ export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
 
     if (resource) {
         // Dashboard
-        links.push(<BreadcrumbItem name="ra.page.dashboard" to="/" />);
+        links.push(
+            <BreadcrumbItem key="dashboard" name="ra.page.dashboard" to="/" />
+        );
 
         const matchShow = location.pathname.match(regexShow);
         if (matchShow && matchShow[1]) {
             // List
             links.push(
                 <BreadcrumbItem
+                    key="list"
                     name={translate(`resources.${resource}.name`, {
                         smart_count: 2,
                         _: resource,
@@ -41,11 +44,12 @@ export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
             );
 
             // Show
-            links.push(<BreadcrumbItem name={matchShow[1]} />);
+            links.push(<BreadcrumbItem key="show" name={matchShow[1]} />);
         } else if (location.pathname.match(regexCreate)) {
             // List
             links.push(
                 <BreadcrumbItem
+                    key="list"
                     name={translate(`resources.${resource}.name`, {
                         smart_count: 2,
                         _: resource,
@@ -55,13 +59,14 @@ export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
             );
 
             // Create
-            links.push(<BreadcrumbItem name="ra.action.create" />);
+            links.push(<BreadcrumbItem key="create" name="ra.action.create" />);
         } else {
             const matchEdit = location.pathname.match(regexEdit);
             if (matchEdit && matchEdit[1]) {
                 // List
                 links.push(
                     <BreadcrumbItem
+                        key="list"
                         name={translate(`resources.${resource}.name`, {
                             smart_count: 2,
                             _: resource,
@@ -70,18 +75,22 @@ export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
                     />
                 );
 
-                // Edit
+                // Show
                 links.push(
                     <BreadcrumbItem
+                        key="show"
                         name={matchEdit[1]}
                         to={`/${resource}/${matchEdit[1]}/show`}
                     />
                 );
-                links.push(<BreadcrumbItem name="ra.action.edit" />);
+
+                // Edit
+                links.push(<BreadcrumbItem key="edit" name="ra.action.edit" />);
             } else {
                 // List
                 links.push(
                     <BreadcrumbItem
+                        key="list"
                         name={translate(`resources.${resource}.name`, {
                             smart_count: 2,
                             _: resource,
@@ -92,7 +101,7 @@ export const BreadcrumbResourceItems = (props: BreadcrumbProps) => {
         }
     } else {
         // Dashboard
-        links.push(<BreadcrumbItem name="ra.page.dashboard" />);
+        links.push(<BreadcrumbItem key="dashboard" name="ra.page.dashboard" />);
     }
 
     return (
