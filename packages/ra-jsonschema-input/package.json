@@ -1,0 +1,48 @@
+{
+    "name": "@smartcommunitylab/ra-jsonschema-input",
+    "version": "1.0.0",
+    "author": {
+        "name": "Nawaz Khurshid",
+        "email": "khurshid@fbk.eu"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/smartcommunitylab/react-admin-packages"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "license": "MIT",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "types": "dist/cjs/index.d.ts",
+    "scripts": {
+        "build": "yarn run build-cjs && yarn run build-esm",
+        "build-cjs": "rimraf ./dist/cjs && tsc --outDir dist/cjs",
+        "build-esm": "rimraf ./dist/esm && tsc --outDir dist/esm --module es2015",
+        "watch": "tsc --outDir dist/esm --module es2015 --watch"
+    },
+    "peerDependencies": {
+        "@mui/material": "^5.0.2",
+        "react": " ^17.0.0 || ^18.0.0",
+        "react-admin": "^4.11.0",
+        "react-dom": "^17.0.0 || ^18.0.0",
+        "react-router-dom": "^6.7.0",
+        "react-router": "^6.7.0"
+    },
+    "dependencies": {
+        "ra-core": "^4.11.0",
+        "@rjsf/core": "^5.13.0",
+        "@rjsf/mui": "^5.13.0",
+        "@rjsf/utils": "^5.13.0",
+        "@rjsf/validator-ajv8": "^5.13.0"
+    },
+    "devDependencies": {
+        "rimraf": "^3.0.2",
+        "typescript": "^4.4.0"
+    }
+}
