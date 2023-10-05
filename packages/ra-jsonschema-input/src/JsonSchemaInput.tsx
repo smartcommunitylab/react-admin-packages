@@ -1,8 +1,10 @@
 import { useInput, InputProps } from 'react-admin';
-import Form from '@rjsf/mui';
 import validator from '@rjsf/validator-ajv8';
+import React from 'react';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { Form } from '@rjsf/mui';
 
-export const JsonSchemaInput = (props: JsonSchemaFormatInputProps) => {
+export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     const { schema, uiSchema, onBlur, onChange } = props;
 
     const {
@@ -20,26 +22,22 @@ export const JsonSchemaInput = (props: JsonSchemaFormatInputProps) => {
     };
 
     return (
-        <>
-            <Form
-                schema={schema}
-                uiSchema={uiSchema}
-                formData={field.value}
-                validator={validator}
-                onChange={(e: any) => update(e.formData)}
-                omitExtraData={true}
-            >
-                <div>
-                    <button hidden type="submit"></button>
-                </div>
-            </Form>
-        </>
+        <Form
+            schema={schema}
+            uiSchema={uiSchema}
+            formData={field.value}
+            validator={validator}
+            onChange={(e: any) => update(e.formData)}
+            omitExtraData={true}
+        >
+            <></>
+        </Form>
     );
 };
 
-export type JsonSchemaFormatInputProps = InputProps & {
-    schema?: any;
-    uiSchema?: any;
+export type JSONSchemaFormatInputProps = InputProps & {
+    schema: RJSFSchema;
+    uiSchema: UiSchema;
 };
 
 
