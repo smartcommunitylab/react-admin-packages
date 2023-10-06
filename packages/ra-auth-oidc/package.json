@@ -10,6 +10,7 @@
         "url": "https://gitlab.fbk.eu/dslab/react-admin-packages.git"
     },
     "publishConfig": {
+        "access": "public",
         "public": true
     },
     "license": "MIT",

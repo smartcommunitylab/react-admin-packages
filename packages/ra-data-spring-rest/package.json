@@ -7,9 +7,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://gitlab.fbk.eu/dslab/react-admin-packages.git"
+        "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
+        "access": "public",
         "public": true
     },
     "license": "MIT",
@@ -36,6 +37,5 @@
     "devDependencies": {
         "rimraf": "^3.0.2",
         "typescript": "^4.4.0"
-    },
-    "gitHead": "1539ed54d85cfb45cae5ee350b584705479c6ce4"
+    }
 }

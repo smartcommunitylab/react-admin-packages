@@ -1,15 +1,14 @@
 {
     "name": "react-admin-packages",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "private": true,
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
     },
-    "repository": "https://gitlab.fbk.eu/dslab/react-admin-packages.git",
+    "repository": "https://github.com/smartcommunitylab/react-admin-packages",
     "license": "MIT",
     "workspaces": [
-        "examples/*",
         "packages/*"
     ],
     "scripts": {
