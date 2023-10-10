@@ -1,16 +1,13 @@
 {
-    "name": "@dslab/ra-data-spring-rest",
-    "version": "1.0.1",
-    "author": {
-        "name": "Matteo Saloni",
-        "email": "msaloni@fbk.eu"
-    },
+    "name": "@dslab/ra-breadcrumb",
+    "version": "1.0.0",
+    "author": "Matteo Saloni <msaloni@fbk.eu>",
+    "contributors": ["Erica Tomaselli", "Alberto Carotti"],    
     "repository": {
         "type": "git",
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
-        "access": "public",
         "public": true
     },
     "license": "MIT",
@@ -28,14 +25,19 @@
         "watch": "tsc --outDir dist/esm --module es2015 --watch"
     },
     "peerDependencies": {
-        "react": " ^17.0.0 || ^18.0.0"
+        "@mui/material": "^5.0.2",
+        "react": " ^17.0.0 || ^18.0.0",
+        "react-admin": "^4.10.2",
+        "react-router-dom": "^6.7.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
     },
     "dependencies": {
-        "query-string": "^7.1.1",
         "ra-core": "^4.11.0"
     },
     "devDependencies": {
         "rimraf": "^3.0.2",
-        "typescript": "^4.4.0"
+        "typescript": "^4.4.0",
+        "@mui/material": "^5.0.2",
+        "react-router-dom": "^6.7.0"
     }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "@smartcommunitylab/ra-back-button",
-    "version": "1.0.0",
+    "name": "@dslab/ra-back-button",
+    "version": "1.0.1",
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
@@ -10,7 +10,8 @@
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "access": "public",
+        "public": true
     },
     "license": "MIT",
     "files": [
@@ -28,16 +29,22 @@
     },
     "peerDependencies": {
         "@mui/material": "^5.0.2",
+        "@mui/icons-material": "^5.0.2",
         "react": " ^17.0.0 || ^18.0.0",
         "react-admin": "^4.11.0",
         "react-dom": "^17.0.0 || ^18.0.0",
-        "react-router-dom": "^6.7.0",
-        "react-router": "^6.7.0"
+        "react-router": "^6.7.0",
+        "react-router-dom": "^6.7.0"
     },
     "dependencies": {
         "ra-core": "^4.11.0"
     },
     "devDependencies": {
+        "@mui/material": "^5.0.2",
+        "@mui/icons-material": "^5.0.2",
+        "react-admin": "^4.11.0",
+        "react-router": "^6.7.0",
+        "react-router-dom": "^6.7.0",
         "rimraf": "^3.0.2",
         "typescript": "^4.4.0"
     }

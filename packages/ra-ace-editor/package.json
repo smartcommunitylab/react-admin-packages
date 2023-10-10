@@ -1,6 +1,6 @@
 {
-    "name": "@smartcommunitylab/ra-ace-editor",
-    "version": "1.0.0",
+    "name": "@dslab/ra-ace-editor",
+    "version": "1.0.2",
     "description": "",
     "author": {
         "name": "Matteo Saloni",
@@ -11,7 +11,8 @@
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "access": "public",
+        "public": true
     },
     "files": [
         "dist",
@@ -30,34 +31,25 @@
     "peerDependencies": {
         "@mui/material": "^5.0.2",
         "react": " ^17.0.0 || ^18.0.0",
-        "react-admin": "^4.10.2",
+        "react-admin": "^4.11.0",
         "react-dom": "^17.0.0 || ^18.0.0"
     },
     "devDependencies": {
+        "@types/react": "^17.0.20",
+        "@types/react-dom": "^17.0.18",
         "@mui/material": "^5.0.2",
         "react": "^17.0.0",
         "react-dom": "^17.0.0",
         "rimraf": "^3.0.2",
-        "typescript": "^4.4.0"
-    },
-    "dependencies": {
-        "@storybook/addon-actions": "^6.5.15",
-        "@storybook/addon-essentials": "^6.5.15",
-        "@storybook/addon-interactions": "^6.5.15",
-        "@storybook/addon-links": "^6.5.15",
-        "@storybook/builder-webpack5": "^6.5.15",
-        "@storybook/node-logger": "^6.5.15",
-        "@storybook/react": "^6.5.15",
-        "@types/react": "^17.0.20",
-        "@types/react-dom": "^17.0.18",
-        "ace-builds": "^1.14.0",
+        "typescript": "^4.4.0",
         "eslint": "^8.31.0",
         "eslint-config-prettier": "^8.6.0",
         "lerna": "^6.3.0",
         "prettier": "^2.8.1",
-        "react-ace": "^10.1.0",
-        "react-admin": "^4.11.0",
-        "typescript": "^4.4.0",
         "webpack": "^5.70.0"
+    },
+    "dependencies": {
+        "ace-builds": "^1.14.0",
+        "react-ace": "^10.1.0"
     }
 }

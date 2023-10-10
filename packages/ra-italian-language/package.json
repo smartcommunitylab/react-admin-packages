@@ -1,6 +1,6 @@
 {
-    "name": "@smartcommunitylab/ra-language-italian",
-    "version": "1.0.0",
+    "name": "@dslab/ra-language-italian",
+    "version": "1.0.1",
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
@@ -10,7 +10,8 @@
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "access": "public",
+        "public": true
     },
     "license": "MIT",
     "files": [
