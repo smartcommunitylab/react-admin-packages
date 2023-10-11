@@ -1,5 +1,5 @@
 {
-    "name": "@smartcommunitylab/ra-jsonschema-input",
+    "name": "@dslab/ra-jsonschema-input",
     "version": "1.0.0",
     "author": {
         "name": "Nawaz Khurshid",
@@ -10,7 +10,8 @@
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com"
+        "access": "public",
+        "public": true
     },
     "license": "MIT",
     "files": [
@@ -33,17 +34,13 @@
         "react-dom": "^17.0.0 || ^18.0.0"
     },
     "devDependencies": {
-        "@types/react": "^18.2.25",
-        "@types/react-dom": "^18.2.10",
-        "eslint": "^8.31.0",
-        "eslint-config-prettier": "^8.6.0",
-        "lerna": "^6.3.0",
-        "prettier": "^2.8.1",
+        "@mui/material": "^5.0.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.4.0",
-        "webpack": "^5.70.0"
+        "react-admin": "^4.10.2",
+        "@types/react": "^18.2.25",
+        "@types/react-dom": "^18.2.10",
+        "@types/json-schema": "^7.0.12"
     },
     "dependencies": {
         "@rjsf/core": "^5.13.0",
