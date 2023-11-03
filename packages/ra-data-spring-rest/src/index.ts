@@ -1,5 +1,5 @@
 import { stringify } from 'query-string';
-import { fetchUtils, DataProvider } from 'ra-core';
+import { fetchUtils, DataProvider, RaRecord } from 'ra-core';
 
 /**
  * Data Provider for Spring REST with Pageable support.
@@ -149,7 +149,10 @@ const springDataProvider = (
                 data: responses.map(({ json }) => json.id),
             }));
         },
-        create: (resource, params) => {
+        create: <RecordType extends Omit<RaRecord, 'id'> = any>(
+            resource,
+            params
+        ) => {
             const url = `${apiUrl}/${resource}`;
             return httpClient(url, {
                 method: 'POST',
