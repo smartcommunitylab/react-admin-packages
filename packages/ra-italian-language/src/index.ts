@@ -41,6 +41,7 @@ const italianMessages: TranslationMessages = {
             open: 'Apri',
             toggle_theme: 'Alterna tema',
             select_columns: 'Colonne',
+            update_application: "Aggiorna l'applicazione",
         },
         boolean: {
             true: 'Si',
@@ -162,6 +163,8 @@ const italianMessages: TranslationMessages = {
             canceled: 'Azione cancellata',
             logged_out: 'La sessione è terminata, prego riconnettersi.',
             not_authorized: 'Non sei autorizzato ad accedere a questa risorsa.',
+            application_update_available:
+                'Aggiornamento applicazione disponibile',
         },
         validation: {
             required: 'Campo obbligatorio',
