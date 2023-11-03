@@ -1,9 +1,7 @@
-import React from 'react';
-import { Button, ButtonProps } from 'react-admin';
-import { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import DownloadIcon from '@mui/icons-material/GetApp';
+import React, { useCallback } from 'react';
 import {
+    Button,
+    ButtonProps,
     fetchRelatedRecords,
     useDataProvider,
     useNotify,
@@ -13,7 +11,9 @@ import {
     FilterPayload,
     useResourceContext,
     GetListParams,
-} from 'ra-core';
+} from 'react-admin';
+import PropTypes from 'prop-types';
+import DownloadIcon from '@mui/icons-material/GetApp';
 
 /**
  * @author SmartCommunityLab
@@ -44,76 +44,79 @@ export const ExportAllButton = (props: ExportAllButtonProps) => {
     const perPage = customPerPage || perPageFromContext;
     const dataProvider = useDataProvider();
     const notify = useNotify();
-
     const handleClick = useCallback(
         event => {
-            if (total) {
-                const promises: Promise<{
-                    data: any[];
-                    params: GetListParams;
-                }>[] = [];
+            if (!exporter) {
+                return;
+            }
 
-                const numberOfElements =
-                    maxResults < total ? maxResults : total;
-                const numberOfPages = Math.ceil(numberOfElements / perPage);
-
-                for (let page = 1; page <= numberOfPages; page++) {
-                    const params: GetListParams = {
-                        sort,
-                        filter: filter
-                            ? { ...filterValues, ...filter }
-                            : filterValues,
-                        pagination: {
-                            page: page,
-                            perPage: perPage,
-                        },
-                        meta,
-                    };
-
-                    promises.push(
-                        dataProvider
-                            .getList(resource, params)
-                            .then(({ data }) => {
-                                return Promise.resolve({ data, params });
-                            })
-                            .catch(error => {
-                                console.error(error);
-                                notify('ra.notification.http_error', {
-                                    type: 'error',
-                                });
-                                return Promise.reject(null);
-                            })
-                    );
-                }
-
-                Promise.all(promises).then(
-                    (responses: { data: any[]; params: GetListParams }[]) => {
-                        responses.sort(
-                            (a, b) =>
-                                a.params.pagination.page -
-                                b.params.pagination.page
-                        );
-
-                        const data = responses.map(response => response.data);
-
-                        if (data.length > maxResults) {
-                            data.slice(0, maxResults);
-                        }
-
-                        exporter &&
-                            exporter(
-                                data,
-                                fetchRelatedRecords(dataProvider),
-                                dataProvider,
-                                resource
-                            );
-                    }
-                );
-            } else {
-                notify('ra.page.error', {
+            if (!total) {
+                notify('ra.message.error', {
                     type: 'error',
                 });
             }
+
+            const promises: Promise<{
+                data: any[];
+                params: GetListParams;
+            }>[] = [];
+
+            const numberOfElements = maxResults < total ? maxResults : total;
+            const numberOfPages = Math.ceil(numberOfElements / perPage);
+
+            for (let page = 1; page <= numberOfPages; page++) {
+                const params: GetListParams = {
+                    sort,
+                    filter: filter
+                        ? { ...filterValues, ...filter }
+                        : filterValues,
+                    pagination: {
+                        page: page,
+                        perPage: perPage,
+                    },
+                    meta,
+                };
+
+                promises.push(
+                    dataProvider
+                        .getList(resource, params)
+                        .then(({ data }) => {
+                            return Promise.resolve({ data, params });
+                        })
+                        .catch(error => {
+                            return Promise.reject(
+                                new Error('ra.notification.data_provider_error')
+                            );
+                        })
+                );
+            }
+
+            Promise.all(promises)
+                .then((responses: { data: any[]; params: GetListParams }[]) => {
+                    responses.sort(
+                        (a, b) =>
+                            a.params.pagination.page - b.params.pagination.page
+                    );
+
+                    let data = responses.map(response => response.data);
+                    if (data.length > maxResults) {
+                        data = data.slice(0, maxResults);
+                    }
+
+                    exporter &&
+                        exporter(
+                            data,
+                            fetchRelatedRecords(dataProvider),
+                            dataProvider,
+                            resource
+                        );
+                })
+                .catch(error => {
+                    console.log(error);
+                    notify('ra.notification.data_provider_error', {
+                        type: 'error',
+                    });
+                });
 
             if (typeof onClick === 'function') {
                 onClick(event);
@@ -139,7 +142,7 @@ export const ExportAllButton = (props: ExportAllButtonProps) => {
         <Button
             onClick={handleClick}
             label={label}
-            disabled={!total}
+            disabled={total === 0}
             {...sanitizeRestProps(rest)}
         >
             {icon}
