@@ -9,7 +9,8 @@
     "repository": "https://github.com/smartcommunitylab/react-admin-packages",
     "license": "MIT",
     "workspaces": [
-        "packages/*"
+        "packages/*",
+        "examples/*"
     ],
     "scripts": {
         "build": "lerna run build",
