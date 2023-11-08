@@ -1,106 +1,117 @@
 import {
     Button,
+    Confirm,
+    DeleteWithConfirmButtonProps,
+    RaRecord,
     SimpleForm,
     TextInput,
     required,
-    useDelete,
-    useNotify,
+    useDeleteWithConfirmController,
     useRecordContext,
-    useRedirect,
-    useStore,
+    useResourceContext,
 } from 'react-admin';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { DeleteConfirm } from './DeleteConfirm';
+import ActionDelete from '@mui/icons-material/Delete';
+import { useState } from 'react';
 import React from 'react';
 /**
- * Delete button dialog
+ * Delete with confirm button dialog
  *
  * @example
- * <Confirm
- *     isOpen={true}
- *     title="Item title"
- *     property="Property in record to perform deletion on"
- *     rootId='name of parent resource'
- *     resourceName="Item name"
- *     registeredResource="resource id registered in Apps.tsx file"
- *     redirectUrl="url to redirect after delete"
+ * <DeleteButtonDialog
+ *     confirmTitle="Item title"
+ *     redirect="url to redirect after delete"
  * />
  */
-export const DeleteButtonDialog = (params: any) => {
-    const redirect = useRedirect();
+
+const defaultIcon = <ActionDelete />;
+
+export const DeleteButtonDialog = (
+    props: CustomDeleteWithConfirmButtonProps
+) => {
+    const {
+        className,
+        confirmTitle = 'ra.message.delete_title',
+        confirmContent = 'ra.message.delete_content',
+        icon = defaultIcon,
+        label = 'ra.action.delete',
+        mutationMode = 'pessimistic',
+        onClick,
+        redirect = 'list',
+        translateOptions = {},
+        mutationOptions,
+        color = 'error',
+        source = 'id',
+        meta,
+        ...rest
+    } = props;
+
+    const resource = useResourceContext(props);
     const record = useRecordContext();
-    const notify = useNotify();
-    const [open, setOpen] = React.useState(false);
-    const [disabledeletebutton, setDisableDeleteButton] =
-        useStore('delete.disabled');
 
-    const handleClick = () => {
-        setDisableDeleteButton(true);
-        setOpen(true);
-    };
+    const {
+        open,
+        isLoading,
+        handleDialogOpen,
+        handleDialogClose,
+        handleDelete,
+    } = useDeleteWithConfirmController({
+        record,
+        redirect,
+        mutationMode,
+        onClick,
+        mutationOptions,
+        resource,
+    });
 
-    const [deleteOne, { isLoading }] = useDelete(
-        params.registeredResource,
-        {
-            id: record[`${params.property}`],
-            meta: { rootId: `${params.rootId}` },
-        },
-        {
-            onSuccess: () => {
-                notify(params.resourceName + ` deleted successfully`);
-                redirect(params.redirectUrl);
-            },
+    const [value, setValue] = useState();
+
+    const handleConfirm = (e: any) => {
+        console.log(value);
+        if (record.id === value) {
+            handleDelete(e);
         }
-    );
-
-    let title = params.title;
-
-    const handleDialogClose = () => setOpen(false);
-    const handleConfirm = () => {
-        deleteOne();
-        setOpen(false);
     };
-
     return (
         <>
             <span>
                 <Button
                     label="Delete"
-                    onClick={handleClick}
+                    onClick={handleDialogOpen}
                     sx={{ color: 'red' }}
                 >
-                    {<DeleteIcon />}
+                    {<ActionDelete />}
                 </Button>
             </span>
-            <DeleteConfirm
-                disableDeleteButton={disabledeletebutton}
+            <Confirm
                 isOpen={open}
                 loading={isLoading}
-                title={title}
+                title={confirmTitle}
                 content={
                     <DialogContent
+                        setReturnValue={setValue}
                         id={record.id}
-                        resourceName={params.resourceName}
+                        resourceName={resource}
                     />
                 }
-                onDelete={handleConfirm}
+                onConfirm={handleConfirm}
                 onClose={handleDialogClose}
-                onTouchCancel={handleDialogClose}
             />
         </>
     );
 };
 
+export interface CustomDeleteWithConfirmButtonProps<
+    RecordType extends RaRecord = any,
+    MutationOptionsError = unknown
+> extends DeleteWithConfirmButtonProps {
+    source?: string;
+    meta?: any;
+}
+
 const DialogContent = (params: any) => {
-    const [disabledeletebutton, setDisableDeleteButton] =
-        useStore('delete.disabled');
+    const { setReturnValue, ...rest } = params;
 
     const idValidation = (value: any) => {
-        if (value === params.id) {
-            setDisableDeleteButton(false);
-        } else {
-            setDisableDeleteButton(true);
-        }
         if (!value) {
             return 'The id is required';
         }
@@ -110,7 +121,7 @@ const DialogContent = (params: any) => {
         return undefined;
     };
 
-    const validateClientId = [required(), idValidation];
+    const validateClientId = [required(), setReturnValue, idValidation];
     let labelInput = params.resourceName + ' Id';
 
     return (
@@ -134,7 +145,7 @@ const DialogContent = (params: any) => {
             <SimpleForm toolbar={false} mode="onChange" reValidateMode="onBlur">
                 <TextInput
                     label={labelInput}
-                    source="selectedId"
+                    source="confirmValue"
                     validate={validateClientId}
                     fullWidth
                 />

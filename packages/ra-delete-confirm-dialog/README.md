@@ -1,14 +1,12 @@
-# React-Admin Json Schema Input
+# React-Admin `Delete with confirm`` dialog
 
-[![Version](https://img.shields.io/npm/v/@dslab/ra-jsonschema-input.svg)](https://www.npmjs.com/package/@dslab/ra-jsonschema-input)
+[![Version](https://img.shields.io/npm/v/@dslab/ra-delete-confirm.svg)](https://www.npmjs.com/package/@dslab/ra-delete-confirm)
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/smartcommunitylab/react-admin-packages/blob/master/packages/ra-jsonschema-input/README.md)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/smartcommunitylab/react-admin-packages/graphs/commit-activity)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/smartcommunitylab/react-admin-packages/blob/master/LICENSE)
 
-Delete with confirm field for React-Admin, to render a nested field in the record to match as confirmation before performing deletion.
-Supports validation, required flags and the most common field types. Uses MUIv5 as ui library.
-
-Also supports OOB i18n via react-admin providers and translation messages.
+Delete with confirm dialog for React-Admin, to render a nested field in the record to match as confirmation before performing deletion.
+Supports validation on user input match against resource id. Uses MUIv5 as ui library.
 
 ## Install
 
@@ -18,73 +16,32 @@ yarn install @dslab/ra-delete-confirm
 
 ## Usage
 
-To use in an edit context, where the record is available, include the component as any other button in list or toolbar actions.
+To use in an show/edit context, where the record is available, include the component as any other button in list or toolbar actions.
 
-The list of required parameters  are
+The list of optional parameters are
 
 ```
- title="Item title"
- property="Property in record to perform deletion on"
- rootId='name of parent resource'
- resourceName="Item name"
- registeredResource="resource id registered in Apps.tsx file"
- redirectUrl="url to redirect after delete"
+ confirmTitle="Resource title"
+ mutationOptions="optional API query parameters"
+ redirect="url to redirect after deletion"
  ```
 
 The list could be implemented like the following.
 
 ```javascript
-import { DeleteButtonDialog } from '@dslab/ra-delete-confirm';
-import {
-    List,
-    useListContext,
-    SearchInput,
-    Datagrid,
-    TextField,
-    TopToolbar,
-    CreateButton,
-    ShowButton,
-    useRecordContext,
-    Button,
-    EditButton,
-} from 'react-admin';
-import { useParams } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
-
 export const AppList = () => {
     const params = useParams();
     const options = { meta: { realmId: params.realmId } };
     useListContext<any>();
     return (
         <>
-            <br />
-            <Typography variant="h5" sx={{ mt: 1 }}>
-                Client applications
-            </Typography>
-            <Typography variant="h6">
-                Manage web, mobile, server and IoT applications
-            </Typography>
-            <List
-                empty={<Empty />}
-                actions={<AppListActions />}
-                queryOptions={options}
-                filters={RealmFilters}
-                sort={{ field: 'name', order: 'DESC' }}
-            >
+            <List>
                 <Datagrid bulkActionButtons={false}>
-                    <TextField source="name" />
-                    <TextField source="id" />
-                    <ShowAppButton />
-                    <EditAppButton />
                     <DeleteButtonDialog
-                        rootId={params.realmId}
-                        property="id"
-                        title="Client App Deletion"
-                        resourceName="Client Application"
-                        registeredResource="apps"
-                        redirectUrl={`/apps/r/${params.realmId}`}
+                        mutationOptions={options}
+                        confirmTitle="Resource Deletion"
+                        redirect={`/apps/r/${params.id}`}
                     />
-                    <ExportAppButton />
                 </Datagrid>
             </List>
         </>
