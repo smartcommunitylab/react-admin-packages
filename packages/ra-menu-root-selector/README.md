@@ -5,13 +5,26 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/smartcommunitylab/react-admin-packages/graphs/commit-activity)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/smartcommunitylab/react-admin-packages/blob/master/LICENSE)
 
-Back button (via history) for React-Admin
-
+Menu switcher for React-admin
 ## Install
 
 ```sh
 yarn install @dslab/ra-menu-root-selector
 ```
+## Usage
+
+The menu switcher component can be used wrapping the entire application inside the <RootResourceContext/> and defining some attributes like in the following code
+```javascript
+<RootResourceContext resource="domains" adminApp={<AdminApp />} initialApp={<InitialApp />} />
+```
+The attributes passed in the components are:
+<ul>
+  <li>resource: the name of the resource your application use as a context. The list will appear on the AppBar</li>
+  <li>adminApp: the main application wrapped in the Admin component with the definition of the resources</li>
+  <li>initialApp: the application that show the context list and that is the starting point of the entire app </li>
+</ul>
+
+
 
 ## Author
 
