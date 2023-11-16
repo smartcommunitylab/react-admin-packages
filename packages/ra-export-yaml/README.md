@@ -5,7 +5,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/smartcommunitylab/react-admin-packages/graphs/commit-activity)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](https://github.com/smartcommunitylab/react-admin-packages/blob/master/LICENSE)
 
-Export bulk list to Yaml file, 
+Export bulk list to Yaml file,
 
 ## Install
 
@@ -17,30 +17,18 @@ yarn install @dslab/ra-export-yaml
 
 To use in an list context, where the records are available, include the component as exporter function inside <List>.
 
-The list of optional parameters are
-
+```javascript
+import yamlExporter from '@dslab/ra-export-yaml';
+```
 
 The list could be implemented like the following.
 
 ```javascript
-
-export const AppList = () => {
-    const params = useParams();
-    const options = { meta: { realmId: params.realmId } };
-    useListContext<any>();
-    return (
-        <>
-            <List
-                exporter={YamlExporter}
-            >
-                <Datagrid>
-                    <TextField source="id" />
-                    <ExportAppButton />
-                </Datagrid>
-            </List>
-        </>
-    );
-};
+<List exporter={yamlExporter}>
+    <Datagrid>
+        <TextField source="id" />
+    </Datagrid>
+</List>
 ```
 
 ## Author
