@@ -98,7 +98,7 @@ export const ExportAllButton = (props: ExportAllButtonProps) => {
                             a.params.pagination.page - b.params.pagination.page
                     );
 
-                    let data = responses.map(response => response.data);
+                    let data = responses.map(response => response.data).flat();
                     if (data.length > maxResults) {
                         data = data.slice(0, maxResults);
                     }
