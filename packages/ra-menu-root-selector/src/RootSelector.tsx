@@ -1,47 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { useDataProvider, GetListParams } from 'react-admin';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDataProvider, GetListParams, SortPayload } from 'react-admin';
 import { Box, MenuItem, Menu, ListItemText } from '@mui/material';
 import { useRootSelectorContext } from './RootSelectorContext';
 
 export type RootSelectorParams = {
     source?: string;
+    maxResults?: number;
+    sort?: SortPayload;
+    filter?: any;
+    meta?: any;
 };
-export const RootSelector = (props: RootSelectorParams) => {
-    const { source = 'id' } = props;
-    const { resource, resourceContext, selectResourceContext } =
-        useRootSelectorContext();
-    const resourceSelected = resourceContext();
+
+export const RootResourceSelector = (props: RootSelectorParams) => {
+    const {
+        source = 'id',
+        maxResults = 100,
+        sort = { field: 'id', order: 'ASC' },
+        filter,
+        meta,
+    } = props;
+    const { resource, context, selectContext } = useRootSelectorContext();
+    const resourceSelected = context;
     const dataProvider = useDataProvider();
-    const [resources, setResource] = useState<any[]>([]);
+    const [resources, setResources] = useState<any[]>([]);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
     const handleOpen = (event: React.MouseEvent<HTMLDivElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    const handleAddTag = (resource: any) => {
+    const handleClick = (resource: any) => {
         setAnchorEl(null);
         console.log(resource['id']);
-        selectResourceContext(resource);
+        selectContext(resource);
     };
 
-    let params: GetListParams = {
-        pagination: { page: 0, perPage: 100 },
-        sort: { field: 'id', order: 'ASC' },
-        filter: undefined,
-    };
+    const params: GetListParams = useMemo(
+        () => ({
+            pagination: { page: 0, perPage: maxResults },
+            sort,
+            filter,
+            meta,
+        }),
+        [maxResults, sort, filter, meta]
+    );
 
     useEffect(() => {
-        dataProvider.getList(resource, params).then((data: any) => {
-            if (data && data.data) {
-                console.log(data);
-                setResource(data.data);
+        dataProvider.getList(resource, params).then((res: any) => {
+            if (res.data) {
+                setResources(res.data);
             }
         });
-    }, [resourceSelected]);
+    }, [dataProvider, params, resource, resourceSelected]);
+
     let label = resourceSelected;
     if (resources) {
         const foundRes = resources.find(res => res.id === resourceSelected);
@@ -49,6 +62,7 @@ export const RootSelector = (props: RootSelectorParams) => {
             label = foundRes[source];
         }
     }
+
     return (
         <>
             <Box>
@@ -63,7 +77,7 @@ export const RootSelector = (props: RootSelectorParams) => {
                     resources.map(resource => (
                         <MenuItem
                             key={resource['id']}
-                            onClick={() => handleAddTag(resource)}
+                            onClick={() => handleClick(resource)}
                         >
                             <ListItemText>{resource[source]} </ListItemText>
                         </MenuItem>
@@ -73,4 +87,4 @@ export const RootSelector = (props: RootSelectorParams) => {
     );
 };
 
-export default RootSelector;
+export default RootResourceSelector;

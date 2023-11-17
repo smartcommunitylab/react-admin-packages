@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
     BrowserRouter,
     Routes,
@@ -6,49 +6,50 @@ import {
     useNavigate,
     useParams,
 } from 'react-router-dom';
-import { RootSelectorContext } from './RootSelectorContext';
-import React from 'react';
+import { RootResourceSelectorContext } from './RootSelectorContext';
 
-export type ResourceContextParams = {
-    resource: string;
-    initialApp: ReactElement;
-    adminApp: ReactElement;
-};
 export const RootResourceContext = (props: ResourceContextParams) => {
     return (
         <BrowserRouter>
-            <RootSelectorContextProvider {...props} />
+            <RootResourceContextProvider {...props} />
         </BrowserRouter>
     );
 };
 
-export const RootSelectorContextProvider = (props: ResourceContextParams) => {
-    const { resource, initialApp, adminApp } = props;
-    const [resourceSelected, setResourceSelected] = useState<string>();
+const RootResourceContextProvider = (props: ResourceContextParams) => {
+    const { resource, initialApp, separator = '-', children } = props;
+    const [selected, setSelected] = useState<string>();
     const { context } = useParams();
     const navigate = useNavigate();
+
     const getResourceContext = () => {
-        const id = resourceSelected ? resourceSelected : context;
+        const id = selected || context;
         return id;
     };
+
     const selectResourceContext = (resource: any) => {
-        setResourceSelected(resource['id']);
-        navigate(`/-/` + resource['id']);
+        setSelected(resource['id']);
+        navigate(`/${separator}/` + resource['id']);
     };
     return (
-        <RootSelectorContext.Provider
+        <RootResourceSelectorContext.Provider
             value={{
                 resource,
-                resourceContext: getResourceContext,
-                selectResourceContext,
+                context: getResourceContext(),
+                selectContext: selectResourceContext,
             }}
         >
             <Routes>
-                {/* domains list initial app */}
+                <Route path={`/${separator}/:context/*`} element={children} />
                 <Route path="/*" element={initialApp} />
-                {/* context sub app */}
-                <Route path="/-/:context/*" element={adminApp} />
             </Routes>
-        </RootSelectorContext.Provider>
+        </RootResourceSelectorContext.Provider>
     );
+};
+
+export type ResourceContextParams = {
+    resource: string;
+    initialApp: ReactElement;
+    separator?: string;
+    children: React.ReactNode;
 };

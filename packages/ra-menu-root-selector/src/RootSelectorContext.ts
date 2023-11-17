@@ -1,19 +1,19 @@
 import { createContext, useContext } from 'react';
 
-interface RootSelectorContextValue {
+interface RootResourceSelectorContextValue {
     resource: string;
-    resourceContext: () => string | undefined;
-    selectResourceContext: (resource: any) => void;
+    context: string | undefined;
+    selectContext: (resource: any) => void;
 }
 
-export const RootSelectorContext = createContext<
-    RootSelectorContextValue | undefined
+export const RootResourceSelectorContext = createContext<
+    RootResourceSelectorContextValue | undefined
 >(undefined);
 
 export const useRootSelectorContext = () => {
-    const menuRootSelector = useContext(RootSelectorContext);
-    if (menuRootSelector === undefined) {
+    const rootSelector = useContext(RootResourceSelectorContext);
+    if (rootSelector === undefined) {
         throw new Error('useRootSelectorContext must be inside a provider');
     }
-    return menuRootSelector;
+    return rootSelector;
 };
