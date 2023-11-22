@@ -2,8 +2,8 @@ import { createContext, useContext } from 'react';
 
 interface RootSelectorContextValue {
     resource: string;
-    context: string | undefined;
-    selectContext: (resource: any) => void;
+    root: string | undefined;
+    selectRoot: (record: any) => void;
 }
 
 export const RootSelectorContext = createContext<

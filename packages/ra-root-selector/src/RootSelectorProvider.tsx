@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState } from 'react';
+import React, { ReactElement, isValidElement, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
     BrowserRouter,
@@ -7,9 +7,10 @@ import {
     useNavigate,
     useParams,
 } from 'react-router-dom';
-import { Layout } from 'react-admin';
+import { Layout, ResourceContextProvider } from 'react-admin';
 import { RootSelectorContext } from './RootSelectorContext';
 import { RootSelectorList } from './RootSelectorList';
+import { isValidDataProvider, withRootSelector } from './utils';
 
 export const RootSelector = (props: RootSelectorParams) => {
     const { basename = '' } = props;
@@ -28,28 +29,43 @@ const AppWrapper = (props: RootSelectorParams) => {
     const current = selected || context;
 
     const selectorContext = useMemo(() => {
-        const selectResourceContext = (resource: any) => {
+        const handleSelect = (resource: any) => {
             setSelected(resource['id']);
             navigate(`${basename}/${separator}/` + resource['id']);
         };
 
         return {
             resource,
-            context: current,
-            selectContext: selectResourceContext,
+            root: current,
+            selectRoot: handleSelect,
         };
     }, [resource, current, navigate, basename, separator]);
 
+    const appProps = {
+        basename: `${basename}/${separator}/${current}`,
+    } as any;
+
+    if (
+        children.props.dataProvider &&
+        isValidDataProvider(children.props.dataProvider)
+    ) {
+        //wrap it
+        appProps.dataProvider = withRootSelector(
+            children.props.dataProvider,
+            current
+        );
+    }
+
+    const app = React.cloneElement(children, appProps);
+
     return (
         <RootSelectorContext.Provider value={selectorContext}>
-            {React.cloneElement(children, {
-                basename: `${basename}/${separator}/${current}`,
-            })}
+            {app}
         </RootSelectorContext.Provider>
     );
 };
 
-const InitalWrapper = (props: RootSelectorParams) => {
+const InitialWrapper = (props: RootSelectorParams) => {
     const {
         resource,
         basename = '',
@@ -60,25 +76,43 @@ const InitalWrapper = (props: RootSelectorParams) => {
     const navigate = useNavigate();
 
     const selectorContext = useMemo(() => {
-        const selectResourceContext = (resource: any) => {
+        const handleSelect = (resource: any) => {
             navigate(`${basename}/${separator}/` + resource['id']);
         };
 
         return {
             resource,
-            context: null,
-            selectContext: selectResourceContext,
+            root: null,
+            selectRoot: handleSelect,
         };
     }, [basename, navigate, resource, separator]);
 
     const dummy = () => <></>;
-    const dashboard = () => <RootSelectorList {...props} resource={resource} />;
+    const hasSelector = selector === undefined || !!selector !== false;
+    const dashboard = () => {
+        return (
+            <ResourceContextProvider value={resource}>
+                {selector && hasSelector && isValidElement(selector) ? (
+                    React.cloneElement(selector, {
+                        ...props,
+                    })
+                ) : (
+                    <RootSelectorList
+                        {...props}
+                        resource={resource}
+                        skipToFirst={!hasSelector}
+                    />
+                )}
+            </ResourceContextProvider>
+        );
+    };
+
     const layout = (props: any) => <Layout {...props} sidebar={dummy} />;
 
     const initialApp = React.cloneElement(children, {
         basename: `${basename}`,
-        layout: layout,
-        dashboard: selector || dashboard,
+        layout,
+        dashboard: dashboard,
     });
 
     return (
@@ -91,7 +125,7 @@ const InitalWrapper = (props: RootSelectorParams) => {
 const RootSelectorContextProvider = (props: RootSelectorParams) => {
     const { separator = '-' } = props;
     const contextApp = <AppWrapper {...props} />;
-    const initialApp = <InitalWrapper {...props} />;
+    const initialApp = <InitialWrapper {...props} />;
 
     return (
         <Routes>
@@ -121,7 +155,8 @@ export type RootSelectorParams = {
     /**
      * custom selector to be displayed in initial app for context selection
      */
-    selector?: ReactElement;
+    selector?: ReactElement | boolean;
+
     /**
      * source field (for resource) to be used as label
      */

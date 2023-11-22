@@ -13,13 +13,14 @@ export const RootSelectorButton = (props: RootSelectorButtonProps) => {
         resource: resourceProp,
         ...rest
     } = props;
-    const { selectContext } = useRootSelector();
+    const { selectRoot } = useRootSelector();
     const record = useRecordContext(props);
     if (!record) return null;
 
     const handleClick = e => {
-        if (record) {
-            selectContext(record);
+        const r = recordProp || record;
+        if (r) {
+            selectRoot(r);
         }
         e.stopPropagation();
     };

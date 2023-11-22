@@ -10,13 +10,42 @@ import { useRootSelector } from './RootSelectorContext';
 const defaultIcon = <GroupWorkIcon />;
 
 export type RootSelectorMenuParams = {
+    /**
+     * Name of the field to be used as label, defaults to 'id'
+     */
     source?: string;
+    /**
+     * Maximum number of entries to show in the menu
+     */
     maxResults?: number;
+    /**
+     * (Optional) sort criteria for data provider
+     */
     sort?: SortPayload;
+    /**
+     * (Optional) filter criteria for data provider
+     */
     filter?: any;
+    /**
+     * (Optional) meta properties for data provider
+     */
     meta?: any;
+    /**
+     * (Optional) label for the menu, used when showSelected is false.
+     * Defaults to the resource name
+     */
+
     label?: string;
+    /**
+     * (Optional) custom icon for the menu.
+     */
+
     icon?: ReactNode;
+    /**
+     * Show the selected resource as label for the menu, or
+     * fall back to the configured label
+     */
+
     showSelected?: boolean;
 };
 
@@ -33,7 +62,7 @@ export const RootResourceSelectorMenu = (props: RootSelectorMenuParams) => {
     } = props;
     const dataProvider = useDataProvider();
     const translate = useTranslate();
-    const { resource, context, selectContext } = useRootSelector();
+    const { resource, root, selectRoot } = useRootSelector();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [records, setRecords] = useState<any[]>([]);
     const [selectedRecord, setSelectedRecord] = useState<any>();
@@ -47,12 +76,12 @@ export const RootResourceSelectorMenu = (props: RootSelectorMenuParams) => {
 
     const handleClick = (resource: any) => {
         setAnchorEl(null);
-        selectContext(resource);
+        selectRoot(resource);
     };
 
     const isSelected = (record: any) => {
         // eslint-disable-next-line eqeqeq
-        return context && record && 'id' in record && record.id == context;
+        return root && record && 'id' in record && record.id == root;
     };
 
     //note: do NOT add function definitions or variables from props to dependencies, it will end in a loop
@@ -74,7 +103,7 @@ export const RootResourceSelectorMenu = (props: RootSelectorMenuParams) => {
             }
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resource, context]);
+    }, [resource, root]);
 
     const getMenuLabel = () => {
         if (label) {
