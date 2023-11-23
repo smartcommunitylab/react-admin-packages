@@ -23,7 +23,8 @@
         "@dslab/ra-back-button": "*",
         "@dslab/ra-export-all-button": "*",
         "@dslab/ra-breadcrumb": "*",
-        "@dslab/ra-export-yaml": "*"
+        "@dslab/ra-export-yaml": "*",
+        "@dslab/ra-delete-dialog-button": "*"
     },
     "devDependencies": {
         "@types/react": "^18.2.15",

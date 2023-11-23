@@ -1,1 +1,1 @@
-export * from './components/DeleteButtonDialog';
+export * from './DeleteWithDialogButton';
