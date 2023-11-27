@@ -1,13 +1,14 @@
 import {
-    useInput,
     useTranslate,
     useTranslateLabel,
     InputProps,
+    useRecordContext,
 } from 'react-admin';
 import validator from '@rjsf/validator-ajv8';
 import React from 'react';
 import { RJSFSchema, UiSchema, GenericObjectType } from '@rjsf/utils';
 import { Form } from '@rjsf/mui';
+import { get, useController } from 'react-hook-form';
 
 export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     const {
@@ -17,23 +18,23 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         helperText,
         resource,
         source,
-        onBlur,
-        onChange,
     } = props;
-    const {
-        field,
-        fieldState: { isTouched, error },
-        formState: { isSubmitted },
-    } = useInput({
-        onChange,
-        onBlur,
-        ...props,
-    });
     const translate = useTranslate();
     const translateLabel = useTranslateLabel();
+    const record = useRecordContext();
+
+    const {
+        field,
+        formState: { isLoading },
+    } = useController({
+        name: source,
+        defaultValue: get(record, source, {}),
+    });
 
     const update = (data: any) => {
-        field.onChange(data);
+        if (!isLoading) {
+            field.onChange(data);
+        }
     };
 
     const rjsSchema: RJSFSchema =
