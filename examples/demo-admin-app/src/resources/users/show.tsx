@@ -1,5 +1,6 @@
+import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { Edit, SimpleForm, TextInput } from 'react-admin';
+import { Show, SimpleShowLayout, TextField } from 'react-admin';
 
 const uiSchema = {
     suite: {
@@ -27,20 +28,19 @@ const jsonSchema = {
     },
 };
 
-export const UserEdit = () => (
-    <Edit>
-        <SimpleForm>
-            <TextInput source="id" />
-            <TextInput source="name" />
-            <TextInput source="username" />
-            <TextInput source="email" />
-            <JsonSchemaInput
+export const UserShow = () => (
+    <Show>
+        <SimpleShowLayout>
+            <TextField source="id" />
+            <TextField source="name" />
+            <TextField source="username" />
+            <TextField source="email" />
+            <JsonSchemaField
                 schema={jsonSchema}
                 uiSchema={uiSchema}
                 source="address"
                 label="Address"
-                helperText="Fill the form"
             />
-        </SimpleForm>
-    </Edit>
+        </SimpleShowLayout>
+    </Show>
 );
