@@ -1,13 +1,13 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { Show, SimpleShowLayout, TextField } from 'react-admin';
 
 const uiSchema = {
+    // 'ui:title': 'address details',
     suite: {
         'ui:title': 'Primary address',
-        'ui:description': 'the address form',
     },
 };
+
 const jsonSchema = {
     type: 'object',
     required: ['street', 'city'],
@@ -39,7 +39,7 @@ export const UserShow = () => (
                 schema={jsonSchema}
                 uiSchema={uiSchema}
                 source="address"
-                label="Address"
+                label={false}
             />
         </SimpleShowLayout>
     </Show>

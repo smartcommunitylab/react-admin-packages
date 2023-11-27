@@ -13,14 +13,27 @@ import { Form } from '@rjsf/mui';
 import { get } from 'lodash';
 import { useRJSchema } from './utils';
 import BaseInputTemplate from '@rjsf/mui/lib/BaseInputTemplate';
+import { styled } from '@mui/material';
 
-//TODO add css or update template
-// .RaJsonSchemaField-Form .MuiGrid-root > .MuiGrid-item {
-//     padding-top: 0;
-//     margin-bottom: 0 !important;
-// }
+const ReadOnlyForm = styled(Form)(({ theme }) => ({
+    '& .MuiFormControl-root': {
+        marginTop: 0,
+        '& .MuiGrid-root > .MuiGrid-item': {
+            paddingTop: 0,
+            marginBottom: '0 !important',
+            '& .Mui-disabled': {
+                color: 'inherit',
+                '-webkit-text-fill-color': 'inherit',
+            },
+            '& .MuiFormLabel-colorPrimary.Mui-disabled': {
+                color: 'rgba(0, 0, 0, 0.6)',
+                marginBottom: '0.2em',
+            },
+        },
+    },
+}));
 
-//patch base template for custom field rendering
+//patch base input template for custom field rendering
 function ReadOnlyBaseFieldTemplate<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
@@ -29,6 +42,8 @@ function ReadOnlyBaseFieldTemplate<
     return BaseInputTemplate({
         ...props,
         variant: 'standard',
+        margin: 'dense',
+        InputLabelProps: { focused: true, shrink: true },
         InputProps: {
             readOnly: true,
             disableUnderline: true,
@@ -36,15 +51,10 @@ function ReadOnlyBaseFieldTemplate<
     });
 }
 
+//TODO add additional widgets for select,radio,checkbox...
+
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
-    const {
-        schema,
-        uiSchema = {},
-        label,
-        resource,
-        source,
-        forceReadOnly = false,
-    } = props;
+    const { schema, uiSchema = {}, label, resource, source } = props;
 
     const record = useRecordContext(props);
     const value = get(record, source);
@@ -64,7 +74,7 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
     }
 
     return (
-        <Form
+        <ReadOnlyForm
             tagName={'div'}
             schema={rjsSchema}
             uiSchema={ruiSchema}
@@ -73,12 +83,14 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
             omitExtraData={true}
             showErrorList={false}
             noValidate
-            readonly={forceReadOnly}
-            templates={{ BaseInputTemplate: ReadOnlyBaseFieldTemplate }}
+            readonly
+            templates={{
+                BaseInputTemplate: ReadOnlyBaseFieldTemplate,
+            }}
             className="RaJsonSchemaField-Form"
         >
             <></>
-        </Form>
+        </ReadOnlyForm>
     );
 };
 
@@ -87,7 +99,6 @@ export interface JsonSchemaFieldProps<
 > extends FieldProps<RecordType> {
     schema: RJSFSchema | object | string;
     uiSchema?: UiSchema | object | string;
-    forceReadOnly?: boolean;
 }
 
 export default JsonSchemaField;
