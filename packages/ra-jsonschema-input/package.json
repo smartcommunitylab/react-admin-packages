@@ -1,10 +1,16 @@
 {
     "name": "@dslab/ra-jsonschema-input",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": {
-        "name": "Nawaz Khurshid",
-        "email": "khurshid@fbk.eu"
+        "name": "Matteo Saloni",
+        "email": "msaloni@fbk.eu"
     },
+    "contributors": [
+        {
+            "name": "Nawaz Khurshid",
+            "email": "khurshid@fbk.eu"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/smartcommunitylab/react-admin-packages"

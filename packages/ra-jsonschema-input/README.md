@@ -93,6 +93,33 @@ Screenshot for the resulting form
 
 ![Form screenshot](assets/form-screenshot.png)
 
+The package also contains a _field_ dedicated to displaying values as read-only, via a customized version of the form.
+To use it in a _show_ view include it similarly to the input field.
+
+```javascript
+export const UserShow = () => (
+    <Show>
+        <SimpleShowLayout>
+            <TextField source="id" />
+            <TextField source="name" />
+            <TextField source="username" />
+            <TextField source="email" />
+            <JsonSchemaField
+                schema={jsonSchema}
+                uiSchema={uiSchema}
+                source="address"
+            />
+        </SimpleShowLayout>
+    </Show>
+);
+```
+
+Screenshot for the resulting form
+
+![Field screenshot](assets/field-screenshot.png)
+
+#### Additional resources
+
 For customization via uiSchema and detailed documentation follow the guidelines from _react-jsonschema-form_ (https://github.com/rjsf-team/react-jsonschema-form).
 
 ## Author
