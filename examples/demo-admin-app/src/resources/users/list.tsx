@@ -16,7 +16,7 @@ import {
 export const UserList = () => {
     return (
         <List exporter={yamlExporter}>
-            <Datagrid rowClick="edit">
+            <Datagrid rowClick="show">
                 <TextField source="id" />
                 <TextField source="name" />
                 <TextField source="username" />
