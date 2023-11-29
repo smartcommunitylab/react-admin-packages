@@ -1,5 +1,13 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { Show, SimpleShowLayout, TextField } from 'react-admin';
+import {
+    Button,
+    EditButton,
+    Show,
+    SimpleShowLayout,
+    TextField,
+    TopToolbar,
+} from 'react-admin';
+import { InspectButton } from '@dslab/ra-inspect-button';
 
 const uiSchema = {
     // 'ui:title': 'address details',
@@ -28,8 +36,20 @@ const jsonSchema = {
     },
 };
 
+const ShowActions = () => (
+    <TopToolbar>
+        <InspectButton
+            language="yaml"
+            showCopyButton
+            showLineNumbers
+            theme="light"
+        />
+        <EditButton />
+    </TopToolbar>
+);
+
 export const UserShow = () => (
-    <Show>
+    <Show actions={<ShowActions />}>
         <SimpleShowLayout>
             <TextField source="id" />
             <TextField source="name" />
