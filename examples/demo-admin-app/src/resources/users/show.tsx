@@ -6,8 +6,10 @@ import {
     SimpleShowLayout,
     TextField,
     TopToolbar,
+    useNotify,
 } from 'react-admin';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { CopyToClipboardButton } from '@dslab/ra-inspect-button';
 
 const uiSchema = {
     // 'ui:title': 'address details',
@@ -36,17 +38,29 @@ const jsonSchema = {
     },
 };
 
-const ShowActions = () => (
-    <TopToolbar>
-        <InspectButton
-            language="yaml"
-            showCopyButton
-            showLineNumbers
-            theme="light"
-        />
-        <EditButton />
-    </TopToolbar>
-);
+const ShowActions = () => {
+    const notify = useNotify();
+
+    const handleClick = e => {
+        notify('ra.message.success');
+    };
+
+    return (
+        <TopToolbar>
+            <InspectButton
+                language="yaml"
+                showCopyButton
+                showLineNumbers
+                theme="light"
+            />
+            <CopyToClipboardButton
+                value="example text"
+                onSuccess={handleClick}
+            />
+            <EditButton />
+        </TopToolbar>
+    );
+};
 
 export const UserShow = () => (
     <Show actions={<ShowActions />}>

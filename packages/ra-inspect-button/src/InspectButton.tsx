@@ -28,6 +28,7 @@ export const InspectButton = (props: InspectButtonProps) => {
         theme = 'dark',
         showLineNumbers = false,
         showCopyButton = true,
+        onCopyButtonSuccess,
         ...rest
     } = props;
     const translate = useTranslate();
@@ -85,6 +86,7 @@ export const InspectButton = (props: InspectButtonProps) => {
                             theme={theme}
                             showLineNumbers={showLineNumbers}
                             showCopyButton={showCopyButton}
+                            onCopyButtonSuccess={onCopyButtonSuccess}
                         />
                     )}
                 </DialogContent>
@@ -96,9 +98,24 @@ export const InspectButton = (props: InspectButtonProps) => {
 export type InspectButtonProps<RecordType extends RaRecord = any> =
     ButtonProps &
         Omit<SourceCodeBlockProps, 'code'> & {
+            /**
+             * (Optional) Custom icon for the button
+             */
             icon?: ReactElement;
+            /**
+             * (Optional) record object to use in place of the context
+             */
             record?: RecordType;
+            /**
+             * (Optional) resource identifier to use in place of the context
+             */
             resource?: string;
+            /**
+             * Display the modal window as full-width, filling the viewport. Defaults to `false`
+             */
             fullWidth?: boolean;
+            /**
+             * Max width for the modal window (breakpoint). Defaults to `md`
+             */
             maxWidth?: Breakpoint;
         };
