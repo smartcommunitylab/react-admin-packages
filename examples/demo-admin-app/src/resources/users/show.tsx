@@ -1,5 +1,15 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { Show, SimpleShowLayout, TextField } from 'react-admin';
+import {
+    Button,
+    EditButton,
+    Show,
+    SimpleShowLayout,
+    TextField,
+    TopToolbar,
+    useNotify,
+} from 'react-admin';
+import { InspectButton } from '@dslab/ra-inspect-button';
+import { CopyToClipboardButton } from '@dslab/ra-inspect-button';
 
 const uiSchema = {
     // 'ui:title': 'address details',
@@ -28,8 +38,32 @@ const jsonSchema = {
     },
 };
 
+const ShowActions = () => {
+    const notify = useNotify();
+
+    const handleClick = e => {
+        notify('ra.message.success');
+    };
+
+    return (
+        <TopToolbar>
+            <InspectButton
+                language="yaml"
+                showCopyButton
+                showLineNumbers
+                theme="light"
+            />
+            <CopyToClipboardButton
+                value="example text"
+                onSuccess={handleClick}
+            />
+            <EditButton />
+        </TopToolbar>
+    );
+};
+
 export const UserShow = () => (
-    <Show>
+    <Show actions={<ShowActions />}>
         <SimpleShowLayout>
             <TextField source="id" />
             <TextField source="name" />

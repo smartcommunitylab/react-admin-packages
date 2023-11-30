@@ -24,7 +24,8 @@
         "@dslab/ra-export-all-button": "*",
         "@dslab/ra-breadcrumb": "*",
         "@dslab/ra-export-yaml": "*",
-        "@dslab/ra-delete-dialog-button": "*"
+        "@dslab/ra-delete-dialog-button": "*",
+        "@dslab/ra-inspect-button": "*"
     },
     "devDependencies": {
         "@types/react": "^18.2.15",

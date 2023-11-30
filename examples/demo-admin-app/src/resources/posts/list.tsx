@@ -11,6 +11,7 @@ import { ExportAllButton } from '@dslab/ra-export-all-button';
 import yamlExporter from '@dslab/ra-export-yaml';
 import { yamlExport } from '@dslab/ra-export-yaml';
 import { downloadYaml } from '@dslab/ra-export-yaml';
+import { InspectButton } from '@dslab/ra-inspect-button';
 
 const exporter: Exporter = (
     data,
@@ -43,6 +44,7 @@ export const PostList = () => (
             <TextField source="id" />
             <TextField source="title" />
             <TextField source="body" />
+            <InspectButton showCopyButton={false} fullWidth />
         </Datagrid>
     </List>
 );
