@@ -12,8 +12,9 @@ import yamlExporter from '@dslab/ra-export-yaml';
 import { yamlExport } from '@dslab/ra-export-yaml';
 import { downloadYaml } from '@dslab/ra-export-yaml';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 
-const exporter: Exporter = (
+const listExporter: Exporter = (
     data,
     fetchRelatedRecords,
     dataProvider,
@@ -31,6 +32,27 @@ const exporter: Exporter = (
     });
 };
 
+const recordExporter: Exporter = (
+    data,
+    fetchRelatedRecords,
+    dataProvider,
+    resource
+) => {
+    fetchRelatedRecords(data, 'userId', 'users').then(users => {
+        const res = data.map(record => ({
+            ...record,
+            username: users[record.userId].username,
+            user: users[record.userId],
+        }));
+
+        //single record, list shoud contain 1 element
+        const r = res && res.length > 0 ? res[0] : null;
+        if (r) {
+            downloadYaml(toYaml(r, resource), `${resource}_${r.id}`);
+        }
+    });
+};
+
 const ListActions = () => (
     <TopToolbar>
         <ExportAllButton />
@@ -38,13 +60,14 @@ const ListActions = () => (
 );
 
 export const PostList = () => (
-    <List actions={<ListActions />} exporter={exporter}>
+    <List actions={<ListActions />} exporter={listExporter}>
         <Datagrid rowClick="edit">
             <ReferenceField source="userId" reference="users" />
             <TextField source="id" />
             <TextField source="title" />
             <TextField source="body" />
             <InspectButton showCopyButton={false} fullWidth />
+            <ExportRecordButton exporter={recordExporter} />
         </Datagrid>
     </List>
 );
