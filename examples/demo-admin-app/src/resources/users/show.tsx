@@ -10,6 +10,7 @@ import {
 } from 'react-admin';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { CopyToClipboardButton } from '@dslab/ra-inspect-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
 
 const uiSchema = {
     // 'ui:title': 'address details',
@@ -57,6 +58,7 @@ const ShowActions = () => {
                 value="example text"
                 onSuccess={handleClick}
             />
+            <ExportRecordButton language="yaml" />
             <EditButton />
         </TopToolbar>
     );
