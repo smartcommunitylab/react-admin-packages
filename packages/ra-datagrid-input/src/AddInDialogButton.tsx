@@ -177,6 +177,7 @@ const DialogBody = <RecordType extends RaRecord = any>(
                     title={<></>}
                 >
                     <Datagrid
+                        rowClick="toggleSelection"
                         bulkActionButtons={<></>}
                         sx={{
                             '& .RaDatagrid-headerCell': {
@@ -198,9 +199,6 @@ const DialogBody = <RecordType extends RaRecord = any>(
             </DialogContent>
 
             <DialogActions>
-                <MuiButton onClick={onClose} startIcon={<CancelIcon />}>
-                    {translate('ra.action.cancel')}
-                </MuiButton>
                 <MuiButton
                     onClick={onClickAddButtonWrapper}
                     startIcon={<AddCircleOutlineIcon />}

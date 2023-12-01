@@ -1,28 +1,24 @@
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import clsx from 'clsx';
 import React from 'react';
-import {
-    Button,
-    ButtonProps,
-    Identifier,
-    RaRecord,
-    useRecordContext,
-} from 'react-admin';
+import clsx from 'clsx';
+import { Button, Identifier, RaRecord, useRecordContext } from 'react-admin';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 export const RemoveButton = <RecordType extends RaRecord = any>(
     props: RemoveButtonProps
 ) => {
-    const { label = 'ra.action.remove', onButtonClick } = props;
+    const { onRemove } = props;
     const record = useRecordContext<RecordType>(props);
 
-    const onClick = (e: any) => {
-        onButtonClick([record.id]);
+    const handleClick = (e: any) => {
+        if (record) {
+            onRemove(record.id);
+        }
         e.stopPropagation();
     };
     return (
         <Button
-            label={label}
-            onClick={e => onClick(e)}
+            // label="ra.action.remove"
+            onClick={handleClick}
             className={clsx(RemoveButtonClasses.root)}
             color="error"
         >
@@ -32,9 +28,8 @@ export const RemoveButton = <RecordType extends RaRecord = any>(
 };
 
 export type RemoveButtonProps = {
-    onButtonClick: (record: Identifier[]) => void;
-    label?: string;
-} & ButtonProps;
+    onRemove: (record: Identifier) => void;
+};
 
 const PREFIX = 'RaRemoveButton';
 

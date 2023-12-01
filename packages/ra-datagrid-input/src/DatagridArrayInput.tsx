@@ -24,8 +24,8 @@ import {
 import { BulkRemoveButton } from './BulkRemoveButton';
 import { RemoveButton } from './RemoveButton';
 
-export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
-    props: DatagridInputProps<RecordType>
+export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
+    props: DatagridArrayInputProps<RecordType>
 ) => {
     const {
         children,
@@ -57,7 +57,7 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
 
     const [data, setData] = useState<RecordType[] | undefined>(undefined);
     const [selectedIds, { select, toggle, clearSelection, unselect }] =
-        useRecordSelection<RecordType>(resource + '-' + source);
+        useRecordSelection<RecordType>(`${resource}-${source}`);
 
     const { field, isRequired } = useInput({
         source,
@@ -82,6 +82,7 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
         onUnselectItems: clearSelection,
     };
 
+    //TODO refactor to handle only initial set: manipulating the local data should happen in the component
     useEffect(() => {
         if (selectedChoices) {
             setData(selectedChoices);
@@ -105,7 +106,7 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
         }
     }, [selectedChoices]);
 
-    const handleRemoveButtonClick = useCallback(
+    const handleBulkRemoveButtonClick = useCallback(
         (selectedIds: Identifier[]) => {
             const array = data
                 ? data.filter(obj => !selectedIds.includes(obj.id))
@@ -113,7 +114,15 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
 
             field.onChange(array.map(obj => obj.id));
         },
-        [data, field]
+        [field]
+    );
+
+    const handleRemoveButtonClick = useCallback(
+        (selectedId: Identifier) => {
+            const array = data ? data.filter(obj => selectedId !== obj.id) : [];
+            field.onChange(array.map(obj => obj.id));
+        },
+        [field]
     );
 
     const handleAddButtonClick = useCallback(
@@ -127,7 +136,16 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
 
             field.onChange(array.map(obj => obj.id));
         },
-        [data, field]
+        [field]
+    );
+
+    // build a default representation with proper headers
+    const defaultChildren = (
+        <DefaultRepresentation
+            label={resource}
+            source={resource}
+            sortable={false}
+        />
     );
 
     return (
@@ -149,9 +167,7 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
                         dialogFilter={dialogFilter}
                         dialogFilterDefaultValues={dialogFilterDefaultValues}
                         dialogQueryOptions={dialogQueryOptions}
-                        dialogChildren={
-                            dialogChildren ?? <RecordRepresentation />
-                        }
+                        dialogChildren={dialogChildren ?? defaultChildren}
                     />
                 </TopToolbar>
 
@@ -160,14 +176,12 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
                         <Datagrid
                             bulkActionButtons={
                                 <BulkRemoveButton
-                                    onButtonClick={handleRemoveButtonClick}
+                                    onRemove={handleBulkRemoveButtonClick}
                                 />
                             }
                         >
-                            {children ?? <RecordRepresentation />}
-                            <RemoveButton
-                                onButtonClick={handleRemoveButtonClick}
-                            />
+                            {children ?? defaultChildren}
+                            <RemoveButton onRemove={handleRemoveButtonClick} />
                         </Datagrid>
 
                         {data &&
@@ -182,10 +196,20 @@ export const DatagridInput = <RecordType extends RaRecord = RaRecord>(
     );
 };
 
-export type DatagridInputProps<RecordType extends RaRecord = any> =
+export type DatagridArrayInputProps<RecordType extends RaRecord = any> =
     OpenAddInDialogButtonProps<RecordType> &
         Omit<CommonInputProps, 'source'> & {
             children?: ReactNode;
             source?: string;
             sort?: SortPayload;
         };
+
+const DefaultRepresentation = (props: {
+    label: string;
+    source: string;
+    sortable: boolean;
+}) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { label, source, sortable } = props;
+    return <RecordRepresentation />;
+};

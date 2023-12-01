@@ -1,19 +1,21 @@
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import clsx from 'clsx';
 import React from 'react';
-import { BulkActionProps, Button, ButtonProps, Identifier } from 'react-admin';
+import clsx from 'clsx';
+import { BulkActionProps, Button, Identifier } from 'react-admin';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 export const BulkRemoveButton = (props: BulkRemoveButtonProps) => {
-    const { label = 'ra.action.remove', onButtonClick, selectedIds } = props;
+    const { onRemove, selectedIds } = props;
 
-    const onClick = (e: any) => {
-        onButtonClick(selectedIds ? selectedIds : []);
+    const handleClick = (e: any) => {
+        if (selectedIds) {
+            onRemove(selectedIds);
+        }
         e.stopPropagation();
     };
     return (
         <Button
-            label={label}
-            onClick={e => onClick(e)}
+            label="ra.action.remove"
+            onClick={handleClick}
             className={clsx(BulkRemoveButtonClasses.root)}
             color="error"
         >
@@ -23,10 +25,8 @@ export const BulkRemoveButton = (props: BulkRemoveButtonProps) => {
 };
 
 export type BulkRemoveButtonProps = {
-    onButtonClick: (selectedIds: Identifier[]) => void;
-    label?: string;
-} & ButtonProps &
-    BulkActionProps;
+    onRemove: (selectedIds: Identifier[]) => void;
+} & BulkActionProps;
 
 const PREFIX = 'RaBulkRemoveButton';
 
