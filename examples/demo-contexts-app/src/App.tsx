@@ -30,6 +30,7 @@ import {
 } from './resources/organizations';
 import { RootSelectorButton } from '@dslab/ra-root-selector';
 import dataProvider from './dataProvider';
+import { GroupEdit, GroupList } from './resources/groups';
 
 const myDataProvider = dataProvider('http://localhost:3000');
 
@@ -53,7 +54,14 @@ const App = () => {
                 layout={MyLayout}
                 // basename={basePath}
             >
-                <Resource name="users" list={UserList} show={ShowGuesser} />
+                <Resource
+                    name="users"
+                    list={UserList}
+                    recordRepresentation="name"
+                    show={ShowGuesser}
+                />
+                <Resource name="groups" list={GroupList} edit={GroupEdit} />
+
                 <Resource
                     name="organizations"
                     list={OrganizationSelectorList}
