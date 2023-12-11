@@ -181,7 +181,17 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
                             }
                         >
                             {children ?? defaultChildren}
-                            <RemoveButton onRemove={handleRemoveButtonClick} />
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'end',
+                                }}
+                            >
+                                <RemoveButton
+                                    onRemove={handleRemoveButtonClick}
+                                />
+                            </div>
                         </Datagrid>
 
                         {data &&
