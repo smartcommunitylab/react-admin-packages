@@ -1,5 +1,6 @@
 import { DatagridArrayInput } from '@dslab/ra-datagrid-input';
 import {
+    Create,
     Edit,
     NumberInput,
     ReferenceArrayInput,
@@ -11,10 +12,10 @@ import {
 
 const dialogFilters = [<TextInput label="name" source="name" />];
 
-export const GroupEdit = () => (
-    <Edit>
+export const GroupCreate = () => (
+    <Create>
         <SimpleForm>
-            <TextInput source="id" disabled />
+            <TextInput source="id" />
             <NumberInput source="organization" />
             <TextInput source="name" />
             <ReferenceArrayInput reference="users" source="users">
@@ -23,5 +24,5 @@ export const GroupEdit = () => (
                 </DatagridArrayInput>
             </ReferenceArrayInput>
         </SimpleForm>
-    </Edit>
+    </Create>
 );

@@ -1,4 +1,10 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, {
+    ReactNode,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import {
     CommonInputProps,
     Datagrid,
@@ -55,9 +61,23 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
         source: sourceProp,
     });
 
+    const isFirstRender = useRef(true);
     const [data, setData] = useState<RecordType[] | undefined>(undefined);
     const [selectedIds, { select, toggle, clearSelection, unselect }] =
         useRecordSelection<RecordType>(`${resource}-${source}`);
+
+    useEffect(() => {
+        if (
+            isFirstRender.current &&
+            !isLoading &&
+            !isFetching &&
+            selectedChoices
+        ) {
+            isFirstRender.current = false;
+            setData(selectedChoices);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedChoices]);
 
     const { field, isRequired } = useInput({
         source,
@@ -82,20 +102,24 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
         onUnselectItems: clearSelection,
     };
 
-    //TODO refactor to handle only initial set: manipulating the local data should happen in the component
-    useEffect(() => {
-        if (selectedChoices) {
-            setData(selectedChoices);
+    const handleBulkRemoveButtonClick = useCallback(
+        (selectedIds: Identifier[]) => {
+            const tempData = data
+                ? data.filter(record => !selectedIds.includes(record.id))
+                : [];
+
+            setData(tempData);
+            field.onChange(tempData.map(record => record.id));
 
             //find the IDs of rows that have been removed and unselect them
-            const rowIdsToUnselect = selectedIds.filter(
-                id => !selectedChoices.some(obj => obj.id === id)
-            );
-            unselect(rowIdsToUnselect);
+            // const rowIdsToUnselect = selectedIds.filter(
+            //     id => !selectedChoices.some(obj => obj.id === id)
+            // );
+            unselect(selectedIds);
 
             //move to the first page if the current page is empty
             const numberOfPages = Math.ceil(
-                selectedChoices.length / overriddenListProps.perPage
+                tempData.length / overriddenListProps.perPage
             );
             if (
                 overriddenListProps.page !== 1 &&
@@ -103,49 +127,64 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
             ) {
                 overriddenListProps.setPage(1);
             }
-        }
-    }, [selectedChoices]);
-
-    const handleBulkRemoveButtonClick = useCallback(
-        (selectedIds: Identifier[]) => {
-            const array = data
-                ? data.filter(obj => !selectedIds.includes(obj.id))
-                : [];
-
-            field.onChange(array.map(obj => obj.id));
         },
-        [field]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [field, setData]
     );
 
     const handleRemoveButtonClick = useCallback(
         (selectedId: Identifier) => {
-            const array = data ? data.filter(obj => selectedId !== obj.id) : [];
-            field.onChange(array.map(obj => obj.id));
+            const tempData = data
+                ? data.filter(record => selectedId !== record.id)
+                : [];
+            setData(tempData);
+
+            field.onChange(tempData.map(record => record.id));
+
+            //move to the first page if the current page is empty
+            const numberOfPages = Math.ceil(
+                tempData.length / overriddenListProps.perPage
+            );
+            if (
+                overriddenListProps.page !== 1 &&
+                overriddenListProps.page > numberOfPages
+            ) {
+                overriddenListProps.setPage(1);
+            }
         },
-        [field]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [field, setData]
     );
 
     const handleAddButtonClick = useCallback(
         (records: RecordType[]) => {
             //filter records to remove duplicates
             const sanitizedRecords = records.filter(
-                obj => data && !data.some(o => o.id === obj.id)
+                record => data && !data.some(r => r.id === record.id)
             );
 
-            const array = data ? [...data, ...sanitizedRecords] : [...records];
+            const tempData = data
+                ? [...data, ...sanitizedRecords]
+                : [...records];
+            setData(tempData);
 
-            field.onChange(array.map(obj => obj.id));
+            field.onChange(tempData.map(record => record.id));
+
+            //move to the last page if the current page is not the last
+            const numberOfPages = Math.ceil(
+                tempData.length / overriddenListProps.perPage
+            );
+            if (overriddenListProps.page !== numberOfPages) {
+                overriddenListProps.setPage(numberOfPages);
+            }
         },
-        [field]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [field, setData]
     );
 
     // build a default representation with proper headers
     const defaultChildren = (
-        <DefaultRepresentation
-            label={resource}
-            source={resource}
-            sortable={false}
-        />
+        <DefaultRepresentation label={''} source={resource} sortable={false} />
     );
 
     return (
@@ -215,7 +254,7 @@ export type DatagridArrayInputProps<RecordType extends RaRecord = any> =
         };
 
 const DefaultRepresentation = (props: {
-    label: string;
+    label?: string;
     source: string;
     sortable: boolean;
 }) => {
