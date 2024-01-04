@@ -141,6 +141,10 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
 
             field.onChange(tempData.map(record => record.id));
 
+            if (selectedIds.includes(selectedId)) {
+                unselect([selectedId]);
+            }
+
             //move to the first page if the current page is empty
             const numberOfPages = Math.ceil(
                 tempData.length / overriddenListProps.perPage
@@ -182,6 +186,13 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
         [field, setData]
     );
 
+    const isDialogRowSelectable = useCallback(
+        (record: RecordType) => {
+            return !data || !data.some(r => r.id === record.id);
+        },
+        [data]
+    );
+
     // build a default representation with proper headers
     const defaultChildren = (
         <DefaultRepresentation label={''} source={resource} sortable={false} />
@@ -199,6 +210,7 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
                 <TopToolbar>
                     <AddInDialogButton
                         onClickAddButton={handleAddButtonClick}
+                        isDialogRowSelectable={isDialogRowSelectable}
                         sort={sort}
                         resource={resource}
                         dialogTitle={dialogTitle}
@@ -221,7 +233,7 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
                         >
                             {children ?? defaultChildren}
 
-                            <div
+                            <span
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'end',
@@ -230,7 +242,7 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
                                 <RemoveButton
                                     onRemove={handleRemoveButtonClick}
                                 />
-                            </div>
+                            </span>
                         </Datagrid>
 
                         {data &&
