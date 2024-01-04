@@ -127,7 +127,13 @@ export const AddInDialogButton = <RecordType extends RaRecord = any>(
 const DialogBody = <RecordType extends RaRecord = any>(
     props: DialogBodyProps<RecordType>
 ) => {
-    const { dialogChildren, dialogFilters, onClickAddButton, onClose } = props;
+    const {
+        dialogChildren,
+        dialogFilters,
+        onClickAddButton,
+        onClose,
+        isDialogRowSelectable,
+    } = props;
     const { data, selectedIds } = useListContext<RecordType>();
     const [selectedRecords, setSelectedRecords] = useState<RecordType[]>([]);
     const translate = useTranslate();
@@ -188,6 +194,7 @@ const DialogBody = <RecordType extends RaRecord = any>(
                                 },
                             },
                         }}
+                        isRowSelectable={isDialogRowSelectable}
                     >
                         {Array.isArray(dialogChildren) &&
                             dialogChildren.map((child, index) =>
@@ -213,6 +220,7 @@ const DialogBody = <RecordType extends RaRecord = any>(
 
 export type DialogBodyProps<RecordType extends RaRecord = any> = {
     onClickAddButton: (records: RecordType[]) => void;
+    isDialogRowSelectable: (record: RecordType) => boolean;
     dialogChildren: ReactNode;
     onClose: () => void;
     dialogFilters?: ReactElement | ReactElement[];
@@ -221,6 +229,7 @@ export type DialogBodyProps<RecordType extends RaRecord = any> = {
 export type AddInDialogButtonProps<RecordType extends RaRecord = any> =
     OpenAddInDialogButtonProps<RecordType> & {
         onClickAddButton: (records: RecordType[]) => void;
+        isDialogRowSelectable: (record: RecordType) => boolean;
         resource?: string;
         sort?: SortPayload;
     };
