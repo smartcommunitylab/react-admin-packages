@@ -39,7 +39,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const notify = useNotify();
-    const { onSuccess } = mutationOptions;
+    const { onSuccess, onError } = mutationOptions;
 
     const defaultDialogTitle = translate('ra.action.create_item', {
         item: getResourceLabel(resource, 1),
@@ -114,6 +114,31 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                                     messageArgs: { smart_count: 1 },
                                 });
                             },
+                            onError: (error, variables, context) => {
+                                handleClose();
+
+                                if (onError) {
+                                    return onError(error, variables, context);
+                                }
+
+                                notify(
+                                    typeof error === 'string'
+                                        ? error
+                                        : error.message ||
+                                              'ra.notification.http_error',
+                                    {
+                                        type: 'error',
+                                        messageArgs: {
+                                            _:
+                                                typeof error === 'string'
+                                                    ? error
+                                                    : error && error.message
+                                                    ? error.message
+                                                    : undefined,
+                                        },
+                                    }
+                                );
+                            },
                         }}
                     >
                         {children}
@@ -138,6 +163,7 @@ export type CreateInDialogButtonProps<
     | 'redirect'
     | 'title'
     | 'sx'
+    | 'className'
 > & {
     children: ReactNode;
     dialogTitle?: string;
