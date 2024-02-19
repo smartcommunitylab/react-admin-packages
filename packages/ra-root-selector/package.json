@@ -1,10 +1,16 @@
 {
     "name": "@dslab/ra-root-selector",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": {
         "name": "Matteo Chini",
         "email": "m.chini@fbk.eu"
     },
+    "contributors": [
+        {
+            "name": "Matteo Saloni",
+            "email": "msaloni@fbk.eu"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/smartcommunitylab/react-admin-packages"

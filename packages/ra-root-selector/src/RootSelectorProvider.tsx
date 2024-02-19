@@ -21,7 +21,7 @@ export const RootSelector = (props: RootSelectorParams) => {
     );
 };
 
-const AppWrapper = (props: RootSelectorParams) => {
+export const RootSelectorAppWrapper = (props: RootSelectorParams) => {
     const { resource, basename = '', separator = '-', children } = props;
     const [selected, setSelected] = useState<string>();
     const { context } = useParams();
@@ -65,7 +65,7 @@ const AppWrapper = (props: RootSelectorParams) => {
     );
 };
 
-const InitialWrapper = (props: RootSelectorParams) => {
+export const RootSelectorInitialWrapper = (props: RootSelectorParams) => {
     const {
         resource,
         basename = '',
@@ -122,10 +122,14 @@ const InitialWrapper = (props: RootSelectorParams) => {
     );
 };
 
-const RootSelectorContextProvider = (props: RootSelectorParams) => {
-    const { separator = '-' } = props;
-    const contextApp = <AppWrapper {...props} />;
-    const initialApp = <InitialWrapper {...props} />;
+export const RootSelectorContextProvider = (
+    props: RootSelectorParams & { initialApp?: ReactElement }
+) => {
+    const {
+        separator = '-',
+        initialApp = <RootSelectorInitialWrapper {...props} />,
+    } = props;
+    const contextApp = <RootSelectorAppWrapper {...props} />;
 
     return (
         <Routes>
