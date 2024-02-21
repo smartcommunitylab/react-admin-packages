@@ -1,5 +1,5 @@
-import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import {
     Breakpoint,
     Dialog,
@@ -11,45 +11,57 @@ import {
 import React, { ReactNode, useState } from 'react';
 import {
     Button,
-    Create,
-    CreateBase,
-    CreateProps,
-    Identifier,
+    Edit,
+    EditProps,
     RaRecord,
+    useGetRecordRepresentation,
     useGetResourceLabel,
     useNotify,
+    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
 
-export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
+export const EditInDialogButton = (props: EditInDialogButtonProps) => {
     const contextResource = useResourceContext();
+    const record = useRecordContext();
 
     const {
         children,
-        title: dialogTitleProp,
+        dialogTitle: dialogTitleProp,
         maxWidth = 'sm',
         fullWidth = false,
         resource = contextResource,
-        label = 'ra.action.create',
+        label = 'ra.action.edit',
         mutationOptions = {},
-        sx,
+        queryOptions = {},
+        id = record.id,
+        mutationMode = 'undoable',
         ...rest
     } = props;
 
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
+    const getRecordRepresentation = useGetRecordRepresentation(resource);
     const notify = useNotify();
-    const { onSuccess, onError } = mutationOptions;
+    const { onSuccess, onError: mutationOptionsOnError } = mutationOptions;
+    const { onError: queryOptionsOnError } = queryOptions;
 
-    const defaultDialogTitle = translate('ra.action.create_item', {
-        item: getResourceLabel(resource, 1),
+    const recordRepresentation = getRecordRepresentation(record);
+    const defaultDialogTitle = translate('ra.page.edit', {
+        name: getResourceLabel(resource, 1),
+        id,
+        record,
+        recordRepresentation:
+            typeof recordRepresentation === 'string'
+                ? recordRepresentation
+                : '',
     });
-    const dialogTitle =
-        dialogTitleProp && typeof dialogTitleProp === 'string'
-            ? translate(dialogTitleProp, { _: dialogTitleProp })
-            : defaultDialogTitle;
+
+    const dialogTitle = dialogTitleProp
+        ? translate(dialogTitleProp, { _: dialogTitleProp })
+        : defaultDialogTitle;
 
     const handleOpen = () => {
         setOpen(true);
@@ -64,31 +76,30 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
             <Button
                 label={label}
                 onClick={handleOpen}
-                className={CreateInDialogButtonClasses.button}
+                className={EditInDialogButtonClasses.button}
             >
-                <AddIcon />
+                <EditIcon />
             </Button>
 
-            <AddDialog
+            <EditDialog
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
                 onClose={handleClose}
                 aria-labelledby="dialog-title"
                 open={open}
-                className={CreateInDialogButtonClasses.dialog}
+                className={EditInDialogButtonClasses.dialog}
                 scroll="paper"
             >
-                {/* //edit base e edit view */}
-                <div className={CreateInDialogButtonClasses.header}>
+                <div className={EditInDialogButtonClasses.header}>
                     <DialogTitle
                         id="dialog-title"
-                        className={CreateInDialogButtonClasses.title}
+                        className={EditInDialogButtonClasses.title}
                     >
                         {dialogTitle}
                     </DialogTitle>
 
                     <IconButton
-                        className={CreateInDialogButtonClasses.closeButton}
+                        className={EditInDialogButtonClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleClose}
@@ -99,12 +110,27 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                 </div>
 
                 <DialogContent sx={{ padding: 0 }}>
-                    <Create
-                        //unico pacchetto con edit e show: DialogForms
+                    {/* scomporre in editbase e editview */}
+                    <Edit
                         title={<></>}
                         resource={resource}
                         redirect={false}
-                        {...rest}
+                        id={id}
+                        mutationMode={mutationMode}
+                        queryOptions={{
+                            ...queryOptions,
+                            onError: error => {
+                                handleClose();
+
+                                if (queryOptionsOnError) {
+                                    return queryOptionsOnError(error);
+                                }
+
+                                notify('ra.notification.item_doesnt_exist', {
+                                    type: 'error',
+                                });
+                            },
+                        }}
                         mutationOptions={{
                             ...mutationOptions,
                             onSuccess: (data, variables, context) => {
@@ -114,16 +140,28 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                                     return onSuccess(data, variables, context);
                                 }
 
-                                notify('ra.notification.created', {
+                                /**
+                                 * If the onSuccess function is not provided, the notification is displayed by default, following the behavior of the useEditController hook.
+                                 * If the developer provides the onSuccess function, it is their responsibility to handle the notification display.
+                                 *
+                                 * It also important to rebember that, when the mutation mode is set to "undoable", it is crucial to explicitly set the undoable option of the notification to true.
+                                 * It plays a key role in initiating the submission of data once the notification disappears, typically after a 5-second interval.
+                                 */
+                                notify('ra.notification.updated', {
                                     type: 'info',
                                     messageArgs: { smart_count: 1 },
+                                    undoable: mutationMode === 'undoable',
                                 });
                             },
                             onError: (error, variables, context) => {
                                 handleClose();
 
-                                if (onError) {
-                                    return onError(error, variables, context);
+                                if (mutationOptionsOnError) {
+                                    return mutationOptionsOnError(
+                                        error,
+                                        variables,
+                                        context
+                                    );
                                 }
 
                                 notify(
@@ -145,40 +183,39 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                                 );
                             },
                         }}
+                        {...rest}
                     >
                         {children}
-                    </Create>
+                    </Edit>
                 </DialogContent>
-            </AddDialog>
+            </EditDialog>
         </>
     );
 };
 
-export type CreateInDialogButtonProps<
-    RecordType extends Omit<RaRecord, 'id'> = any,
-    MutationOptionsError = unknown,
-    ResultRecordType extends RaRecord = RecordType & { id: Identifier }
+export type EditInDialogButtonProps<
+    RecordType extends RaRecord = RaRecord,
+    MutationOptionsError = unknown
 > = Omit<
-    CreateProps<RecordType, MutationOptionsError, ResultRecordType>,
+    EditProps<RecordType, MutationOptionsError>,
     | 'actions'
     | 'aside'
     | 'component'
-    | 'hasEdit'
-    | 'hasShow'
     | 'redirect'
+    | 'title'
+    | 'sx'
     | 'className'
 > & {
     children: ReactNode;
-    //usare title di Create
-    //usare sx di Create per passarlo a addDialog
+    dialogTitle?: string;
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;
     label?: string;
 };
 
-const PREFIX = 'RaCreateInDialogButton';
+const PREFIX = 'RaEditInDialogButton';
 
-export const CreateInDialogButtonClasses = {
+export const EditInDialogButtonClasses = {
     button: `${PREFIX}-button`,
     dialog: `${PREFIX}-dialog`,
     header: `${PREFIX}-header`,
@@ -186,19 +223,19 @@ export const CreateInDialogButtonClasses = {
     closeButton: `${PREFIX}-close-button`,
 };
 
-const AddDialog = styled(Dialog, {
+const EditDialog = styled(Dialog, {
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme }) => ({
-    [`& .${CreateInDialogButtonClasses.title}`]: {
+    [`& .${EditInDialogButtonClasses.title}`]: {
         padding: theme.spacing(0),
     },
-    [`& .${CreateInDialogButtonClasses.header}`]: {
+    [`& .${EditInDialogButtonClasses.header}`]: {
         padding: theme.spacing(2, 2),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
+    [`& .${EditInDialogButtonClasses.closeButton}`]: {
         height: 'fit-content',
     },
 }));

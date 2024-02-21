@@ -72,6 +72,59 @@ The component accepts the following props:
 
 ## React Admin Edit in Dialog Button
 
+This React Admin component renders a button opening an `<Edit>` view inside a dialog, hence allowing to edit a record without leaving the current view.
+
+### Usage
+
+```javascript
+import { EditInDialogButton } from '@dslab/ra-dialog-crud';
+import {
+    Datagrid,
+    EmailField,
+    List,
+    SimpleForm,
+    TextField,
+    TextInput,
+} from 'react-admin';
+
+export const UserList = () => (
+    <List>
+        <Datagrid>
+            <TextField source="first_name" />
+            <TextField source="last_name" />
+            <EmailField source="email" />
+
+            <EditInDialogButton>
+                <SimpleForm>
+                    <TextInput source="first_name" />
+                    <TextInput source="last_name" />
+                    <TextInput source="email" />
+                </SimpleForm>
+            </EditInDialogButton>
+        </Datagrid>
+    </List>
+);
+```
+
+#### Props
+
+The component accepts the following props:
+
+| Prop                    | Required | Type                 | Default                                   | Description                                                                                                                                                                              |
+| ----------------------- | -------- | -------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `children`              | Required | `ReactNode`          |                                           | The content of the dialog                                                                                                                                                                |
+| `dialogTitle`           | Optional | `string`             | resource's name + record's representation | The title of the dialog                                                                                                                                                                  |
+| `maxWidth`              | Optional | `string`             | sm                                        | The max width of the dialog                                                                                                                                                              |
+| `fullWidth`             | Optional | `boolean`            | `false`                                   | If `true`, the dialog stretches to the full width of the screen                                                                                                                          |
+| `resource`              | Optional | `string`             |                                           | The resource name                                                                                                                                                                        |
+| `label`                 | Optional | `string`             |                                           | Allows to override the default button label. I18N is supported                                                                                                                           |
+| `queryOptions`          | Optional | `object`             |                                           | Options for the `dataProvider.getOne()` call                                                                                                                                             |
+| `mutationOptions`       | Optional | `object`             |                                           | Options for the `dataProvider.update()` call                                                                                                                                             |
+| `mutationMode`          | Optional | `string`             | `undoable`                                | The mode that determines when the side effects (redirection, notifications, etc.) are executed. React-admin offers three modes for mutations: `pessimistic`, `optimistic` and `undoable` |
+| `id`                    | Optional | `string` or `number` |                                           | The record id. If not provided, it will be deduced from the record context                                                                                                               |
+| `disableAuthentication` | Optional | `boolean`            |                                           | Disable the authentication check                                                                                                                                                         |
+| `transform`             | Optional | `function`           |                                           | Allows to transform a record after the user has submitted the form but before the record is passed to `dataProvider.update()`                                                            |
+
 ## Author
 
 **SmartCommunityLab**
