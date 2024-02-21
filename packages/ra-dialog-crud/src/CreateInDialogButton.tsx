@@ -8,26 +8,45 @@ import {
     IconButton,
     styled,
 } from '@mui/material';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactElement, ReactNode, useState } from 'react';
 import {
     Button,
-    Create,
     CreateBase,
     CreateProps,
+    CreateView,
     Identifier,
     RaRecord,
-    useGetResourceLabel,
+    useCreateContext,
     useNotify,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+
+const Title = (props: TitleProps) => {
+    const { propsTitle: title } = props;
+    const translate = useTranslate();
+    const { defaultTitle } = useCreateContext();
+
+    return (
+        <DialogTitle
+            id="dialog-title"
+            className={CreateInDialogButtonClasses.title}
+        >
+            {!title
+                ? defaultTitle
+                : typeof title === 'string'
+                ? translate(title, { _: title })
+                : title}
+        </DialogTitle>
+    );
+};
 
 export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
     const contextResource = useResourceContext();
 
     const {
         children,
-        title: dialogTitleProp,
+        title: propsTitle,
         maxWidth = 'sm',
         fullWidth = false,
         resource = contextResource,
@@ -39,17 +58,8 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
 
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
-    const getResourceLabel = useGetResourceLabel();
     const notify = useNotify();
     const { onSuccess, onError } = mutationOptions;
-
-    const defaultDialogTitle = translate('ra.action.create_item', {
-        item: getResourceLabel(resource, 1),
-    });
-    const dialogTitle =
-        dialogTitleProp && typeof dialogTitleProp === 'string'
-            ? translate(dialogTitleProp, { _: dialogTitleProp })
-            : defaultDialogTitle;
 
     const handleOpen = () => {
         setOpen(true);
@@ -77,78 +87,71 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                 open={open}
                 className={CreateInDialogButtonClasses.dialog}
                 scroll="paper"
+                sx={sx}
             >
-                {/* //edit base e edit view */}
-                <div className={CreateInDialogButtonClasses.header}>
-                    <DialogTitle
-                        id="dialog-title"
-                        className={CreateInDialogButtonClasses.title}
-                    >
-                        {dialogTitle}
-                    </DialogTitle>
+                <CreateBase
+                    resource={resource}
+                    redirect={false}
+                    {...rest}
+                    mutationOptions={{
+                        ...mutationOptions,
+                        onSuccess: (data, variables, context) => {
+                            handleClose();
 
-                    <IconButton
-                        className={CreateInDialogButtonClasses.closeButton}
-                        aria-label={translate('ra.action.close')}
-                        title={translate('ra.action.close')}
-                        onClick={handleClose}
-                        size="small"
-                    >
-                        <CloseIcon fontSize="small" />
-                    </IconButton>
-                </div>
+                            if (onSuccess) {
+                                return onSuccess(data, variables, context);
+                            }
 
-                <DialogContent sx={{ padding: 0 }}>
-                    <Create
-                        //unico pacchetto con edit e show: DialogForms
-                        title={<></>}
-                        resource={resource}
-                        redirect={false}
-                        {...rest}
-                        mutationOptions={{
-                            ...mutationOptions,
-                            onSuccess: (data, variables, context) => {
-                                handleClose();
+                            notify('ra.notification.created', {
+                                type: 'info',
+                                messageArgs: { smart_count: 1 },
+                            });
+                        },
+                        onError: (error, variables, context) => {
+                            handleClose();
 
-                                if (onSuccess) {
-                                    return onSuccess(data, variables, context);
+                            if (onError) {
+                                return onError(error, variables, context);
+                            }
+
+                            notify(
+                                typeof error === 'string'
+                                    ? error
+                                    : error.message ||
+                                          'ra.notification.http_error',
+                                {
+                                    type: 'error',
+                                    messageArgs: {
+                                        _:
+                                            typeof error === 'string'
+                                                ? error
+                                                : error && error.message
+                                                ? error.message
+                                                : undefined,
+                                    },
                                 }
+                            );
+                        },
+                    }}
+                >
+                    <div className={CreateInDialogButtonClasses.header}>
+                        <Title propsTitle={propsTitle} />
 
-                                notify('ra.notification.created', {
-                                    type: 'info',
-                                    messageArgs: { smart_count: 1 },
-                                });
-                            },
-                            onError: (error, variables, context) => {
-                                handleClose();
+                        <IconButton
+                            className={CreateInDialogButtonClasses.closeButton}
+                            aria-label={translate('ra.action.close')}
+                            title={translate('ra.action.close')}
+                            onClick={handleClose}
+                            size="small"
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </div>
 
-                                if (onError) {
-                                    return onError(error, variables, context);
-                                }
-
-                                notify(
-                                    typeof error === 'string'
-                                        ? error
-                                        : error.message ||
-                                              'ra.notification.http_error',
-                                    {
-                                        type: 'error',
-                                        messageArgs: {
-                                            _:
-                                                typeof error === 'string'
-                                                    ? error
-                                                    : error && error.message
-                                                    ? error.message
-                                                    : undefined,
-                                        },
-                                    }
-                                );
-                            },
-                        }}
-                    >
-                        {children}
-                    </Create>
-                </DialogContent>
+                    <DialogContent sx={{ padding: 0 }}>
+                        <CreateView title={<></>}>{children}</CreateView>
+                    </DialogContent>
+                </CreateBase>
             </AddDialog>
         </>
     );
@@ -169,11 +172,13 @@ export type CreateInDialogButtonProps<
     | 'className'
 > & {
     children: ReactNode;
-    //usare title di Create
-    //usare sx di Create per passarlo a addDialog
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;
     label?: string;
+};
+
+type TitleProps = {
+    propsTitle: string | ReactElement;
 };
 
 const PREFIX = 'RaCreateInDialogButton';

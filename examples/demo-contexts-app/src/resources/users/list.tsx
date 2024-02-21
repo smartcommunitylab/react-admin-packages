@@ -1,4 +1,7 @@
-import { CreateInDialogButton, EditInDialogButton } from '@dslab/ra-dialog-crud';
+import {
+    CreateInDialogButton,
+    EditInDialogButton,
+} from '@dslab/ra-dialog-crud';
 import {
     Datagrid,
     EmailField,
@@ -64,7 +67,7 @@ export const UserList = () => {
             empty={<EmptyComponent />}
             sx={{ justifyContent: 'center' }}
         >
-            <Datagrid rowClick="edit">
+            <Datagrid>
                 <TextField source="id" />
                 {/* <NumberField source="organization" /> */}
                 <ReferenceField source="organization" reference="organizations">
@@ -74,7 +77,7 @@ export const UserList = () => {
                 <TextField source="name" />
                 <TextField source="surname" />
                 <EmailField source="email" />
-                
+
                 <EditInDialogButton
                     fullWidth={true}
                     maxWidth="sm"
@@ -91,4 +94,3 @@ export const UserList = () => {
         </List>
     );
 };
-

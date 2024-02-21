@@ -8,19 +8,38 @@ import {
     IconButton,
     styled,
 } from '@mui/material';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactElement, ReactNode, useState } from 'react';
 import {
     Button,
-    Edit,
+    EditBase,
     EditProps,
+    EditView,
     RaRecord,
-    useGetRecordRepresentation,
-    useGetResourceLabel,
+    useEditContext,
     useNotify,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+
+const Title = (props: TitleProps) => {
+    const { propsTitle: title } = props;
+    const translate = useTranslate();
+    const { defaultTitle } = useEditContext();
+
+    return (
+        <DialogTitle
+            id="dialog-title"
+            className={EditInDialogButtonClasses.title}
+        >
+            {!title
+                ? defaultTitle
+                : typeof title === 'string'
+                ? translate(title, { _: title })
+                : title}
+        </DialogTitle>
+    );
+};
 
 export const EditInDialogButton = (props: EditInDialogButtonProps) => {
     const contextResource = useResourceContext();
@@ -28,7 +47,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
 
     const {
         children,
-        dialogTitle: dialogTitleProp,
+        title: propsTitle,
         maxWidth = 'sm',
         fullWidth = false,
         resource = contextResource,
@@ -37,31 +56,15 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         queryOptions = {},
         id = record.id,
         mutationMode = 'undoable',
+        sx,
         ...rest
     } = props;
 
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
-    const getResourceLabel = useGetResourceLabel();
-    const getRecordRepresentation = useGetRecordRepresentation(resource);
     const notify = useNotify();
     const { onSuccess, onError: mutationOptionsOnError } = mutationOptions;
     const { onError: queryOptionsOnError } = queryOptions;
-
-    const recordRepresentation = getRecordRepresentation(record);
-    const defaultDialogTitle = translate('ra.page.edit', {
-        name: getResourceLabel(resource, 1),
-        id,
-        record,
-        recordRepresentation:
-            typeof recordRepresentation === 'string'
-                ? recordRepresentation
-                : '',
-    });
-
-    const dialogTitle = dialogTitleProp
-        ? translate(dialogTitleProp, { _: dialogTitleProp })
-        : defaultDialogTitle;
 
     const handleOpen = () => {
         setOpen(true);
@@ -89,105 +92,103 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                 open={open}
                 className={EditInDialogButtonClasses.dialog}
                 scroll="paper"
+                sx={sx}
             >
-                <div className={EditInDialogButtonClasses.header}>
-                    <DialogTitle
-                        id="dialog-title"
-                        className={EditInDialogButtonClasses.title}
-                    >
-                        {dialogTitle}
-                    </DialogTitle>
+                <EditBase
+                    resource={resource}
+                    redirect={false}
+                    id={id}
+                    mutationMode={mutationMode}
+                    queryOptions={{
+                        ...queryOptions,
+                        onError: error => {
+                            handleClose();
 
-                    <IconButton
-                        className={EditInDialogButtonClasses.closeButton}
-                        aria-label={translate('ra.action.close')}
-                        title={translate('ra.action.close')}
-                        onClick={handleClose}
-                        size="small"
-                    >
-                        <CloseIcon fontSize="small" />
-                    </IconButton>
-                </div>
+                            if (queryOptionsOnError) {
+                                return queryOptionsOnError(error);
+                            }
 
-                <DialogContent sx={{ padding: 0 }}>
-                    {/* scomporre in editbase e editview */}
-                    <Edit
-                        title={<></>}
-                        resource={resource}
-                        redirect={false}
-                        id={id}
-                        mutationMode={mutationMode}
-                        queryOptions={{
-                            ...queryOptions,
-                            onError: error => {
-                                handleClose();
+                            notify('ra.notification.item_doesnt_exist', {
+                                type: 'error',
+                            });
+                        },
+                    }}
+                    mutationOptions={{
+                        ...mutationOptions,
+                        onSuccess: (data, variables, context) => {
+                            handleClose();
 
-                                if (queryOptionsOnError) {
-                                    return queryOptionsOnError(error);
-                                }
+                            if (onSuccess) {
+                                return onSuccess(data, variables, context);
+                            }
 
-                                notify('ra.notification.item_doesnt_exist', {
-                                    type: 'error',
-                                });
-                            },
-                        }}
-                        mutationOptions={{
-                            ...mutationOptions,
-                            onSuccess: (data, variables, context) => {
-                                handleClose();
+                            /**
+                             * If the onSuccess function is not provided, the notification is displayed by default, following the behavior of the useEditController hook.
+                             * If the developer provides the onSuccess function, it is their responsibility to handle the notification display.
+                             *
+                             * It also important to rebember that, when the mutation mode is set to "undoable", it is crucial to explicitly set the undoable option of the notification to true.
+                             * It plays a key role in initiating the submission of data once the notification disappears, typically after a 5-second interval.
+                             */
+                            notify('ra.notification.updated', {
+                                type: 'info',
+                                messageArgs: { smart_count: 1 },
+                                undoable: mutationMode === 'undoable',
+                            });
+                        },
+                        onError: (
+                            error: Error | string,
+                            variables,
+                            context
+                        ) => {
+                            handleClose();
 
-                                if (onSuccess) {
-                                    return onSuccess(data, variables, context);
-                                }
-
-                                /**
-                                 * If the onSuccess function is not provided, the notification is displayed by default, following the behavior of the useEditController hook.
-                                 * If the developer provides the onSuccess function, it is their responsibility to handle the notification display.
-                                 *
-                                 * It also important to rebember that, when the mutation mode is set to "undoable", it is crucial to explicitly set the undoable option of the notification to true.
-                                 * It plays a key role in initiating the submission of data once the notification disappears, typically after a 5-second interval.
-                                 */
-                                notify('ra.notification.updated', {
-                                    type: 'info',
-                                    messageArgs: { smart_count: 1 },
-                                    undoable: mutationMode === 'undoable',
-                                });
-                            },
-                            onError: (error, variables, context) => {
-                                handleClose();
-
-                                if (mutationOptionsOnError) {
-                                    return mutationOptionsOnError(
-                                        error,
-                                        variables,
-                                        context
-                                    );
-                                }
-
-                                notify(
-                                    typeof error === 'string'
-                                        ? error
-                                        : error.message ||
-                                              'ra.notification.http_error',
-                                    {
-                                        type: 'error',
-                                        messageArgs: {
-                                            _:
-                                                typeof error === 'string'
-                                                    ? error
-                                                    : error && error.message
-                                                    ? error.message
-                                                    : undefined,
-                                        },
-                                    }
+                            if (mutationOptionsOnError) {
+                                return mutationOptionsOnError(
+                                    error,
+                                    variables,
+                                    context
                                 );
-                            },
-                        }}
-                        {...rest}
-                    >
-                        {children}
-                    </Edit>
-                </DialogContent>
+                            }
+
+                            notify(
+                                typeof error === 'string'
+                                    ? error
+                                    : error.message ||
+                                          'ra.notification.http_error',
+                                {
+                                    type: 'error',
+                                    messageArgs: {
+                                        _:
+                                            typeof error === 'string'
+                                                ? error
+                                                : error && error.message
+                                                ? error.message
+                                                : undefined,
+                                    },
+                                }
+                            );
+                        },
+                    }}
+                    {...rest}
+                >
+                    <div className={EditInDialogButtonClasses.header}>
+                        <Title propsTitle={propsTitle} />
+
+                        <IconButton
+                            className={EditInDialogButtonClasses.closeButton}
+                            aria-label={translate('ra.action.close')}
+                            title={translate('ra.action.close')}
+                            onClick={handleClose}
+                            size="small"
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </div>
+
+                    <DialogContent sx={{ padding: 0 }}>
+                        <EditView title={<></>}>{children}</EditView>
+                    </DialogContent>
+                </EditBase>
             </EditDialog>
         </>
     );
@@ -198,19 +199,16 @@ export type EditInDialogButtonProps<
     MutationOptionsError = unknown
 > = Omit<
     EditProps<RecordType, MutationOptionsError>,
-    | 'actions'
-    | 'aside'
-    | 'component'
-    | 'redirect'
-    | 'title'
-    | 'sx'
-    | 'className'
+    'actions' | 'aside' | 'component' | 'redirect' | 'className'
 > & {
     children: ReactNode;
-    dialogTitle?: string;
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;
     label?: string;
+};
+
+type TitleProps = {
+    propsTitle: string | ReactElement;
 };
 
 const PREFIX = 'RaEditInDialogButton';
