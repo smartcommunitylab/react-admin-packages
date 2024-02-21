@@ -1,29 +1,28 @@
 import React, { ReactElement, useMemo, useState } from 'react';
 import { SearchContext } from './SearchContext';
-import { SearchProvider } from './SearchProvider';
+import { SearchParams, SearchProvider } from './SearchProvider';
 
 // creates a SearchContext
 export const Search = (props: SearchContextProviderParams) => {
-    const { searchProvider: provider } = props;
-
-    //TODO states
+    const { searchProvider, children } = props;
+    const [currentSearch, setCurrentSearch] = useState<SearchParams>({});
 
     //memoized function to handle changes in search
     const searchContext = useMemo(() => {
-        const handleSearch = () => {
-            //TODO receive input value as param
+        const handleSearch = (search: SearchParams) => {
+            setCurrentSearch(search);
         };
 
         return {
-            params: {}, //can contain q, fq
+            params: currentSearch, //can contain q, fq
             setParams: handleSearch,
-            provider: provider,
+            provider: searchProvider,
         };
-    }, [provider]);
+    }, [currentSearch, searchProvider]);
 
     return (
         <SearchContext.Provider value={searchContext}>
-            {/* {app} */}
+            {children}
         </SearchContext.Provider>
     );
 };

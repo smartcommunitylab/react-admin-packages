@@ -4,7 +4,7 @@ import { SearchParams, SearchProvider } from './SearchProvider';
 // everything that can be stored in search context
 interface SearchContextValue {
     params: SearchParams;
-    setParams: (record: any) => void;
+    setParams: (record: SearchParams) => void;
     provider: SearchProvider;
 }
 

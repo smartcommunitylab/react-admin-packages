@@ -2,6 +2,7 @@ import * as React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useNavigate } from 'react-router-dom';
 
 import { useSearch } from './SearchContext';
 import {
@@ -29,11 +30,17 @@ export const SearchBar = (props: SearchBarParams) => {
     const { hintText = 'Search', to, filters } = props;
     const { params, setParams, provider } = useSearch();
     const [showFilters, setShowFilters] = useState(false);
+    const [inputValue, setInputValue] = useState<string>('');
+    const navigate = useNavigate();
 
     const handleClickShowFilters = () => setShowFilters(show => !show);
     const handleClickSearch = () => {
-        //TODO write input value into context
-        //TODO navigate if "to"
+        //write input value into context
+        setParams({ q: inputValue });
+        //navigate if "to"
+        if (to) {
+            navigate(to);
+        }
     };
     const handleClickClear = () => {};
 
@@ -45,6 +52,10 @@ export const SearchBar = (props: SearchBarParams) => {
                         id="search-input"
                         type="text"
                         placeholder={hintText}
+                        value={inputValue}
+                        onChange={event => {
+                            setInputValue(event.target.value);
+                        }}
                         startAdornment={
                             <InputAdornment position="start">
                                 <SearchIcon />
@@ -68,6 +79,9 @@ export const SearchBar = (props: SearchBarParams) => {
                                 </IconButton>
                             </InputAdornment>
                         }
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') handleClickSearch();
+                        }}
                     />
                 </FormControl>
                 <Box

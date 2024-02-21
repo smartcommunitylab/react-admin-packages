@@ -27,7 +27,7 @@ const myDataProvider = dataProvider('http://localhost:3000');
 const MyAppBar = () => (
     <AppBar color="primary">
         <TitlePortal />
-        <SearchBar hintText="Search"></SearchBar>
+        <SearchBar hintText="Search" to="organizations"></SearchBar>
         <RootResourceSelectorMenu source="name" showSelected={false} />
     </AppBar>
 );

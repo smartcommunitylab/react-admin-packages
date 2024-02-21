@@ -1,4 +1,5 @@
 import { RootSelectorButton } from '@dslab/ra-root-selector';
+import { useSearch } from '@dslab/ra-search-bar';
 import {
     CreateButton,
     Datagrid,
@@ -20,6 +21,8 @@ export const OrganizationList = () => (
 );
 
 export const OrganizationSelectorList = props => {
+    const { params, setParams, provider } = useSearch();
+    console.log(params);
     const Toolbar = () => {
         return (
             <TopToolbar>
