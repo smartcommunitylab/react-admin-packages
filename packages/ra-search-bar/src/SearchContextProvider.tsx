@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { ReactElement, useMemo, useState } from 'react';
 import { SearchContext } from './SearchContext';
 import { SearchProvider } from './SearchProvider';
 
 // creates a SearchContext
 export const Search = (props: SearchContextProviderParams) => {
-    const { provider } = props;
+    const { searchProvider: provider } = props;
 
     //TODO states
 
@@ -15,7 +15,7 @@ export const Search = (props: SearchContextProviderParams) => {
         };
 
         return {
-            params: {}, //TODO
+            params: {}, //can contain q, fq
             setParams: handleSearch,
             provider: provider,
         };
@@ -29,5 +29,6 @@ export const Search = (props: SearchContextProviderParams) => {
 };
 
 export type SearchContextProviderParams = {
-    provider: SearchProvider;
+    searchProvider: SearchProvider;
+    children: ReactElement;
 };

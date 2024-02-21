@@ -1,6 +1,8 @@
 import { stringify } from 'query-string';
 import { fetchUtils, DataProvider } from 'ra-core';
-import { CreateParams, Identifier, RaRecord } from 'react-admin';
+import {
+    SearchProvider
+} from '@dslab/ra-search-bar';
 
 /**
  * Maps react-admin queries to a json-server powered REST API
@@ -37,7 +39,7 @@ import { CreateParams, Identifier, RaRecord } from 'react-admin';
 export default (
     apiUrl: string,
     httpClient = fetchUtils.fetchJson
-): DataProvider => ({
+): DataProvider & SearchProvider => ({
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
@@ -162,4 +164,9 @@ export default (
                 })
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
+    
+    search: (params, resource) =>
+        httpClient(`${apiUrl}`, {
+            method: 'GET',
+        }).then(({ json }) => ({ data: json })),
 });
