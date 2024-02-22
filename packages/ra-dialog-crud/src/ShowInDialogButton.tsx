@@ -8,13 +8,12 @@ import {
     IconButton,
     styled,
 } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, ReactNode, useState } from 'react';
 import {
     Button,
     RaRecord,
     ShowBase,
     ShowProps,
-    ShowView,
     useNotify,
     useRecordContext,
     useResourceContext,
@@ -29,7 +28,7 @@ const Title = (props: TitleProps) => {
 
     return (
         <DialogTitle
-            id="dialog-title"
+            id="show-dialog-title"
             className={ShowInDialogButtonClasses.title}
         >
             {!title
@@ -39,6 +38,16 @@ const Title = (props: TitleProps) => {
                 : title}
         </DialogTitle>
     );
+};
+
+const ChildrenWrapper = (props: ChildrenWrapperProps) => {
+    const { children, emptyWhileLoading } = props;
+    const { record } = useShowContext();
+
+    if (!children || (!record && emptyWhileLoading)) {
+        return null;
+    }
+    return <>{children}</>;
 };
 
 export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
@@ -53,9 +62,9 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
         resource = contextResource,
         label = 'ra.action.show',
         queryOptions = {},
-        id = record.id,
+        id = record?.id,
         sx,
-        emptyWhileLoading,
+        emptyWhileLoading = false,
         disableAuthentication,
     } = props;
 
@@ -72,6 +81,7 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
         setOpen(false);
     };
 
+    if (!id) return null;
     return (
         <>
             <Button
@@ -86,7 +96,7 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
                 onClose={handleClose}
-                aria-labelledby="dialog-title"
+                aria-labelledby="show-dialog-title"
                 open={open}
                 className={ShowInDialogButtonClasses.dialog}
                 scroll="paper"
@@ -128,13 +138,11 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
                             </IconButton>
                         </div>
 
-                        <DialogContent sx={{ padding: 0 }}>
-                            <ShowView
-                                title={<></>}
+                        <DialogContent sx={{ p: 0 }}>
+                            <ChildrenWrapper
+                                children={children}
                                 emptyWhileLoading={emptyWhileLoading}
-                            >
-                                {children}
-                            </ShowView>
+                            />
                         </DialogContent>
                     </>
                 </ShowBase>
@@ -155,6 +163,11 @@ export type ShowInDialogButtonProps<RecordType extends RaRecord = RaRecord> =
 
 type TitleProps = {
     propsTitle: string | ReactElement;
+};
+
+type ChildrenWrapperProps = {
+    children: ReactNode;
+    emptyWhileLoading: boolean;
 };
 
 const PREFIX = 'RaShowInDialogButton';

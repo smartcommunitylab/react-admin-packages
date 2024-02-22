@@ -80,11 +80,7 @@ export const UserList = () => {
                 <TextField source="surname" />
                 <EmailField source="email" />
 
-                <ShowInDialogButton
-                    fullWidth={true}
-                    maxWidth="sm"
-                    mutationMode="undoable"
-                >
+                <ShowInDialogButton fullWidth={true} maxWidth="sm">
                     <SimpleShowLayout>
                         <ReferenceField
                             source="organization"

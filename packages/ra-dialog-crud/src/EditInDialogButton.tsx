@@ -13,7 +13,6 @@ import {
     Button,
     EditBase,
     EditProps,
-    EditView,
     RaRecord,
     useEditContext,
     useNotify,
@@ -29,7 +28,7 @@ const Title = (props: TitleProps) => {
 
     return (
         <DialogTitle
-            id="dialog-title"
+            id="edit-dialog-title"
             className={EditInDialogButtonClasses.title}
         >
             {!title
@@ -54,7 +53,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         label = 'ra.action.edit',
         mutationOptions = {},
         queryOptions = {},
-        id = record.id,
+        id = record?.id,
         mutationMode = 'undoable',
         sx,
         ...rest
@@ -74,6 +73,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         setOpen(false);
     };
 
+    if (!id) return null;
     return (
         <>
             <Button
@@ -88,7 +88,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
                 onClose={handleClose}
-                aria-labelledby="dialog-title"
+                aria-labelledby="edit-dialog-title"
                 open={open}
                 className={EditInDialogButtonClasses.dialog}
                 scroll="paper"
@@ -185,8 +185,8 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                         </IconButton>
                     </div>
 
-                    <DialogContent sx={{ padding: 0 }}>
-                        <EditView title={<></>}>{children}</EditView>
+                    <DialogContent sx={{ p: 0 }}>
+                        {children ? children : null}
                     </DialogContent>
                 </EditBase>
             </EditDialog>

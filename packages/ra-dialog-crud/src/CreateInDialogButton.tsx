@@ -13,7 +13,6 @@ import {
     Button,
     CreateBase,
     CreateProps,
-    CreateView,
     Identifier,
     RaRecord,
     useCreateContext,
@@ -29,7 +28,7 @@ const Title = (props: TitleProps) => {
 
     return (
         <DialogTitle
-            id="dialog-title"
+            id="create-dialog-title"
             className={CreateInDialogButtonClasses.title}
         >
             {!title
@@ -83,7 +82,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
                 onClose={handleClose}
-                aria-labelledby="dialog-title"
+                aria-labelledby="create-dialog-title"
                 open={open}
                 className={CreateInDialogButtonClasses.dialog}
                 scroll="paper"
@@ -148,8 +147,8 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                         </IconButton>
                     </div>
 
-                    <DialogContent sx={{ padding: 0 }}>
-                        <CreateView title={<></>}>{children}</CreateView>
+                    <DialogContent sx={{ p: 0 }}>
+                        {children ? children : null}
                     </DialogContent>
                 </CreateBase>
             </AddDialog>
