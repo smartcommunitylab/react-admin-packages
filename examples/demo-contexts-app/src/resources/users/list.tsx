@@ -1,6 +1,7 @@
 import {
     CreateInDialogButton,
     EditInDialogButton,
+    ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import {
     Datagrid,
@@ -9,6 +10,7 @@ import {
     List,
     ReferenceField,
     SimpleForm,
+    SimpleShowLayout,
     TextField,
     TextInput,
     TopToolbar,
@@ -77,6 +79,25 @@ export const UserList = () => {
                 <TextField source="name" />
                 <TextField source="surname" />
                 <EmailField source="email" />
+
+                <ShowInDialogButton
+                    fullWidth={true}
+                    maxWidth="sm"
+                    mutationMode="undoable"
+                >
+                    <SimpleShowLayout>
+                        <ReferenceField
+                            source="organization"
+                            reference="organizations"
+                        >
+                            <TextField source="name" />
+                        </ReferenceField>
+                        <TextField source="username" />
+                        <TextField source="name" />
+                        <TextField source="surname" />
+                        <EmailField source="email" />
+                    </SimpleShowLayout>
+                </ShowInDialogButton>
 
                 <EditInDialogButton
                     fullWidth={true}

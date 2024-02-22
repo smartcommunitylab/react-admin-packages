@@ -61,7 +61,7 @@ The component accepts the following props:
 | Prop                    | Required | Type        | Default | Description                                                                                                                   |
 | ----------------------- | -------- | ----------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `children`              | Required | `ReactNode` |         | The content of the dialog                                                                                                     |
-| `title`           | Optional | `string`    |         | The title of the dialog                                                                                                       |
+| `title`                 | Optional | `string`    |         | The title of the dialog                                                                                                       |
 | `maxWidth`              | Optional | `string`    | sm      | The max width of the dialog                                                                                                   |
 | `fullWidth`             | Optional | `boolean`   | `false` | If `true`, the dialog stretches to the full width of the screen                                                               |
 | `resource`              | Optional | `string`    |         | The resource name                                                                                                             |
@@ -69,6 +69,7 @@ The component accepts the following props:
 | `mutationOptions`       | Optional | `object`    |         | Options for the `dataProvider.create()` call                                                                                  |
 | `disableAuthentication` | Optional | `boolean`   |         | Disable the authentication check                                                                                              |
 | `transform`             | Optional | `function`  |         | Allows to transform a record after the user has submitted the form but before the record is passed to `dataProvider.create()` |
+| `sx`                    | Optional | `object`    |         | Override the styles applied to the dialog component                                                                           |
 
 ## React Admin Edit in Dialog Button
 
@@ -113,7 +114,7 @@ The component accepts the following props:
 | Prop                    | Required | Type                 | Default                                   | Description                                                                                                                                                                              |
 | ----------------------- | -------- | -------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `children`              | Required | `ReactNode`          |                                           | The content of the dialog                                                                                                                                                                |
-| `title`           | Optional | `string`             | resource's name + record's representation | The title of the dialog                                                                                                                                                                  |
+| `title`                 | Optional | `string`             | resource's name + record's representation | The title of the dialog                                                                                                                                                                  |
 | `maxWidth`              | Optional | `string`             | sm                                        | The max width of the dialog                                                                                                                                                              |
 | `fullWidth`             | Optional | `boolean`            | `false`                                   | If `true`, the dialog stretches to the full width of the screen                                                                                                                          |
 | `resource`              | Optional | `string`             |                                           | The resource name                                                                                                                                                                        |
@@ -124,12 +125,13 @@ The component accepts the following props:
 | `id`                    | Optional | `string` or `number` |                                           | The record id. If not provided, it will be deduced from the record context                                                                                                               |
 | `disableAuthentication` | Optional | `boolean`            |                                           | Disable the authentication check                                                                                                                                                         |
 | `transform`             | Optional | `function`           |                                           | Allows to transform a record after the user has submitted the form but before the record is passed to `dataProvider.update()`                                                            |
+| `sx`                    | Optional | `object`             |                                           | Override the styles applied to the dialog component                                                                                                                                      |
 
 ## Author
 
 **SmartCommunityLab**
 
--   Website: http://www.smartcommunitylab.it/
+-   Website: [http://www.smartcommunitylab.it/](http://www.smartcommunitylab.it/)
 -   Github: [@smartcommunitylab](https://github.com/smartcommunitylab)
 
 ## Show your support
