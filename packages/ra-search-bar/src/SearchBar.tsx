@@ -45,16 +45,23 @@ export const SearchBar = (props: SearchBarParams) => {
     const handleClickClear = () => {};
 
     return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+        <Box sx={{ marginRight: '50px' }}>
             <Stack>
                 <FormControl variant="outlined">
                     <OutlinedInput
                         id="search-input"
                         type="text"
                         placeholder={hintText}
+                        sx={{
+                            backgroundColor: 'white',
+                            width: '50ch',
+                        }}
                         value={inputValue}
                         onChange={event => {
                             setInputValue(event.target.value);
+                        }}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') handleClickSearch();
                         }}
                         startAdornment={
                             <InputAdornment position="start">
@@ -79,26 +86,25 @@ export const SearchBar = (props: SearchBarParams) => {
                                 </IconButton>
                             </InputAdornment>
                         }
-                        onKeyDown={e => {
-                            if (e.key === 'Enter') handleClickSearch();
-                        }}
                     />
                 </FormControl>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                    }}
-                >
+                <Box>
                     {showFilters && (
-                        <Grid container sx={{ border: 1 }}>
-                            <Grid item xs={12}>
+                        <Grid
+                            container
+                            sx={{ border: 1, backgroundColor: 'white' }}
+                        >
+                            <Grid
+                                item
+                                xs={12}
+                                sx={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                            >
                                 <div>some filters here</div>
                             </Grid>
-                            <Grid item xs={8}>
+                            <Grid item xs={9}>
                                 <div></div>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={3}>
                                 <Button
                                     variant="text"
                                     aria-controls="search-button"
