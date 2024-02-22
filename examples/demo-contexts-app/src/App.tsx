@@ -4,6 +4,7 @@ import {
     AppBar,
     Layout,
     TitlePortal,
+    TextInput,
 } from 'react-admin';
 import {
     RootResourceSelectorMenu,
@@ -24,10 +25,29 @@ import dataProvider from './dataProvider';
 
 const myDataProvider = dataProvider('http://localhost:3000');
 
+const filters = [
+    <TextInput
+        label="Name"
+        source="metadata.name"
+        alwaysOn
+        key={1}
+        // parse={v => 'metadata.name:' + v}
+        // format={v => v.split(':')[1]}
+    />,
+    <TextInput
+        label="Description"
+        source="metadata.description"
+        alwaysOn
+        key={2}
+        // parse={v => 'metadata.description:' + v}
+        // format={v => v.split(':')[1]}
+    />,
+]
+
 const MyAppBar = () => (
     <AppBar color="primary">
         <TitlePortal />
-        <SearchBar hintText="Search" to="organizations"></SearchBar>
+        <SearchBar hintText="Search" to="organizations" filters={filters}></SearchBar>
         <RootResourceSelectorMenu source="name" showSelected={false} />
     </AppBar>
 );
