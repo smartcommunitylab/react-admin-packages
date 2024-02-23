@@ -27,6 +27,33 @@ const getEntries = (o, prefix = '') =>
             : [[`${prefix}${k}`, v]]
     );
 
+const parseInput = (searchBarInput: string, filterInputs: SearchFilter[]) => {
+    let newInput = searchBarInput;
+    filterInputs.forEach(filter => {
+        if (!searchBarInput.includes(filter.field)) {
+            newInput += ` ${filter.filter}`;
+        } else {
+            //es. foo metadata.name:"pippo"
+            let startIndex = newInput.indexOf(filter.field + ':"');
+            let endIndex = newInput.indexOf(
+                '"',
+                startIndex + `${filter.field}:"`.length
+            );
+            newInput = newInput.replace(
+                newInput.substring(startIndex, endIndex + 1),
+                `${filter.field}:"${filter.value}"`
+            );
+        }
+    });
+
+    console.log(newInput);
+    return newInput.trim();
+};
+
+const extractQ = (input: string) => {
+    return input.replace(/[^\s:"]+(:"){1}[^:]+"\s?/g, '');
+};
+
 export type SearchBarParams = {
     hintText?: string;
     to?: string;
@@ -44,21 +71,34 @@ export const SearchBar = (props: SearchBarParams) => {
     const navigate = useNavigate();
 
     const handleClickShowFilters = () => setShowFilters(show => !show);
+
     const handleClickSearch = (filterInputs: any) => {
         console.log('filterInputs ', filterInputs);
         const flattenedInputs = Object.fromEntries(getEntries(filterInputs));
         let fq: SearchFilter[] = [];
 
         if (Array.isArray(filters)) {
-            fq = filters.map(filter => {
-                const source = filter.props.source;
-                const value = flattenedInputs[source];
-                return { filter: source + ':' + value };
-            });
+            fq = filters
+                .map(filter => {
+                    const source = filter.props.source;
+                    const value = flattenedInputs[source];
+                    if (value !== undefined) {
+                        return {
+                            field: source,
+                            value: value,
+                            filter: `${source}:"${value}"`,
+                        };
+                    }
+                    return null;
+                })
+                .filter(value => value !== null);
         }
 
+        //update searchbar value
+        setInputValue(parseInput(inputValue, fq));
+
         //write input values into context
-        setParams({ q: inputValue, fq: fq });
+        setParams({ q: extractQ(inputValue), fq: fq });
         //close filter box
         setShowFilters(false);
         if (to) {
@@ -78,19 +118,21 @@ export const SearchBar = (props: SearchBarParams) => {
             <RecordContextProvider value={record}>
                 <Stack>
                     <Form>
-                        <ActualSearchBar
-                            hintText={hintText}
-                            value={inputValue}
-                            setValue={setInputValue}
-                            handleEnter={handleClickSearch}
-                            handleClickClear={handleClickClear}
-                            handleClickShowFilters={handleClickShowFilters}
-                        />
-                        <FilterBox
-                            showFilters={showFilters}
-                            filters={filters}
-                            handleClickSearch={handleClickSearch}
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <ActualSearchBar
+                                hintText={hintText}
+                                value={inputValue}
+                                setValue={setInputValue}
+                                handleEnter={handleClickSearch}
+                                handleClickClear={handleClickClear}
+                                handleClickShowFilters={handleClickShowFilters}
+                            />
+                            <FilterBox
+                                showFilters={showFilters}
+                                filters={filters}
+                                handleClickSearch={handleClickSearch}
+                            />
+                        </div>
                     </Form>
                 </Stack>
             </RecordContextProvider>
@@ -160,7 +202,16 @@ const FilterBox = (props: any) => {
     return (
         <Box>
             {showFilters && (
-                <Stack sx={{ border: 1, backgroundColor: 'white' }}>
+                <Stack
+                    sx={{
+                        backgroundColor: 'white',
+                        position: 'absolute',
+                        width: '100%',
+                        padding: '8px',
+                        borderRadius: '4px',
+                        border: '1px solid darkgray',
+                    }}
+                >
                     {filters}
                     <Button
                         variant="text"
@@ -204,3 +255,8 @@ const FilterBox = (props: any) => {
 };
 
 export default SearchBar;
+
+/*
+TODO:
+- in handleclickSearch, aggiornare inputValue con i valori dei filtri
+*/
