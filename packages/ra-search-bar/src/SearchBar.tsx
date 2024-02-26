@@ -74,24 +74,29 @@ export const SearchBar = (props: SearchBarParams) => {
 
     const handleClickSearch = (filterInputs: any) => {
         console.log('filterInputs ', filterInputs);
-        const flattenedInputs = Object.fromEntries(getEntries(filterInputs));
         let fq: SearchFilter[] = [];
 
-        if (Array.isArray(filters)) {
-            fq = filters
-                .map(filter => {
-                    const source = filter.props.source;
-                    const value = flattenedInputs[source];
-                    if (value !== undefined) {
-                        return {
-                            field: source,
-                            value: value,
-                            filter: `${source}:"${value}"`,
-                        };
-                    }
-                    return null;
-                })
-                .filter(value => value !== null);
+        if (filterInputs !== undefined) {
+            const flattenedInputs = Object.fromEntries(
+                getEntries(filterInputs)
+            );
+
+            if (Array.isArray(filters)) {
+                fq = filters
+                    .map(filter => {
+                        const source = filter.props.source;
+                        const value = flattenedInputs[source];
+                        if (value !== undefined) {
+                            return {
+                                field: source,
+                                value: value,
+                                filter: `${source}:"${value}"`,
+                            };
+                        }
+                        return null;
+                    })
+                    .filter(value => value !== null);
+            }
         }
 
         //update searchbar value

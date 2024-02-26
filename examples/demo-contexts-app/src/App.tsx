@@ -5,7 +5,10 @@ import {
     Layout,
     TitlePortal,
     TextInput,
+    fetchUtils,
+    CustomRoutes,
 } from 'react-admin';
+import { Route } from "react-router-dom";
 import {
     RootResourceSelectorMenu,
     RootSelector,
@@ -22,8 +25,21 @@ import {
     OrganizationSelectorList,
 } from './resources/organizations';
 import dataProvider from './dataProvider';
+import { SearchList } from './resources/searchresults';
 
-const myDataProvider = dataProvider('http://localhost:3000');
+const API_URL: string = 'http://localhost:8080';
+const httpClient = (url: string, options: fetchUtils.Options = {}) => {
+    const customHeaders = (options.headers ||
+        new Headers({
+            Accept: 'application/json',
+        })) as Headers;
+    // customHeaders.set('Authorization', 'Basic ' + authHeader());
+    options.headers = customHeaders;
+    return fetchUtils.fetchJson(url, options);
+};
+
+// const myDataProvider = dataProvider('http://localhost:3000');
+const myDataProvider = dataProvider(API_URL, httpClient);
 
 const filters = [
     <TextInput
@@ -47,7 +63,7 @@ const filters = [
 const MyAppBar = () => (
     <AppBar color="primary">
         <TitlePortal />
-        <SearchBar hintText="Search" to="organizations" filters={filters}></SearchBar>
+        <SearchBar hintText="Search" to="searchresults" filters={filters}></SearchBar>
         <RootResourceSelectorMenu source="name" showSelected={false} />
     </AppBar>
 );
@@ -73,6 +89,10 @@ const App = () => {
                         edit={OrganizationEdit}
                         create={OrganizationCreate}
                     />
+                    <Resource name="searchresults" list={SearchList} />
+                    {/* <CustomRoutes>
+                        <Route path="/searchresults" element={<SearchList />} />
+                    </CustomRoutes> */}
                 </Admin>
             </Search>
         </RootSelector>

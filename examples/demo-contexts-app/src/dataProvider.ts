@@ -3,6 +3,7 @@ import { fetchUtils, DataProvider } from 'ra-core';
 import {
     SearchProvider
 } from '@dslab/ra-search-bar';
+import { SearchParams } from '@dslab/ra-search-bar';
 
 /**
  * Maps react-admin queries to a json-server powered REST API
@@ -38,7 +39,16 @@ import {
  */
 export default (
     apiUrl: string,
-    httpClient = fetchUtils.fetchJson
+    // httpClient = fetchUtils.fetchJson
+    httpClient: (
+        url: any,
+        options?: fetchUtils.Options | undefined
+    ) => Promise<{
+        status: number;
+        headers: Headers;
+        body: string;
+        json: any;
+    }> = fetchUtils.fetchJson
 ): DataProvider & SearchProvider => ({
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;
@@ -165,8 +175,12 @@ export default (
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
     
-    search: (params, resource) =>
-        httpClient(`${apiUrl}`, {
+    search: (params: SearchParams, resource) => {
+        const q = params.q !== undefined ? `q=${encodeURIComponent(params.q)}` : '';
+        const fq: string = params.fq.map(filter => filter.filter).join('&');
+
+        return httpClient(`${apiUrl}/api/v1/solr/search/item?${[q,fq].filter(Boolean).join('&')}`, {
             method: 'GET',
-        }).then(({ json }) => ({ data: json })),
+        }).then(({ json }) => ({ data: json }))
+    },
 });
