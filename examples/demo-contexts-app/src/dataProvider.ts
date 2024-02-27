@@ -1,9 +1,11 @@
 import { stringify } from 'query-string';
 import { fetchUtils, DataProvider } from 'ra-core';
 import {
-    SearchProvider
+    SearchProvider,
+    SearchParams,
+    SearchFilter,
+    SearchResults
 } from '@dslab/ra-search-bar';
-import { SearchParams } from '@dslab/ra-search-bar';
 
 /**
  * Maps react-admin queries to a json-server powered REST API
@@ -175,9 +177,9 @@ export default (
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
     
-    search: (params: SearchParams, resource) => {
-        const q = params.q !== undefined ? `q=${encodeURIComponent(params.q)}` : '';
-        const fq: string = params.fq.map(filter => filter.filter).join('&');
+    search: (params: SearchParams, resource): Promise<SearchResults> => {
+        const q = params.q ? `q=${encodeURIComponent(params.q)}` : '';
+        const fq = params.fq?.map((filter: SearchFilter) => `fq=${encodeURIComponent(filter.filter)}`).join('&');
 
         return httpClient(`${apiUrl}/api/v1/solr/search/item?${[q,fq].filter(Boolean).join('&')}`, {
             method: 'GET',

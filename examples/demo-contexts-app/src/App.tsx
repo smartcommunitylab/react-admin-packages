@@ -58,6 +58,14 @@ const filters = [
         // parse={v => 'metadata.description:' + v}
         // format={v => v.split(':')[1]}
     />,
+    <TextInput
+        label="Type"
+        source="type"
+        alwaysOn
+        key={3}
+        // parse={v => 'metadata.description:' + v}
+        // format={v => v.split(':')[1]}
+    />,
 ]
 
 const MyAppBar = () => (

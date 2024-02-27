@@ -46,7 +46,7 @@ const parseInput = (searchBarInput: string, filterInputs: SearchFilter[]) => {
         }
     });
 
-    console.log(newInput);
+    console.log('searchbar updated q:', newInput);
     return newInput.trim();
 };
 
@@ -73,7 +73,7 @@ export const SearchBar = (props: SearchBarParams) => {
     const handleClickShowFilters = () => setShowFilters(show => !show);
 
     const handleClickSearch = (filterInputs: any) => {
-        console.log('filterInputs ', filterInputs);
+        console.log('searchbar filterInputs ', filterInputs);
         let fq: SearchFilter[] = [];
 
         if (filterInputs !== undefined) {
@@ -111,8 +111,12 @@ export const SearchBar = (props: SearchBarParams) => {
         }
     };
 
-    //TODO
-    const handleClickClear = () => {};
+    const handleClickClear = () => {
+        //reset searchbar
+        setInputValue('');
+        //reset filters
+        //TODO
+    };
 
     const record = {
         id: '1',
@@ -260,8 +264,3 @@ const FilterBox = (props: any) => {
 };
 
 export default SearchBar;
-
-/*
-TODO:
-- in handleclickSearch, aggiornare inputValue con i valori dei filtri
-*/

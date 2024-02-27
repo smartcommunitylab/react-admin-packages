@@ -4,21 +4,27 @@ import {
     TextField,
     useDataProvider,
     Error,
+    useList,
+    ListContextProvider,
+    Pagination,
 } from 'react-admin';
 import {
-    List
+    List as MuiList
 } from '@mui/material';
-import { useSearch, SearchResults } from '@dslab/ra-search-bar';
+import { useSearch } from '@dslab/ra-search-bar';
 import { useEffect, useState } from 'react';
 
 export const SearchList = () => {
     const { params, setParams, provider } = useSearch();
     console.log('context', params);
+
     const dataProvider = useDataProvider();
     const [results, setResults] = useState<[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState();
     useEffect(() => {
+        //TODO do not call search if there are no params?
+        //TODO use provider or useDataProvider?
         dataProvider.search(params)
             .then(({ data }) => {
                 setResults(data.content);
@@ -30,6 +36,8 @@ export const SearchList = () => {
             })
     }, [dataProvider, params]);
 
+    const listContext = useList({ data: results, isLoading: loading });
+
     if (loading) return <Loading />;
     if (error) return <Error />;
     if (!results) return null;
@@ -37,17 +45,15 @@ export const SearchList = () => {
     console.log('results', results);
 
     return (
-        <List>
-            {/* <Datagrid>
-                {results.map(res => {return (
-                    <TextField source="id" key={res.id} />
-                )})}
-            </Datagrid> */}
-            {results.map(res => {return (
-                <span key={res.id}>
-                    {res.id}
-                </span>
-            )})}
-        </List>
+        <ListContextProvider value={listContext}>
+            <Datagrid expand={<></>} bulkActionButtons={false}>
+                <TextField source="type" />
+                <TextField source="metadata.name" />
+                <TextField source="kind" />
+                <TextField source="metadata.description" />
+                <TextField source="metadata.updated" />
+            </Datagrid>
+            <Pagination />
+        </ListContextProvider>
     );
 };
