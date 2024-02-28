@@ -18,14 +18,11 @@ export const SearchList = () => {
     const { params, setParams, provider } = useSearch();
     console.log('context', params);
 
-    const dataProvider = useDataProvider();
     const [results, setResults] = useState<[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState();
     useEffect(() => {
-        //TODO do not call search if there are no params?
-        //TODO use provider or useDataProvider?
-        dataProvider.search(params)
+        provider.search(params)
             .then(({ data }) => {
                 setResults(data.content);
                 setLoading(false);
@@ -34,7 +31,7 @@ export const SearchList = () => {
                 setError(error);
                 setLoading(false);
             })
-    }, [dataProvider, params]);
+    }, [provider, params]);
 
     const listContext = useList({ data: results, isLoading: loading });
 

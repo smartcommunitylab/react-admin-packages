@@ -16,9 +16,15 @@ import {
     Stack,
 } from '@mui/material';
 import { useState } from 'react';
-import { Form, RecordContextProvider } from 'react-admin';
+import {
+    Form,
+    RecordContextProvider,
+    TextInput,
+    useRecordContext,
+} from 'react-admin';
 import { useFormContext } from 'react-hook-form';
 import { SearchFilter } from './SearchProvider';
+import { InputProps } from 'ra-core';
 
 const getEntries = (o, prefix = '') =>
     Object.entries(o).flatMap(([k, v]) =>
@@ -33,6 +39,10 @@ const parseInput = (searchBarInput: string, filterInputs: SearchFilter[]) => {
         if (!searchBarInput.includes(filter.field)) {
             newInput += ` ${filter.filter}`;
         } else {
+            /************************************************************
+             * TODO modificare per usare funzione parse
+             ************************************************************
+             */
             //es. foo metadata.name:"pippo"
             let startIndex = newInput.indexOf(filter.field + ':"');
             let endIndex = newInput.indexOf(
@@ -69,34 +79,79 @@ export const SearchBar = (props: SearchBarParams) => {
     const [showFilters, setShowFilters] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
     const navigate = useNavigate();
+    const [record, setRecord] = useState({ id: '1', q: '' });
 
     const handleClickShowFilters = () => setShowFilters(show => !show);
+
+    //TODO
+    //impedire ricerca vuota tramite search
+    //quando dopo una ricerca si fa clear resettare gli input ma non il context
+    //includere inputValue in record
+    //usare funzioni di format per scrivere dalla barra ai filtri
+    //mentre iteriamo sui filtri, costruire anche oggetto defaultValues per il reset
+
+    let conversionMap = {}; //{"metadata.name": {parse: f, format: f}}
+
+    function isInputProps(object: any): object is InputProps {
+        return 'source' in object && 'format' in object && 'parse' in object;
+    }
+
+    const cloneFilter = (
+        element: React.ReactElement<
+            any,
+            string | React.JSXElementConstructor<any>
+        >
+    ) => {
+        if (element !== undefined) {
+            if (isInputProps(element.props)) {
+                conversionMap[element.props.source] = {
+                    parse: element.props.parse,
+                    format: element.props.format,
+                };
+                return React.cloneElement(element, {
+                    format: undefined,
+                    parse: undefined,
+                });
+            }
+            return React.cloneElement(element);
+        }
+        return undefined;
+    };
+
+    let newFilters = undefined;
+
+    if (filters !== undefined) {
+        if (Array.isArray(filters)) {
+            newFilters = filters.map(filter => cloneFilter(filter));
+        } else {
+            newFilters = cloneFilter(filters);
+        }
+    }
 
     const handleClickSearch = (filterInputs: any) => {
         console.log('searchbar filterInputs ', filterInputs);
         let fq: SearchFilter[] = [];
 
+        //build fq using parse functions defined on filters
         if (filterInputs !== undefined) {
             const flattenedInputs = Object.fromEntries(
                 getEntries(filterInputs)
             );
 
-            if (Array.isArray(filters)) {
-                fq = filters
-                    .map(filter => {
-                        const source = filter.props.source;
-                        const value = flattenedInputs[source];
-                        if (value !== undefined) {
-                            return {
-                                field: source,
-                                value: value,
-                                filter: `${source}:"${value}"`,
-                            };
-                        }
-                        return null;
-                    })
-                    .filter(value => value !== null);
-            }
+            fq = Object.keys(conversionMap)
+                .map(source => {
+                    const value = flattenedInputs[source];
+                    const parse = conversionMap[source].parse;
+                    if (value !== undefined) {
+                        return {
+                            field: source,
+                            value: value,
+                            filter: parse(value),
+                        };
+                    }
+                    return null;
+                })
+                .filter(value => value !== null);
         }
 
         //update searchbar value
@@ -111,34 +166,28 @@ export const SearchBar = (props: SearchBarParams) => {
         }
     };
 
-    const handleClickClear = () => {
-        //reset searchbar
-        setInputValue('');
-        //reset filters
-        //TODO
-    };
-
-    const record = {
-        id: '1',
-    };
-
     return (
         <Box sx={{ marginRight: '50px' }}>
             <RecordContextProvider value={record}>
                 <Stack>
-                    <Form>
+                    <Form
+                    //TODO
+                    // defaultValues={{
+                    //     metadata: { name: '', description: '' },
+                    //     type: '',
+                    // }}
+                    >
                         <div style={{ position: 'relative' }}>
                             <ActualSearchBar
                                 hintText={hintText}
                                 value={inputValue}
                                 setValue={setInputValue}
                                 handleEnter={handleClickSearch}
-                                handleClickClear={handleClickClear}
                                 handleClickShowFilters={handleClickShowFilters}
                             />
                             <FilterBox
                                 showFilters={showFilters}
-                                filters={filters}
+                                filters={newFilters}
                                 handleClickSearch={handleClickSearch}
                             />
                         </div>
@@ -150,14 +199,27 @@ export const SearchBar = (props: SearchBarParams) => {
 };
 
 const ActualSearchBar = (props: any) => {
-    const {
-        hintText,
-        value,
-        setValue,
-        handleEnter,
-        handleClickClear,
-        handleClickShowFilters,
-    } = props;
+    const { hintText, value, setValue, handleEnter, handleClickShowFilters } =
+        props;
+
+    const formContext = useFormContext();
+
+    const handleClickClear = () => {
+        setValue('');
+        //NOTE: works only if defaultValues are provided to Form or to reset()
+        formContext.reset();
+    };
+
+    // return (
+    //     <TextInput
+    //         source="q"
+    //         variant="outlined"
+    //         placeholder={hintText}
+    //         onKeyDown={e => {
+    //             if (e.key === 'Enter') handleEnter();
+    //         }}
+    //     />
+    // );
 
     return (
         <FormControl variant="outlined">
@@ -174,7 +236,7 @@ const ActualSearchBar = (props: any) => {
                     setValue(event.target.value);
                 }}
                 onKeyDown={e => {
-                    if (e.key === 'Enter') handleEnter();
+                    if (e.key === 'Enter' && value) handleEnter();
                 }}
                 startAdornment={
                     <InputAdornment position="start">
@@ -226,6 +288,7 @@ const FilterBox = (props: any) => {
                         variant="text"
                         aria-controls="search-button"
                         aria-label=""
+                        //TODO disable se input vuoti
                         onClick={() =>
                             handleClickSearch(formContext.getValues())
                         }

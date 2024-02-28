@@ -7,6 +7,7 @@ import {
     TextInput,
     fetchUtils,
     CustomRoutes,
+    TextField,
 } from 'react-admin';
 import { Route } from "react-router-dom";
 import {
@@ -42,29 +43,30 @@ const httpClient = (url: string, options: fetchUtils.Options = {}) => {
 const myDataProvider = dataProvider(API_URL, httpClient);
 
 const filters = [
+    <TextField source="id" key={4} />,
     <TextInput
         label="Name"
         source="metadata.name"
         alwaysOn
         key={1}
-        // parse={v => 'metadata.name:' + v}
-        // format={v => v.split(':')[1]}
+        parse={v => 'metadata.name:' + v}
+        format={v => v.split(':')[1]}
     />,
     <TextInput
         label="Description"
         source="metadata.description"
         alwaysOn
         key={2}
-        // parse={v => 'metadata.description:' + v}
-        // format={v => v.split(':')[1]}
+        parse={v => 'metadata.description:' + v}
+        format={v => v.split(':')[1]}
     />,
     <TextInput
         label="Type"
         source="type"
         alwaysOn
         key={3}
-        // parse={v => 'metadata.description:' + v}
-        // format={v => v.split(':')[1]}
+        parse={v => 'type:' + v}
+        format={v => v.split(':')[1]}
     />,
 ]
 
@@ -97,10 +99,10 @@ const App = () => {
                         edit={OrganizationEdit}
                         create={OrganizationCreate}
                     />
-                    <Resource name="searchresults" list={SearchList} />
-                    {/* <CustomRoutes>
+                    {/* <Resource name="searchresults" list={SearchList} /> */}
+                    <CustomRoutes>
                         <Route path="/searchresults" element={<SearchList />} />
-                    </CustomRoutes> */}
+                    </CustomRoutes>
                 </Admin>
             </Search>
         </RootSelector>
