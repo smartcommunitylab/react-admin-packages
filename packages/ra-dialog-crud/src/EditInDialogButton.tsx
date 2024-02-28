@@ -1,19 +1,21 @@
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import {
+    Box,
     Breakpoint,
+    CircularProgress,
     Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
     styled,
+    useTheme,
 } from '@mui/material';
 import React, { ReactElement, ReactNode, useState } from 'react';
 import {
     Button,
     EditBase,
     EditProps,
-    LoadingIndicator,
     RaRecord,
     useEditContext,
     useNotify,
@@ -44,13 +46,22 @@ const Title = (props: TitleProps) => {
 const ChildrenWrapper = (props: ChildrenWrapperProps) => {
     const { children, emptyWhileLoading } = props;
     const { error, isLoading } = useEditContext();
+    const theme = useTheme();
 
     if (error) {
         return null;
     }
 
     if (isLoading && emptyWhileLoading) {
-        return <LoadingIndicator />;
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+                <CircularProgress
+                    color="inherit"
+                    size={theme.spacing(6)}
+                    thickness={3}
+                />
+            </Box>
+        );
     }
 
     return <>{children}</>;
@@ -76,7 +87,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         ...rest
     } = props;
 
-    const id = idProps != null ? idProps : record.id;
+    const id = idProps != null ? idProps : record?.id;
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
     const notify = useNotify();

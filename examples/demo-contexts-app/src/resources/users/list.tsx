@@ -103,7 +103,7 @@ export const UserList = () => {
                 <EditInDialogButton
                     fullWidth={true}
                     maxWidth="sm"
-                    mutationMode="undoable"
+                    mutationMode="pessimistic"
                 >
                     <SimpleForm>
                         <TextInput
