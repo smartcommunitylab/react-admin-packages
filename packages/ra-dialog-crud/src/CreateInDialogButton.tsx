@@ -58,7 +58,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
     const notify = useNotify();
-    const { onSuccess, onError } = mutationOptions;
+    const { onSuccess } = mutationOptions;
 
     const handleOpen = () => {
         setOpen(true);
@@ -105,31 +105,6 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                                 type: 'info',
                                 messageArgs: { smart_count: 1 },
                             });
-                        },
-                        onError: (error, variables, context) => {
-                            handleClose();
-
-                            if (onError) {
-                                return onError(error, variables, context);
-                            }
-
-                            notify(
-                                typeof error === 'string'
-                                    ? error
-                                    : error.message ||
-                                          'ra.notification.http_error',
-                                {
-                                    type: 'error',
-                                    messageArgs: {
-                                        _:
-                                            typeof error === 'string'
-                                                ? error
-                                                : error && error.message
-                                                ? error.message
-                                                : undefined,
-                                    },
-                                }
-                            );
                         },
                     }}
                 >

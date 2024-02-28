@@ -11,6 +11,7 @@ import {
 import React, { ReactElement, ReactNode, useState } from 'react';
 import {
     Button,
+    LoadingIndicator,
     RaRecord,
     ShowBase,
     ShowProps,
@@ -42,11 +43,16 @@ const Title = (props: TitleProps) => {
 
 const ChildrenWrapper = (props: ChildrenWrapperProps) => {
     const { children, emptyWhileLoading } = props;
-    const { record } = useShowContext();
+    const { error, isLoading } = useShowContext();
 
-    if (!children || (!record && emptyWhileLoading)) {
+    if (error) {
         return null;
     }
+
+    if (isLoading && emptyWhileLoading) {
+        return <LoadingIndicator />;
+    }
+
     return <>{children}</>;
 };
 
@@ -62,12 +68,13 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
         resource = contextResource,
         label = 'ra.action.show',
         queryOptions = {},
-        id = record?.id,
+        id: idProps,
         sx,
         emptyWhileLoading = false,
         disableAuthentication,
     } = props;
 
+    const id = idProps != null ? idProps : record.id;
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
     const notify = useNotify();
@@ -107,9 +114,14 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
                     id={id}
                     queryOptions={{
                         ...queryOptions,
+                        /**
+                         * The onError function of the queryOptions props is provided to override the default
+                         * onError function used by the useGetOne hook within useShowController.
+                         * Within the default function, after displaying a notification, two operations are executed:
+                         * redirection to the list page of the resoruce and page refreshing.
+                         * However, since the content is displayed inside a dialog, these two actions are not longer needed.
+                         */
                         onError: error => {
-                            handleClose();
-
                             if (queryOptionsOnError) {
                                 return queryOptionsOnError(error);
                             }

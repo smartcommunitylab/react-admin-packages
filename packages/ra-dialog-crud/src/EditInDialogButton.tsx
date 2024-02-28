@@ -13,6 +13,7 @@ import {
     Button,
     EditBase,
     EditProps,
+    LoadingIndicator,
     RaRecord,
     useEditContext,
     useNotify,
@@ -40,6 +41,21 @@ const Title = (props: TitleProps) => {
     );
 };
 
+const ChildrenWrapper = (props: ChildrenWrapperProps) => {
+    const { children, emptyWhileLoading } = props;
+    const { error, isLoading } = useEditContext();
+
+    if (error) {
+        return null;
+    }
+
+    if (isLoading && emptyWhileLoading) {
+        return <LoadingIndicator />;
+    }
+
+    return <>{children}</>;
+};
+
 export const EditInDialogButton = (props: EditInDialogButtonProps) => {
     const contextResource = useResourceContext();
     const record = useRecordContext();
@@ -53,16 +69,18 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         label = 'ra.action.edit',
         mutationOptions = {},
         queryOptions = {},
-        id = record?.id,
+        id: idProps,
         mutationMode = 'undoable',
         sx,
+        emptyWhileLoading = false,
         ...rest
     } = props;
 
+    const id = idProps != null ? idProps : record.id;
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
     const notify = useNotify();
-    const { onSuccess, onError: mutationOptionsOnError } = mutationOptions;
+    const { onSuccess } = mutationOptions;
     const { onError: queryOptionsOnError } = queryOptions;
 
     const handleOpen = () => {
@@ -101,9 +119,14 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                     mutationMode={mutationMode}
                     queryOptions={{
                         ...queryOptions,
+                        /**
+                         * The onError function of the queryOptions props is provided to override the default
+                         * onError function used by the useGetOne hook within useEditController.
+                         * Within the default function, after displaying a notification, two operations are executed:
+                         * redirection to the list page of the resoruce and page refreshing.
+                         * However, since the edit takes place inside a dialog, these two actions are not longer needed.
+                         */
                         onError: error => {
-                            handleClose();
-
                             if (queryOptionsOnError) {
                                 return queryOptionsOnError(error);
                             }
@@ -123,50 +146,21 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                             }
 
                             /**
-                             * If the onSuccess function is not provided, the notification is displayed by default, following the behavior of the useEditController hook.
-                             * If the developer provides the onSuccess function, it is their responsibility to handle the notification display.
+                             * If the onSuccess function is not provided, the notification is displayed
+                             * by default, following the behavior of the useEditController hook.
+                             * If the developer provides the onSuccess function, it is
+                             * their responsibility to handle the notification display.
                              *
-                             * It also important to rebember that, when the mutation mode is set to "undoable", it is crucial to explicitly set the undoable option of the notification to true.
-                             * It plays a key role in initiating the submission of data once the notification disappears, typically after a 5-second interval.
+                             * It also important to rebember that, when the mutation mode is set to "undoable",
+                             * it is crucial to explicitly set the undoable option of the notification to true.
+                             * It plays a key role in initiating the submission of data once
+                             * the notification disappears,typically after a 5-second interval.
                              */
                             notify('ra.notification.updated', {
                                 type: 'info',
                                 messageArgs: { smart_count: 1 },
                                 undoable: mutationMode === 'undoable',
                             });
-                        },
-                        onError: (
-                            error: Error | string,
-                            variables,
-                            context
-                        ) => {
-                            handleClose();
-
-                            if (mutationOptionsOnError) {
-                                return mutationOptionsOnError(
-                                    error,
-                                    variables,
-                                    context
-                                );
-                            }
-
-                            notify(
-                                typeof error === 'string'
-                                    ? error
-                                    : error.message ||
-                                          'ra.notification.http_error',
-                                {
-                                    type: 'error',
-                                    messageArgs: {
-                                        _:
-                                            typeof error === 'string'
-                                                ? error
-                                                : error && error.message
-                                                ? error.message
-                                                : undefined,
-                                    },
-                                }
-                            );
                         },
                     }}
                     {...rest}
@@ -186,7 +180,10 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                     </div>
 
                     <DialogContent sx={{ p: 0 }}>
-                        {children ? children : null}
+                        <ChildrenWrapper
+                            children={children}
+                            emptyWhileLoading={emptyWhileLoading}
+                        />
                     </DialogContent>
                 </EditBase>
             </EditDialog>
@@ -205,10 +202,16 @@ export type EditInDialogButtonProps<
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;
     label?: string;
+    emptyWhileLoading?: boolean;
 };
 
 type TitleProps = {
     propsTitle: string | ReactElement;
+};
+
+type ChildrenWrapperProps = {
+    children: ReactNode;
+    emptyWhileLoading: boolean;
 };
 
 const PREFIX = 'RaEditInDialogButton';

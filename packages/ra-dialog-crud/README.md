@@ -63,7 +63,7 @@ The component accepts the following props:
 | `id`                    | Optional | `string` or `number`       |         | The record id. If not provided, it will be deduced from the record context |
 | `queryOptions`          | Optional | `object`                   |         | Options for the `dataProvider.getOne()` call                               |
 | `disableAuthentication` | Optional | `boolean`                  |         | Set to `true` to disable the authentication check                          |
-| `emptyWhileLoading`     | Optional | `boolean`                  |         | Set to `true` to return `null` while the list is loading                   |
+| `emptyWhileLoading`     | Optional | `boolean`                  |         | Set to `true` to show a loading indicator while the list is loading        |
 | `sx`                    | Optional | `object`                   |         | Override the styles applied to the dialog component                        |
 
 ## React Admin Create in Dialog Button
@@ -179,6 +179,7 @@ The component accepts the following props:
 | `id`                    | Optional | `string` or `number`       |            | The record id. If not provided, it will be deduced from the record context                                                                                                               |
 | `disableAuthentication` | Optional | `boolean`                  |            | Set to `true` to disable the authentication check                                                                                                                                        |
 | `transform`             | Optional | `function`                 |            | Allows to transform a record after the user has submitted the form but before the record is passed to `dataProvider.update()`                                                            |
+| `emptyWhileLoading`     | Optional | `boolean`                  |            | Set to `true` to show a loading indicator while the list is loading                                                                                                                      |
 | `sx`                    | Optional | `object`                   |            | Override the styles applied to the dialog component                                                                                                                                      |
 
 ## Author

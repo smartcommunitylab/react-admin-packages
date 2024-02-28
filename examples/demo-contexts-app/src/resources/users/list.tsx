@@ -14,6 +14,7 @@ import {
     TextField,
     TextInput,
     TopToolbar,
+    required,
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
 
@@ -32,7 +33,11 @@ const CreateUserComponent = () => {
             transform={transform}
         >
             <SimpleForm>
-                <TextInput source="username" fullWidth={true} />
+                <TextInput
+                    source="username"
+                    fullWidth={true}
+                    validate={required()}
+                />
                 <TextInput source="name" fullWidth={true} />
                 <TextInput source="surname" fullWidth={true} />
                 <TextInput source="email" fullWidth={true} />
@@ -101,7 +106,11 @@ export const UserList = () => {
                     mutationMode="undoable"
                 >
                     <SimpleForm>
-                        <TextInput source="username" fullWidth={true} />
+                        <TextInput
+                            source="username"
+                            fullWidth={true}
+                            validate={required()}
+                        />
                         <TextInput source="name" fullWidth={true} />
                         <TextInput source="surname" fullWidth={true} />
                         <TextInput source="email" fullWidth={true} />
