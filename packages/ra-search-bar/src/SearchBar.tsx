@@ -88,24 +88,21 @@ export type SearchBarParams = {
     filterSeparator?: string;
 };
 
+/** TODO
+ * - implementare logica per scrivere da q a fq e viceversa, in un componente che wrappa ActualSearchBar e FilterBox (vedi watch di useForm)
+ * - verificare comportamento quando parse e format sono undefined
+ * - impedire ricerca vuota se utente scrive in un campo e poi cancella manualmente
+ * - sostituire double quotes hardcoded (es. in parseInput) con due props di SearchBar
+ */
+
 export const SearchBar = (props: SearchBarParams) => {
     const { hintText = 'Search', to, filters, filterSeparator = ':' } = props;
     const { params, setParams, provider } = useSearch();
     const [showFilters, setShowFilters] = useState(false);
-    //const [inputValue, setInputValue] = useState<string>('');
     const navigate = useNavigate();
     const [record, setRecord] = useState({ id: '1', q: '' });
 
     const handleClickShowFilters = () => setShowFilters(show => !show);
-
-    //TODO
-    //OK quando dopo una ricerca si fa clear resettare gli input ma non il context
-    //OK mentre iteriamo sui filtri, costruire anche oggetto defaultValues per il reset
-    //OK impedire ricerca vuota tramite search
-    //OK includere inputValue in record
-    //scrivere dai filtri alla barra tramite record/form
-    //usare funzioni di format per scrivere dalla barra ai filtri
-    //impedire ricerca vuota se utente scrive in un campo e poi cancella manualmente
 
     let conversionMap = {}; //{"metadata.name": {parse: f, format: f}}
     let defaultValues = {}; //{metadata: {name: "", description: ""}, type: ""}
@@ -125,6 +122,16 @@ export const SearchBar = (props: SearchBarParams) => {
                 conversionMap[element.props.source] = {
                     parse: element.props.parse,
                     format: element.props.format,
+                    // parse: element.props.parse
+                    //     ? element.props.parse
+                    //     : v => {
+                    //           return v;
+                    //       },
+                    // format: element.props.format
+                    //     ? element.props.format
+                    //     : v => {
+                    //           return v;
+                    //       },
                 };
                 unflatten(
                     defaultValues,
@@ -156,8 +163,6 @@ export const SearchBar = (props: SearchBarParams) => {
         let q = filterInputs.q;
         let fq: SearchFilter[] = [];
 
-        //TODO q potrebbe contenere qualcosa che deve andare in fq
-
         //build fq using parse functions defined on filters
         if (filterInputs !== undefined) {
             const flattenedInputs = Object.fromEntries(
@@ -181,7 +186,6 @@ export const SearchBar = (props: SearchBarParams) => {
         }
 
         //update searchbar value
-        //TODO write updated q to form (qui o in ActualSearchBar?)
         //setInputValue(parseInput(inputValue, fq, filterSeparator));
 
         //write input values into context
@@ -201,8 +205,6 @@ export const SearchBar = (props: SearchBarParams) => {
                         <div style={{ position: 'relative' }}>
                             <ActualSearchBar
                                 hintText={hintText}
-                                // value={inputValue}
-                                // setValue={setInputValue}
                                 handleEnter={handleClickSearch}
                                 handleClickShowFilters={handleClickShowFilters}
                             />
@@ -267,62 +269,6 @@ const ActualSearchBar = (props: any) => {
                 ),
             }}
         />
-    );
-};
-
-const ActualSearchBarOld = (props: any) => {
-    const { hintText, value, setValue, handleEnter, handleClickShowFilters } =
-        props;
-
-    const formContext = useFormContext();
-
-    const handleClickClear = () => {
-        setValue('');
-        formContext.reset();
-    };
-
-    return (
-        <FormControl variant="outlined">
-            <OutlinedInput
-                id="search-input"
-                type="text"
-                placeholder={hintText}
-                sx={{
-                    backgroundColor: 'white',
-                    width: '50ch',
-                }}
-                value={value}
-                onChange={event => {
-                    setValue(event.target.value);
-                }}
-                onKeyDown={e => {
-                    if (e.key === 'Enter' && value) handleEnter();
-                }}
-                startAdornment={
-                    <InputAdornment position="start">
-                        <SearchIcon />
-                    </InputAdornment>
-                }
-                endAdornment={
-                    <InputAdornment position="end">
-                        <IconButton
-                            aria-label="cancel search input"
-                            onClick={handleClickClear}
-                            edge="end"
-                        >
-                            <ClearIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="toggle filters visibility"
-                            onClick={handleClickShowFilters}
-                            edge="end"
-                        >
-                            <TuneIcon />
-                        </IconButton>
-                    </InputAdornment>
-                }
-            />
-        </FormControl>
     );
 };
 
@@ -393,6 +339,62 @@ const FilterBox = (props: any) => {
                 // </Grid>
             )}
         </Box>
+    );
+};
+
+const ActualSearchBarOld = (props: any) => {
+    const { hintText, value, setValue, handleEnter, handleClickShowFilters } =
+        props;
+
+    const formContext = useFormContext();
+
+    const handleClickClear = () => {
+        setValue('');
+        formContext.reset();
+    };
+
+    return (
+        <FormControl variant="outlined">
+            <OutlinedInput
+                id="search-input"
+                type="text"
+                placeholder={hintText}
+                sx={{
+                    backgroundColor: 'white',
+                    width: '50ch',
+                }}
+                value={value}
+                onChange={event => {
+                    setValue(event.target.value);
+                }}
+                onKeyDown={e => {
+                    if (e.key === 'Enter' && value) handleEnter();
+                }}
+                startAdornment={
+                    <InputAdornment position="start">
+                        <SearchIcon />
+                    </InputAdornment>
+                }
+                endAdornment={
+                    <InputAdornment position="end">
+                        <IconButton
+                            aria-label="cancel search input"
+                            onClick={handleClickClear}
+                            edge="end"
+                        >
+                            <ClearIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="toggle filters visibility"
+                            onClick={handleClickShowFilters}
+                            edge="end"
+                        >
+                            <TuneIcon />
+                        </IconButton>
+                    </InputAdornment>
+                }
+            />
+        </FormControl>
     );
 };
 
