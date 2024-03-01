@@ -14,15 +14,16 @@ import {
     InputAdornment,
     OutlinedInput,
     Stack,
+    TextField as MuiTextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Form,
     RecordContextProvider,
     TextInput,
     useRecordContext,
 } from 'react-admin';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useFormState, useController } from 'react-hook-form';
 import { SearchFilter } from './SearchProvider';
 import { InputProps } from 'ra-core';
 
@@ -33,7 +34,16 @@ const getEntries = (o, prefix = '') =>
             : [[`${prefix}${k}`, v]]
     );
 
-const parseInput = (searchBarInput: string, filterInputs: SearchFilter[]) => {
+function unflatten(object, keys, value) {
+    const last = keys.pop();
+    keys.reduce((o, k) => (o[k] = o[k] || {}), object)[last] = value;
+}
+
+const parseInput = (
+    searchBarInput: string,
+    filterInputs: SearchFilter[],
+    filterSeparator: string
+) => {
     let newInput = searchBarInput;
     filterInputs.forEach(filter => {
         if (!searchBarInput.includes(filter.field)) {
@@ -44,14 +54,14 @@ const parseInput = (searchBarInput: string, filterInputs: SearchFilter[]) => {
              ************************************************************
              */
             //es. foo metadata.name:"pippo"
-            let startIndex = newInput.indexOf(filter.field + ':"');
+            let startIndex = newInput.indexOf(filter.field);
             let endIndex = newInput.indexOf(
                 '"',
-                startIndex + `${filter.field}:"`.length
+                startIndex + `${filter.field}${filterSeparator}"`.length
             );
             newInput = newInput.replace(
                 newInput.substring(startIndex, endIndex + 1),
-                `${filter.field}:"${filter.value}"`
+                `${filter.field}${filterSeparator}"${filter.value}"`
             );
         }
     });
@@ -60,8 +70,12 @@ const parseInput = (searchBarInput: string, filterInputs: SearchFilter[]) => {
     return newInput.trim();
 };
 
-const extractQ = (input: string) => {
-    return input.replace(/[^\s:"]+(:"){1}[^:]+"\s?/g, '');
+const extractQ = (input: string, filterSeparator: string) => {
+    const reg = new RegExp(
+        `[^\\s${filterSeparator}"]+(${filterSeparator}"){1}[^${filterSeparator}]+"\\s?`,
+        'g'
+    );
+    return input.replace(reg, '');
 };
 
 export type SearchBarParams = {
@@ -71,26 +85,30 @@ export type SearchBarParams = {
         | React.ReactElement<any, string | React.JSXElementConstructor<any>>
         | React.ReactElement<any, string | React.JSXElementConstructor<any>>[]
         | undefined;
+    filterSeparator?: string;
 };
 
 export const SearchBar = (props: SearchBarParams) => {
-    const { hintText = 'Search', to, filters } = props;
+    const { hintText = 'Search', to, filters, filterSeparator = ':' } = props;
     const { params, setParams, provider } = useSearch();
     const [showFilters, setShowFilters] = useState(false);
-    const [inputValue, setInputValue] = useState<string>('');
+    //const [inputValue, setInputValue] = useState<string>('');
     const navigate = useNavigate();
     const [record, setRecord] = useState({ id: '1', q: '' });
 
     const handleClickShowFilters = () => setShowFilters(show => !show);
 
     //TODO
-    //impedire ricerca vuota tramite search
-    //quando dopo una ricerca si fa clear resettare gli input ma non il context
-    //includere inputValue in record
+    //OK quando dopo una ricerca si fa clear resettare gli input ma non il context
+    //OK mentre iteriamo sui filtri, costruire anche oggetto defaultValues per il reset
+    //OK impedire ricerca vuota tramite search
+    //OK includere inputValue in record
+    //scrivere dai filtri alla barra tramite record/form
     //usare funzioni di format per scrivere dalla barra ai filtri
-    //mentre iteriamo sui filtri, costruire anche oggetto defaultValues per il reset
+    //impedire ricerca vuota se utente scrive in un campo e poi cancella manualmente
 
     let conversionMap = {}; //{"metadata.name": {parse: f, format: f}}
+    let defaultValues = {}; //{metadata: {name: "", description: ""}, type: ""}
 
     function isInputProps(object: any): object is InputProps {
         return 'source' in object && 'format' in object && 'parse' in object;
@@ -108,6 +126,11 @@ export const SearchBar = (props: SearchBarParams) => {
                     parse: element.props.parse,
                     format: element.props.format,
                 };
+                unflatten(
+                    defaultValues,
+                    element.props.source.split('.'),
+                    element.props.defaultValue
+                );
                 return React.cloneElement(element, {
                     format: undefined,
                     parse: undefined,
@@ -130,7 +153,10 @@ export const SearchBar = (props: SearchBarParams) => {
 
     const handleClickSearch = (filterInputs: any) => {
         console.log('searchbar filterInputs ', filterInputs);
+        let q = filterInputs.q;
         let fq: SearchFilter[] = [];
+
+        //TODO q potrebbe contenere qualcosa che deve andare in fq
 
         //build fq using parse functions defined on filters
         if (filterInputs !== undefined) {
@@ -155,10 +181,11 @@ export const SearchBar = (props: SearchBarParams) => {
         }
 
         //update searchbar value
-        setInputValue(parseInput(inputValue, fq));
+        //TODO write updated q to form (qui o in ActualSearchBar?)
+        //setInputValue(parseInput(inputValue, fq, filterSeparator));
 
         //write input values into context
-        setParams({ q: extractQ(inputValue), fq: fq });
+        setParams({ q: extractQ(q, filterSeparator), fq: fq });
         //close filter box
         setShowFilters(false);
         if (to) {
@@ -170,18 +197,12 @@ export const SearchBar = (props: SearchBarParams) => {
         <Box sx={{ marginRight: '50px' }}>
             <RecordContextProvider value={record}>
                 <Stack>
-                    <Form
-                    //TODO
-                    // defaultValues={{
-                    //     metadata: { name: '', description: '' },
-                    //     type: '',
-                    // }}
-                    >
+                    <Form defaultValues={defaultValues}>
                         <div style={{ position: 'relative' }}>
                             <ActualSearchBar
                                 hintText={hintText}
-                                value={inputValue}
-                                setValue={setInputValue}
+                                // value={inputValue}
+                                // setValue={setInputValue}
                                 handleEnter={handleClickSearch}
                                 handleClickShowFilters={handleClickShowFilters}
                             />
@@ -199,6 +220,57 @@ export const SearchBar = (props: SearchBarParams) => {
 };
 
 const ActualSearchBar = (props: any) => {
+    const { hintText, handleEnter, handleClickShowFilters } = props;
+    const { field } = useController({ name: 'q', defaultValue: '' });
+
+    const formContext = useFormContext();
+
+    const handleClickClear = () => {
+        formContext.reset();
+    };
+
+    return (
+        <MuiTextField
+            {...field}
+            variant="outlined"
+            id="search-input"
+            type="text"
+            placeholder={hintText}
+            onKeyDown={e => {
+                if (e.key === 'Enter' && field.value)
+                    handleEnter(formContext.getValues());
+            }}
+            InputProps={{
+                sx: { width: '50ch', backgroundColor: 'white' },
+                startAdornment: (
+                    <InputAdornment position="start">
+                        <SearchIcon />
+                    </InputAdornment>
+                ),
+                endAdornment: (
+                    <InputAdornment position="end">
+                        <IconButton
+                            aria-label="cancel search input"
+                            onClick={handleClickClear}
+                            edge="end"
+                        >
+                            <ClearIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label="toggle filters visibility"
+                            onClick={handleClickShowFilters}
+                            edge="end"
+                        >
+                            <TuneIcon />
+                        </IconButton>
+                    </InputAdornment>
+                ),
+            }}
+        />
+    );
+};
+
+const ActualSearchBarOld = (props: any) => {
     const { hintText, value, setValue, handleEnter, handleClickShowFilters } =
         props;
 
@@ -206,20 +278,8 @@ const ActualSearchBar = (props: any) => {
 
     const handleClickClear = () => {
         setValue('');
-        //NOTE: works only if defaultValues are provided to Form or to reset()
         formContext.reset();
     };
-
-    // return (
-    //     <TextInput
-    //         source="q"
-    //         variant="outlined"
-    //         placeholder={hintText}
-    //         onKeyDown={e => {
-    //             if (e.key === 'Enter') handleEnter();
-    //         }}
-    //     />
-    // );
 
     return (
         <FormControl variant="outlined">
@@ -268,7 +328,17 @@ const ActualSearchBar = (props: any) => {
 
 const FilterBox = (props: any) => {
     const { showFilters, filters, handleClickSearch } = props;
+    const [disabled, setDisabled] = useState(true);
     const formContext = useFormContext();
+    const { isDirty } = useFormState();
+
+    useEffect(() => {
+        if (isDirty) {
+            setDisabled(false);
+        } else {
+            setDisabled(true);
+        }
+    }, [isDirty]);
 
     return (
         <Box>
@@ -288,7 +358,7 @@ const FilterBox = (props: any) => {
                         variant="text"
                         aria-controls="search-button"
                         aria-label=""
-                        //TODO disable se input vuoti
+                        disabled={disabled}
                         onClick={() =>
                             handleClickSearch(formContext.getValues())
                         }

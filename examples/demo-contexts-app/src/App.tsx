@@ -49,31 +49,49 @@ const filters = [
         source="metadata.name"
         alwaysOn
         key={1}
-        parse={v => 'metadata.name:' + v}
-        format={v => v.split(':')[1]}
+        defaultValue=""
+        parse={v => {
+            if (!(v.startsWith('"') && v.endsWith('"'))) {
+                v = `"${v}"`
+            }
+            return 'metadata.name:' + v
+        }}
+        format={v => v.split(':')[1].split('"')[0]}
     />,
     <TextInput
         label="Description"
         source="metadata.description"
         alwaysOn
         key={2}
-        parse={v => 'metadata.description:' + v}
-        format={v => v.split(':')[1]}
+        defaultValue=""
+        parse={v => {
+            if (!(v.startsWith('"') && v.endsWith('"'))) {
+                v = `"${v}"`
+            }
+            return 'metadata.description:' + v
+        }}
+        format={v => v.split(':')[1].split('"')[0]}
     />,
     <TextInput
         label="Type"
         source="type"
         alwaysOn
         key={3}
-        parse={v => 'type:' + v}
-        format={v => v.split(':')[1]}
+        defaultValue=""
+        parse={v => {
+            if (!(v.startsWith('"') && v.endsWith('"'))) {
+                v = `"${v}"`
+            }
+            return 'type:' + v
+        }}
+        format={v => v.split(':')[1].split('"')[0]}
     />,
 ]
 
 const MyAppBar = () => (
     <AppBar color="primary">
         <TitlePortal />
-        <SearchBar hintText="Search" to="searchresults" filters={filters}></SearchBar>
+        <SearchBar hintText="Search" to="searchresults" filters={filters} filterSeparator=":"></SearchBar>
         <RootResourceSelectorMenu source="name" showSelected={false} />
     </AppBar>
 );
