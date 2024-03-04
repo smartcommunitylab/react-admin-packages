@@ -7,7 +7,7 @@ import {
     TextInput,
     fetchUtils,
     CustomRoutes,
-    TextField,
+    CheckboxGroupInput,
 } from 'react-admin';
 import { Route } from "react-router-dom";
 import {
@@ -26,7 +26,7 @@ import {
     OrganizationSelectorList,
 } from './resources/organizations';
 import dataProvider from './dataProvider';
-import { SearchList } from './resources/searchresults';
+import { SearchList } from './components/list';
 
 const API_URL: string = 'http://localhost:8080';
 const httpClient = (url: string, options: fetchUtils.Options = {}) => {
@@ -43,12 +43,32 @@ const httpClient = (url: string, options: fetchUtils.Options = {}) => {
 const myDataProvider = dataProvider(API_URL, httpClient);
 
 const filters = [
-    <TextField source="id" key={4} />,
+    <CheckboxGroupInput source="type" choices={[
+        { id: 'function', name: 'Function' },
+        { id: 'dataitem', name: 'DataItem' },
+        { id: 'artifact', name: 'Artifact' },
+    ]}
+        label="Type"
+        key={1}
+        defaultValue={[]}
+        parse={v => {
+            //v=['function', 'dataitem']
+            //return type:(function OR dataitem)
+            return `type:(${v.join(' OR ')})`
+        }}
+        format={v => {
+            //v=type:(function OR dataitem)
+            //return ['function', 'dataitem']
+            const startIndex = v.indexOf('(')
+            const endIndex = v.indexOf(')')
+            return v.substring(startIndex + 1, endIndex).split(' OR ')
+        }}
+    />,
     <TextInput
         label="Name"
         source="metadata.name"
         alwaysOn
-        key={1}
+        key={2}
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
@@ -62,7 +82,7 @@ const filters = [
         label="Description"
         source="metadata.description"
         alwaysOn
-        key={2}
+        key={3}
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
@@ -73,16 +93,16 @@ const filters = [
         format={v => v.split(':')[1].split('"')[0]}
     />,
     <TextInput
-        label="Type"
-        source="type"
+        label="Version"
+        source="metadata.version"
         alwaysOn
-        key={3}
+        key={4}
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
                 v = `"${v}"`
             }
-            return 'type:' + v
+            return 'metadata.version:' + v
         }}
         format={v => v.split(':')[1].split('"')[0]}
     />,
@@ -117,7 +137,6 @@ const App = () => {
                         edit={OrganizationEdit}
                         create={OrganizationCreate}
                     />
-                    {/* <Resource name="searchresults" list={SearchList} /> */}
                     <CustomRoutes>
                         <Route path="/searchresults" element={<SearchList />} />
                     </CustomRoutes>

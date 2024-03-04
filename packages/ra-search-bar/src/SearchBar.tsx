@@ -17,19 +17,14 @@ import {
     TextField as MuiTextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import {
-    Form,
-    RecordContextProvider,
-    TextInput,
-    useRecordContext,
-} from 'react-admin';
+import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
 import { SearchFilter } from './SearchProvider';
 import { InputProps } from 'ra-core';
 
 const getEntries = (o, prefix = '') =>
     Object.entries(o).flatMap(([k, v]) =>
-        Object(v) === v
+        Object(v) === v && !Array.isArray(v)
             ? getEntries(v, `${prefix}${k}.`)
             : [[`${prefix}${k}`, v]]
     );
@@ -76,6 +71,15 @@ const extractQ = (input: string, filterSeparator: string) => {
         'g'
     );
     return input.replace(reg, '');
+};
+
+const isEmpty = value => {
+    return (
+        value === undefined ||
+        value === null ||
+        (typeof value === 'string' && value.trim().length === 0) ||
+        (Array.isArray(value) && value.length === 0)
+    );
 };
 
 export type SearchBarParams = {
@@ -173,7 +177,7 @@ export const SearchBar = (props: SearchBarParams) => {
                 .map(source => {
                     const value = flattenedInputs[source];
                     const parse = conversionMap[source].parse;
-                    if (value !== undefined) {
+                    if (!isEmpty(value)) {
                         return {
                             field: source,
                             value: value,
@@ -292,6 +296,7 @@ const FilterBox = (props: any) => {
                 <Stack
                     sx={{
                         backgroundColor: 'white',
+                        color: 'black',
                         position: 'absolute',
                         width: '100%',
                         padding: '8px',

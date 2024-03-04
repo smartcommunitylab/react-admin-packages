@@ -2,15 +2,11 @@ import {
     Datagrid,
     Loading,
     TextField,
-    useDataProvider,
     Error,
     useList,
     ListContextProvider,
     Pagination,
 } from 'react-admin';
-import {
-    List as MuiList
-} from '@mui/material';
 import { useSearch } from '@dslab/ra-search-bar';
 import { useEffect, useState } from 'react';
 
