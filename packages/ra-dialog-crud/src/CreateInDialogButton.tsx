@@ -1,14 +1,9 @@
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import {
-    Breakpoint,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    styled,
-} from '@mui/material';
-import React, { ReactElement, ReactNode, useState } from 'react';
+import React, {
+    MouseEventHandler,
+    ReactElement,
+    ReactNode,
+    useState,
+} from 'react';
 import {
     Button,
     CreateBase,
@@ -20,68 +15,66 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import {
+    Breakpoint,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    styled,
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 
-const Title = (props: TitleProps) => {
-    const { propsTitle: title } = props;
-    const translate = useTranslate();
-    const { defaultTitle } = useCreateContext();
-
-    return (
-        <DialogTitle
-            id="create-dialog-title"
-            className={CreateInDialogButtonClasses.title}
-        >
-            {!title
-                ? defaultTitle
-                : typeof title === 'string'
-                ? translate(title, { _: title })
-                : title}
-        </DialogTitle>
-    );
-};
+const defaultIcon = <AddIcon />;
 
 export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
-    const contextResource = useResourceContext();
-
     const {
         children,
-        title: propsTitle,
+        title,
+        icon = defaultIcon,
         maxWidth = 'sm',
         fullWidth = false,
-        resource = contextResource,
         label = 'ra.action.create',
         mutationOptions = {},
         sx,
         ...rest
     } = props;
 
+    const resource = useResourceContext(props);
+
     const [open, setOpen] = useState(false);
-    const translate = useTranslate();
     const notify = useNotify();
     const { onSuccess } = mutationOptions;
 
-    const handleOpen = () => {
-        setOpen(true);
+    const closeDialog = () => {
+        setOpen(false);
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleDialogOpen: MouseEventHandler<HTMLButtonElement> = e => {
+        setOpen(true);
+        e.stopPropagation();
+    };
+
+    const handleDialogClose: MouseEventHandler<HTMLButtonElement> = e => {
+        closeDialog();
+        e.stopPropagation();
     };
 
     return (
         <>
             <Button
                 label={label}
-                onClick={handleOpen}
+                onClick={handleDialogOpen}
                 className={CreateInDialogButtonClasses.button}
             >
-                <AddIcon />
+                {icon}
             </Button>
 
-            <AddDialog
+            <CreateDialog
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
-                onClose={handleClose}
+                onClose={handleDialogClose}
                 aria-labelledby="create-dialog-title"
                 open={open}
                 className={CreateInDialogButtonClasses.dialog}
@@ -95,7 +88,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                     mutationOptions={{
                         ...mutationOptions,
                         onSuccess: (data, variables, context) => {
-                            handleClose();
+                            closeDialog();
 
                             if (onSuccess) {
                                 return onSuccess(data, variables, context);
@@ -108,25 +101,53 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                         },
                     }}
                 >
-                    <div className={CreateInDialogButtonClasses.header}>
-                        <Title propsTitle={propsTitle} />
-
-                        <IconButton
-                            className={CreateInDialogButtonClasses.closeButton}
-                            aria-label={translate('ra.action.close')}
-                            title={translate('ra.action.close')}
-                            onClick={handleClose}
-                            size="small"
-                        >
-                            <CloseIcon fontSize="small" />
-                        </IconButton>
-                    </div>
-
-                    <DialogContent sx={{ p: 0 }}>
-                        {children ? children : null}
-                    </DialogContent>
+                    <CreateContent
+                        title={title}
+                        handleClose={handleDialogClose}
+                    >
+                        {children}
+                    </CreateContent>
                 </CreateBase>
-            </AddDialog>
+            </CreateDialog>
+        </>
+    );
+};
+
+const CreateContent = (props: {
+    title: string | ReactElement;
+    children: ReactNode;
+    handleClose: MouseEventHandler;
+}) => {
+    const { title, children, handleClose } = props;
+    const translate = useTranslate();
+    const { defaultTitle } = useCreateContext();
+
+    return (
+        <>
+            <div className={CreateInDialogButtonClasses.header}>
+                <DialogTitle
+                    id="create-dialog-title"
+                    className={CreateInDialogButtonClasses.title}
+                >
+                    {!title
+                        ? defaultTitle
+                        : typeof title === 'string'
+                        ? translate(title, { _: title })
+                        : title}
+                </DialogTitle>
+
+                <IconButton
+                    className={CreateInDialogButtonClasses.closeButton}
+                    aria-label={translate('ra.action.close')}
+                    title={translate('ra.action.close')}
+                    onClick={handleClose}
+                    size="small"
+                >
+                    <CloseIcon fontSize="small" />
+                </IconButton>
+            </div>
+
+            <DialogContent sx={{ p: 0 }}>{children}</DialogContent>
         </>
     );
 };
@@ -149,10 +170,7 @@ export type CreateInDialogButtonProps<
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;
     label?: string;
-};
-
-type TitleProps = {
-    propsTitle: string | ReactElement;
+    icon?: ReactElement;
 };
 
 const PREFIX = 'RaCreateInDialogButton';
@@ -165,7 +183,8 @@ export const CreateInDialogButtonClasses = {
     closeButton: `${PREFIX}-close-button`,
 };
 
-const AddDialog = styled(Dialog, {
+const CreateDialog = styled(Dialog, {
+    name: PREFIX,
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme }) => ({
     [`& .${CreateInDialogButtonClasses.title}`]: {

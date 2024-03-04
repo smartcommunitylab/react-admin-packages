@@ -9,6 +9,7 @@ import {
     Empty,
     List,
     ReferenceField,
+    ShowButton,
     SimpleForm,
     SimpleShowLayout,
     TextField,
@@ -97,6 +98,7 @@ export const UserList = () => {
                         <TextField source="name" />
                         <TextField source="surname" />
                         <EmailField source="email" />
+                        <ShowButton />
                     </SimpleShowLayout>
                 </ShowInDialogButton>
 

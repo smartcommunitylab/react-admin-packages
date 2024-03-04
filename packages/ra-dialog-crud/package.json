@@ -5,6 +5,12 @@
         "name": "Claudio Ballardini",
         "email": "cballardini@fbk.eu"
     },
+    "contributors": [
+        {
+            "name": "Matteo Saloni",
+            "email": "msaloni@fbk.eu"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/smartcommunitylab/react-admin-packages"

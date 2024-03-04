@@ -1,17 +1,9 @@
-import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
-import {
-    Box,
-    Breakpoint,
-    CircularProgress,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    styled,
-    useTheme,
-} from '@mui/material';
-import React, { ReactElement, ReactNode, useState } from 'react';
+import React, {
+    MouseEventHandler,
+    ReactElement,
+    ReactNode,
+    useState,
+} from 'react';
 import {
     Button,
     EditBase,
@@ -23,60 +15,29 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import {
+    Box,
+    Breakpoint,
+    CircularProgress,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    styled,
+    useTheme,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Create';
 
-const Title = (props: TitleProps) => {
-    const { propsTitle: title } = props;
-    const translate = useTranslate();
-    const { defaultTitle } = useEditContext();
-
-    return (
-        <DialogTitle
-            id="edit-dialog-title"
-            className={EditInDialogButtonClasses.title}
-        >
-            {!title
-                ? defaultTitle
-                : typeof title === 'string'
-                ? translate(title, { _: title })
-                : title}
-        </DialogTitle>
-    );
-};
-
-const ChildrenWrapper = (props: ChildrenWrapperProps) => {
-    const { children, emptyWhileLoading } = props;
-    const { error, isLoading } = useEditContext();
-    const theme = useTheme();
-
-    if (error) {
-        return null;
-    }
-
-    if (isLoading && emptyWhileLoading) {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
-                <CircularProgress
-                    color="inherit"
-                    size={theme.spacing(6)}
-                    thickness={3}
-                />
-            </Box>
-        );
-    }
-
-    return <>{children}</>;
-};
+const defaultIcon = <EditIcon />;
 
 export const EditInDialogButton = (props: EditInDialogButtonProps) => {
-    const contextResource = useResourceContext();
-    const record = useRecordContext();
-
     const {
         children,
-        title: propsTitle,
+        title,
+        icon = defaultIcon,
         maxWidth = 'sm',
         fullWidth = false,
-        resource = contextResource,
         label = 'ra.action.edit',
         mutationOptions = {},
         queryOptions = {},
@@ -87,19 +48,27 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         ...rest
     } = props;
 
-    const id = idProps != null ? idProps : record?.id;
+    const resource = useResourceContext(props);
+    const record = useRecordContext(props);
+
+    const id = idProps || record?.id;
     const [open, setOpen] = useState(false);
-    const translate = useTranslate();
     const notify = useNotify();
     const { onSuccess } = mutationOptions;
     const { onError: queryOptionsOnError } = queryOptions;
 
-    const handleOpen = () => {
-        setOpen(true);
+    const closeDialog = () => {
+        setOpen(false);
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleDialogOpen: MouseEventHandler<HTMLButtonElement> = e => {
+        setOpen(true);
+        e.stopPropagation();
+    };
+
+    const handleDialogClose: MouseEventHandler<HTMLButtonElement> = e => {
+        closeDialog();
+        e.stopPropagation();
     };
 
     if (!id) return null;
@@ -107,16 +76,16 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         <>
             <Button
                 label={label}
-                onClick={handleOpen}
+                onClick={handleDialogOpen}
                 className={EditInDialogButtonClasses.button}
             >
-                <EditIcon />
+                {icon}
             </Button>
 
             <EditDialog
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
-                onClose={handleClose}
+                onClose={handleDialogClose}
                 aria-labelledby="edit-dialog-title"
                 open={open}
                 className={EditInDialogButtonClasses.dialog}
@@ -126,7 +95,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                 <EditBase
                     resource={resource}
                     redirect={false}
-                    id={id}
+                    id={id} //explicitly pass id because controller reads from route as fallback
                     mutationMode={mutationMode}
                     queryOptions={{
                         ...queryOptions,
@@ -150,7 +119,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                     mutationOptions={{
                         ...mutationOptions,
                         onSuccess: (data, variables, context) => {
-                            handleClose();
+                            closeDialog();
 
                             if (onSuccess) {
                                 return onSuccess(data, variables, context);
@@ -176,28 +145,73 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                     }}
                     {...rest}
                 >
-                    <div className={EditInDialogButtonClasses.header}>
-                        <Title propsTitle={propsTitle} />
-
-                        <IconButton
-                            className={EditInDialogButtonClasses.closeButton}
-                            aria-label={translate('ra.action.close')}
-                            title={translate('ra.action.close')}
-                            onClick={handleClose}
-                            size="small"
-                        >
-                            <CloseIcon fontSize="small" />
-                        </IconButton>
-                    </div>
-
-                    <DialogContent sx={{ p: 0 }}>
-                        <ChildrenWrapper
-                            children={children}
-                            emptyWhileLoading={emptyWhileLoading}
-                        />
-                    </DialogContent>
+                    <EditContent
+                        title={title}
+                        emptyWhileLoading={emptyWhileLoading}
+                        handleClose={handleDialogClose}
+                    >
+                        {children}
+                    </EditContent>
                 </EditBase>
             </EditDialog>
+        </>
+    );
+};
+
+const EditContent = (props: {
+    title: string | ReactElement;
+    emptyWhileLoading: boolean;
+    children: ReactNode;
+    handleClose: MouseEventHandler;
+}) => {
+    const { title, emptyWhileLoading, children, handleClose } = props;
+    const translate = useTranslate();
+    const { defaultTitle, error, isLoading } = useEditContext();
+    const theme = useTheme();
+
+    if (error) {
+        return null;
+    }
+
+    const content =
+        isLoading && emptyWhileLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+                <CircularProgress
+                    color="inherit"
+                    size={theme.spacing(6)}
+                    thickness={3}
+                />
+            </Box>
+        ) : (
+            children
+        );
+
+    return (
+        <>
+            <div className={EditInDialogButtonClasses.header}>
+                <DialogTitle
+                    id="edit-dialog-title"
+                    className={EditInDialogButtonClasses.title}
+                >
+                    {!title
+                        ? defaultTitle
+                        : typeof title === 'string'
+                        ? translate(title, { _: title })
+                        : title}
+                </DialogTitle>
+
+                <IconButton
+                    className={EditInDialogButtonClasses.closeButton}
+                    aria-label={translate('ra.action.close')}
+                    title={translate('ra.action.close')}
+                    onClick={handleClose}
+                    size="small"
+                >
+                    <CloseIcon fontSize="small" />
+                </IconButton>
+            </div>
+
+            <DialogContent sx={{ p: 0 }}>{content}</DialogContent>
         </>
     );
 };
@@ -213,16 +227,8 @@ export type EditInDialogButtonProps<
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;
     label?: string;
+    icon?: ReactElement;
     emptyWhileLoading?: boolean;
-};
-
-type TitleProps = {
-    propsTitle: string | ReactElement;
-};
-
-type ChildrenWrapperProps = {
-    children: ReactNode;
-    emptyWhileLoading: boolean;
 };
 
 const PREFIX = 'RaEditInDialogButton';
@@ -236,6 +242,7 @@ export const EditInDialogButtonClasses = {
 };
 
 const EditDialog = styled(Dialog, {
+    name: PREFIX,
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme }) => ({
     [`& .${EditInDialogButtonClasses.title}`]: {
