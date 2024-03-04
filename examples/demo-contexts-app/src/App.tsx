@@ -53,7 +53,7 @@ const App = () => {
                 layout={MyLayout}
                 // basename={basePath}
             >
-                <Resource name="users" list={UserList} />
+                <Resource name="users" list={UserList} show={ShowGuesser} />
                 <Resource
                     name="organizations"
                     list={OrganizationSelectorList}

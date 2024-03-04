@@ -13,6 +13,7 @@
     "dependencies": {
         "@dslab/ra-language-italian": "*",
         "@dslab/ra-root-selector": "*",
+        "@dslab/ra-dialog-crud": "*",
         "json-server": "^0.17.4",
         "ra-data-fakerest": "^4.11.0",
         "ra-data-json-server": "^4.11.0",
