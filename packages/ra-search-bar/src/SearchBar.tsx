@@ -16,7 +16,7 @@ import {
     Stack,
     TextField as MuiTextField,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
 import { SearchFilter } from './SearchProvider';
@@ -105,8 +105,26 @@ export const SearchBar = (props: SearchBarParams) => {
     const [showFilters, setShowFilters] = useState(false);
     const navigate = useNavigate();
     const [record, setRecord] = useState({ id: '1', q: '' });
+    const boxRef = useRef(null);
 
     const handleClickShowFilters = () => setShowFilters(show => !show);
+
+    const handleOutsideClick = (event: MouseEvent) => {
+        if (
+            showFilters &&
+            boxRef.current &&
+            !boxRef.current.contains(event.target)
+        ) {
+            setShowFilters(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleOutsideClick);
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    });
 
     let conversionMap = {}; //{"metadata.name": {parse: f, format: f}}
     let defaultValues = {}; //{metadata: {name: "", description: ""}, type: ""}
@@ -202,7 +220,7 @@ export const SearchBar = (props: SearchBarParams) => {
     };
 
     return (
-        <Box sx={{ marginRight: '50px' }}>
+        <Box sx={{ marginRight: '50px' }} ref={boxRef}>
             <RecordContextProvider value={record}>
                 <Stack>
                     <Form defaultValues={defaultValues}>
