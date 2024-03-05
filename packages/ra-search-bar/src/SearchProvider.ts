@@ -1,7 +1,7 @@
-import { GetListResult, Identifier, RaRecord } from 'react-admin';
+import { GetListParams, GetListResult, Identifier, RaRecord } from 'react-admin';
 
 export type SearchProvider = {
-    search: (params: SearchParams, resource?: string) => Promise<SearchResults>;
+    search: (searchParams: SearchParams, params: GetListParams, resource?: string) => Promise<SearchResults>;
 };
 
 export interface SearchParams {
