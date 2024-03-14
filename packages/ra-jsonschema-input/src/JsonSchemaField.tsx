@@ -6,6 +6,7 @@ import {
     FormContextType,
     GenericObjectType,
     RJSFSchema,
+    RegistryWidgetsType,
     StrictRJSFSchema,
     UiSchema,
 } from '@rjsf/utils';
@@ -54,7 +55,7 @@ function ReadOnlyBaseFieldTemplate<
 //TODO add additional widgets for select,radio,checkbox...
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
-    const { schema, uiSchema = {}, label, resource, source } = props;
+    const { schema, uiSchema = {}, label, resource, source, customWidgets  } = props;
 
     const record = useRecordContext(props);
     const value = get(record, source);
@@ -82,6 +83,7 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
             validator={validator}
             omitExtraData={true}
             showErrorList={false}
+            widgets={customWidgets}
             noValidate
             readonly
             templates={{
@@ -99,6 +101,7 @@ export interface JsonSchemaFieldProps<
 > extends FieldProps<RecordType> {
     schema: RJSFSchema | object | string;
     uiSchema?: UiSchema | object | string;
+    customWidgets?: RegistryWidgetsType;
 }
 
 export default JsonSchemaField;
