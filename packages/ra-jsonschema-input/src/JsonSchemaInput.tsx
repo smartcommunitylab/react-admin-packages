@@ -14,7 +14,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         helperText,
         resource,
         source,
-        customWidgets = {},
+        customWidgets,
     } = props;
     const record = useRecordContext();
 
