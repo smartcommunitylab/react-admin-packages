@@ -265,7 +265,13 @@ const ActualSearchBar = (props: any) => {
                     handleEnter(formContext.getValues());
             }}
             InputProps={{
-                sx: { width: '50ch', backgroundColor: 'white' },
+                sx: {
+                    width: '50ch',
+                    backgroundColor: 'white',
+                    '& .MuiInputBase-input': {
+                        padding: '8px 0',
+                    },
+                },
                 startAdornment: (
                     <InputAdornment position="start">
                         <SearchIcon />
