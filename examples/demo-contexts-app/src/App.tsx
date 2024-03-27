@@ -9,15 +9,12 @@ import {
     CustomRoutes,
     CheckboxGroupInput,
 } from 'react-admin';
-import { Route } from "react-router-dom";
+import { Route } from 'react-router-dom';
 import {
     RootResourceSelectorMenu,
     RootSelector,
 } from '@dslab/ra-root-selector';
-import {
-    SearchBar,
-    Search,
-} from '@dslab/ra-search-bar';
+import { SearchBar, Search } from '@dslab/ra-search-bar';
 import { i18nProvider } from './i18nprovider';
 import { UserList } from './resources/users';
 import {
@@ -43,25 +40,27 @@ const httpClient = (url: string, options: fetchUtils.Options = {}) => {
 const myDataProvider = dataProvider(API_URL, httpClient);
 
 const filters = [
-    <CheckboxGroupInput source="type" choices={[
-        { id: 'function', name: 'Function' },
-        { id: 'dataitem', name: 'DataItem' },
-        { id: 'artifact', name: 'Artifact' },
-    ]}
+    <CheckboxGroupInput
+        source="type"
+        choices={[
+            { id: 'function', name: 'Function' },
+            { id: 'dataitem', name: 'DataItem' },
+            { id: 'artifact', name: 'Artifact' },
+        ]}
         label="Type"
         key={1}
         defaultValue={[]}
         parse={v => {
             //v=['function', 'dataitem']
             //return type:(function OR dataitem)
-            return `type:(${v.join(' OR ')})`
+            return `type:(${v.join(' OR ')})`;
         }}
         format={v => {
             //v=type:(function OR dataitem)
             //return ['function', 'dataitem']
-            const startIndex = v.indexOf('(')
-            const endIndex = v.indexOf(')')
-            return v.substring(startIndex + 1, endIndex).split(' OR ')
+            const startIndex = v.indexOf('(');
+            const endIndex = v.indexOf(')');
+            return v.substring(startIndex + 1, endIndex).split(' OR ');
         }}
     />,
     <TextInput
@@ -72,9 +71,9 @@ const filters = [
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
-                v = `"${v}"`
+                v = `"${v}"`;
             }
-            return 'metadata.name:' + v
+            return 'metadata.name:' + v;
         }}
         format={v => v.split(':')[1].split('"')[0]}
     />,
@@ -86,9 +85,9 @@ const filters = [
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
-                v = `"${v}"`
+                v = `"${v}"`;
             }
-            return 'metadata.description:' + v
+            return 'metadata.description:' + v;
         }}
         format={v => v.split(':')[1].split('"')[0]}
     />,
@@ -100,18 +99,38 @@ const filters = [
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
-                v = `"${v}"`
+                v = `"${v}"`;
             }
-            return 'metadata.version:' + v
+            return 'metadata.version:' + v;
         }}
         format={v => v.split(':')[1].split('"')[0]}
     />,
-]
+    <TextInput
+        label="Labels"
+        source="metadata.labels"
+        alwaysOn
+        key={5}
+        defaultValue=""
+        parse={v => {
+            return `metadata.labels:(${v.split(',').join(' AND ')})`
+        }}
+        format={v => {
+            const startIndex = v.indexOf('(')
+            const endIndex = v.indexOf(')')
+            return v.substring(startIndex + 1, endIndex).split(' AND ').join(',')
+        }}
+    />,
+];
 
 const MyAppBar = () => (
     <AppBar color="primary">
         <TitlePortal />
-        <SearchBar hintText="Search" to="searchresults" filters={filters} filterSeparator=":"></SearchBar>
+        <SearchBar
+            hintText="Search"
+            to="searchresults"
+            filters={filters}
+            filterSeparator=":"
+        ></SearchBar>
         <RootResourceSelectorMenu source="name" showSelected={false} />
     </AppBar>
 );

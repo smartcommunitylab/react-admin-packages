@@ -6,6 +6,7 @@ import {
     SearchFilter,
     SearchResults
 } from '@dslab/ra-search-bar';
+import { GetListParams } from 'react-admin';
 
 /**
  * Maps react-admin queries to a json-server powered REST API
@@ -177,12 +178,17 @@ export default (
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
     
-    search: (params: SearchParams, resource): Promise<SearchResults> => {
-        const q = params.q ? `q=${encodeURIComponent(params.q)}` : '';
-        const fq = params.fq?.map((filter: SearchFilter) => `fq=${encodeURIComponent(filter.filter)}`).join('&');
+    search: (searchParams: SearchParams, params: GetListParams): Promise<SearchResults> => {
+        const q = searchParams.q ? `q=${encodeURIComponent(searchParams.q)}` : '';
+        const fq = searchParams.fq?.map((filter: SearchFilter) => `fq=${encodeURIComponent(filter.filter)}`).join('&');
 
         return httpClient(`${apiUrl}/api/v1/solr/search/item?${[q,fq].filter(Boolean).join('&')}`, {
             method: 'GET',
-        }).then(({ json }) => ({ data: json }))
+        }).then(({ json }) => {
+            return {
+                data: json.content,
+                total: parseInt(json.totalElements),
+            };
+        });
     },
 });

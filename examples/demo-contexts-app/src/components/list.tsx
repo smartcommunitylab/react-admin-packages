@@ -6,6 +6,7 @@ import {
     useList,
     ListContextProvider,
     Pagination,
+    GetListParams,
 } from 'react-admin';
 import { useSearch } from '@dslab/ra-search-bar';
 import { useEffect, useState } from 'react';
@@ -14,19 +15,21 @@ export const SearchList = () => {
     const { params, setParams, provider } = useSearch();
     console.log('context', params);
 
-    const [results, setResults] = useState<[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [results, setResults] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState();
     useEffect(() => {
-        provider.search(params)
-            .then(({ data }) => {
-                setResults(data.content);
+        provider
+            .search(params, {} as GetListParams)
+            .then(({ data, total }) => {
+                setResults(data);
                 setLoading(false);
             })
             .catch(error => {
                 setError(error);
                 setLoading(false);
-            })
+            });
     }, [provider, params]);
 
     const listContext = useList({ data: results, isLoading: loading });
