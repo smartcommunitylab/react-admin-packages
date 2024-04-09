@@ -8,11 +8,8 @@ import { useSearch } from './SearchContext';
 import {
     Box,
     Button,
-    FormControl,
-    Grid,
     IconButton,
     InputAdornment,
-    OutlinedInput,
     Stack,
     TextField as MuiTextField,
 } from '@mui/material';
@@ -82,6 +79,18 @@ const isEmpty = value => {
     );
 };
 
+/**
+ * Check whether two arrays of SearchFilter contain the same filters
+ * @param a
+ * @param b
+ */
+const isEqual = (a: SearchFilter[], b: SearchFilter[]) => {
+    return (
+        a?.length === b?.length &&
+        a.every(sf1 => b.some(sf2 => sf1.filter === sf2.filter))
+    );
+};
+
 export type SearchBarParams = {
     hintText?: string;
     to?: string;
@@ -101,7 +110,7 @@ export type SearchBarParams = {
 
 export const SearchBar = (props: SearchBarParams) => {
     const { hintText = 'Search', to, filters, filterSeparator = ':' } = props;
-    const { params, setParams, provider } = useSearch();
+    const { params, setParams } = useSearch();
     const [showFilters, setShowFilters] = useState(false);
     const navigate = useNavigate();
     const [record, setRecord] = useState({ id: '1', q: '' });
@@ -144,16 +153,6 @@ export const SearchBar = (props: SearchBarParams) => {
                 conversionMap[element.props.source] = {
                     parse: element.props.parse,
                     format: element.props.format,
-                    // parse: element.props.parse
-                    //     ? element.props.parse
-                    //     : v => {
-                    //           return v;
-                    //       },
-                    // format: element.props.format
-                    //     ? element.props.format
-                    //     : v => {
-                    //           return v;
-                    //       },
                 };
                 unflatten(
                     defaultValues,
@@ -341,89 +340,8 @@ const FilterBox = (props: any) => {
                         Search
                     </Button>
                 </Stack>
-                // <Grid
-                //     container
-                //     sx={{ border: 1, backgroundColor: 'white' }}
-                // >
-                //     <Grid
-                //         item
-                //         xs={12}
-                //         sx={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                //     >
-                //         <div>some filters here</div>
-                //     </Grid>
-                //     <Grid item xs={9}>
-                //         <div></div>
-                //     </Grid>
-                //     <Grid item xs={3}>
-                //         <Button
-                //             variant="text"
-                //             aria-controls="search-button"
-                //             aria-label=""
-                //             onClick={handleClickSearch}
-                //         >
-                //             Search
-                //         </Button>
-                //     </Grid>
-                // </Grid>
             )}
         </Box>
-    );
-};
-
-const ActualSearchBarOld = (props: any) => {
-    const { hintText, value, setValue, handleEnter, handleClickShowFilters } =
-        props;
-
-    const formContext = useFormContext();
-
-    const handleClickClear = () => {
-        setValue('');
-        formContext.reset();
-    };
-
-    return (
-        <FormControl variant="outlined">
-            <OutlinedInput
-                id="search-input"
-                type="text"
-                placeholder={hintText}
-                sx={{
-                    backgroundColor: 'white',
-                    width: '50ch',
-                }}
-                value={value}
-                onChange={event => {
-                    setValue(event.target.value);
-                }}
-                onKeyDown={e => {
-                    if (e.key === 'Enter' && value) handleEnter();
-                }}
-                startAdornment={
-                    <InputAdornment position="start">
-                        <SearchIcon />
-                    </InputAdornment>
-                }
-                endAdornment={
-                    <InputAdornment position="end">
-                        <IconButton
-                            aria-label="cancel search input"
-                            onClick={handleClickClear}
-                            edge="end"
-                        >
-                            <ClearIcon />
-                        </IconButton>
-                        <IconButton
-                            aria-label="toggle filters visibility"
-                            onClick={handleClickShowFilters}
-                            edge="end"
-                        >
-                            <TuneIcon />
-                        </IconButton>
-                    </InputAdornment>
-                }
-            />
-        </FormControl>
     );
 };
 
