@@ -1,7 +1,7 @@
 import React from 'react';
 import { InputProps, useRecordContext } from 'react-admin';
 import validator from '@rjsf/validator-ajv8';
-import { RJSFSchema, RegistryWidgetsType, UiSchema } from '@rjsf/utils';
+import { RJSFSchema, RegistryFieldsType, RegistryWidgetsType, UiSchema } from '@rjsf/utils';
 import { Form } from '@rjsf/mui';
 import { get, useController } from 'react-hook-form';
 import { useRJSchema } from './utils';
@@ -15,6 +15,8 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         resource,
         source,
         customWidgets,
+        templates,
+        fields
     } = props;
     const record = useRecordContext();
 
@@ -51,6 +53,8 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             tagName={'div'}
             schema={rjsSchema}
             uiSchema={ruiSchema}
+            templates={templates}
+            fields={ fields }
             formData={field.value}
             validator={validator}
             onChange={(e: any) => update(e.formData)}
@@ -67,6 +71,8 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
 export type JSONSchemaFormatInputProps = InputProps & {
     schema: RJSFSchema | object | string;
     uiSchema?: UiSchema | object | string;
+    templates?: object;
+    fields?: RegistryFieldsType;
     customWidgets?: RegistryWidgetsType;
 };
 
