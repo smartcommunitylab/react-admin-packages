@@ -5,13 +5,14 @@ import jsonServerProvider from 'ra-data-json-server';
 import { i18nProvider } from './i18nprovider';
 import { PostEdit, PostList } from './resources/posts';
 import { UserEdit, UserList, UserShow } from './resources/users';
+import { PostCreate } from './resources/posts/create';
 
 const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com');
 
 const App = () => (
     <BrowserRouter>
         <Admin dataProvider={dataProvider} i18nProvider={i18nProvider}>
-            <Resource name="posts" list={PostList} edit={PostEdit} />
+            <Resource name="posts" list={PostList} edit={PostEdit} create={PostCreate} />
             <Resource name="comments" list={ListGuesser} />
             <Resource
                 name="users"

@@ -1,4 +1,5 @@
 import {
+    CreateButton,
     Datagrid,
     Exporter,
     List,
@@ -56,6 +57,7 @@ const recordExporter: Exporter = (
 const ListActions = () => (
     <TopToolbar>
         <ExportAllButton />
+        <CreateButton />
     </TopToolbar>
 );
 
