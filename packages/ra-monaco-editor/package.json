@@ -1,7 +1,6 @@
 {
     "name": "@dslab/ra-monaco-editor",
     "version": "1.0.0",
-    "description": "",
     "author": {
         "name": "Matteo Chini",
         "email": "mchini@fbk.eu"
@@ -25,8 +24,8 @@
     "scripts": {
         "build": "yarn run build-cjs && yarn run build-esm",
         "build-cjs": "rimraf ./dist/cjs && tsc --outDir dist/cjs",
-        "build-esm": "rimraf ./dist/esm && tsc --outDir dist/esm --module es2015",
-        "watch": "tsc --outDir dist/esm --module es2015 --watch"
+        "build-esm": "rimraf ./dist/esm && tsc --outDir dist/esm --module es2020",
+        "watch": "tsc --outDir dist/esm --module es2020 --watch"
     },
     "peerDependencies": {
         "@mui/material": "^5.0.2",
