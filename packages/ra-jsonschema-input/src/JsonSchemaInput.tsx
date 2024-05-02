@@ -56,9 +56,9 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         source,
         validate,
     });
-
-    const onChange = (data: any) => {
-        if (!isLoading) {
+    const data= field.value;
+    const onChange = (e: any, id?:string) => {
+        if (isLoading != undefined && !isLoading && id) {
             //validate first
             if (formRef.current) {
                 const isValid = formRef?.current?.validateForm();
@@ -69,8 +69,9 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             }
 
             //update data
-            field.onChange(data);
-        }
+            if (e.formData){
+                field.onChange(e.formData);
+          }        }
     };
 
     const onError = (values: RJSFValidationError[]) => {
@@ -104,9 +105,9 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             uiSchema={ruiSchema}
             templates={templates}
             fields={fields}
-            formData={field.value}
+            formData={data}
             validator={validator}
-            onChange={(e: any) => onChange(e.formData)}
+            onChange={onChange}
             onError={onError}
             omitExtraData={true}
             liveValidate={false}
