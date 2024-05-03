@@ -27,6 +27,7 @@ export const AceEditorField = (props: AceFieldProps) => {
         mode = 'html',
         theme = 'github',
         fullWidth = false,
+        width = '50vw',
         source,
     } = props;
 
@@ -47,7 +48,7 @@ export const AceEditorField = (props: AceFieldProps) => {
                 mode={mode}
                 theme={theme}
                 wrapEnabled
-                width={fullWidth ? '100%' : undefined}
+                width={fullWidth ? '100%' : width}
                 setOptions={aceOptions}
             />
         </Fragment>
@@ -70,5 +71,6 @@ export interface AceFieldProps extends FieldProps {
         | 'yaml'
         | 'text';
     fullWidth?: boolean;
+    width?: string;
     theme?: 'github' | 'monokai' | 'solarized_dark' | 'solarized_light';
 }
