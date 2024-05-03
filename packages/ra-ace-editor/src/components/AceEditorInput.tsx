@@ -34,7 +34,7 @@ export const AceEditorInput = (props: AceInputProps) => {
         label,
         helperText,
         fullWidth = false,
-        width = '50vw%',
+        width = '50vw',
         onBlur,
         onChange,
         resource,

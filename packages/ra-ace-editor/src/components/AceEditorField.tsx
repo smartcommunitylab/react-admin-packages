@@ -27,7 +27,7 @@ export const AceEditorField = (props: AceFieldProps) => {
         mode = 'html',
         theme = 'github',
         fullWidth = false,
-        width = '50vw%',
+        width = '50vw',
         source,
     } = props;
 
