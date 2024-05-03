@@ -34,6 +34,7 @@ export const AceEditorInput = (props: AceInputProps) => {
         label,
         helperText,
         fullWidth = false,
+        width = '50vw%',
         onBlur,
         onChange,
         resource,
@@ -80,7 +81,7 @@ export const AceEditorInput = (props: AceInputProps) => {
                     mode={mode}
                     theme={theme}
                     wrapEnabled
-                    width={fullWidth ? '100%' : undefined}
+                    width={fullWidth ? '100%' : width}
                     setOptions={aceOptions}
                 />
             </Labeled>
@@ -112,5 +113,6 @@ export type AceInputProps = InputProps & {
     useWorker?: boolean;
     basePath?: string;
     fullWidth?: boolean;
+    width?: string;
     theme?: 'github' | 'monokai' | 'solarized_dark' | 'solarized_light';
 };
