@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-jsonschema-input",
-    "version": "1.3.0",
+    "version": "1.3.2",
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
