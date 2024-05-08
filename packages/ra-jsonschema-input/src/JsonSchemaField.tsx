@@ -55,7 +55,8 @@ function ReadOnlyBaseFieldTemplate<
 //TODO add additional widgets for select,radio,checkbox...
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
-    const { schema, uiSchema = {}, label, resource, source, customWidgets  } = props;
+    const { schema, uiSchema = {}, label, resource, source, customWidgets,templates
+} = props;
 
     const record = useRecordContext(props);
     const value = get(record, source);
@@ -73,7 +74,6 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
     if ('required' in rSchema) {
         rSchema['required'] = [];
     }
-
     return (
         <ReadOnlyForm
             tagName={'div'}
@@ -88,6 +88,7 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
             readonly
             templates={{
                 BaseInputTemplate: ReadOnlyBaseFieldTemplate,
+                ...templates
             }}
             className="RaJsonSchemaField-Form"
         >
@@ -101,6 +102,7 @@ export interface JsonSchemaFieldProps<
 > extends FieldProps<RecordType> {
     schema: RJSFSchema | object | string;
     uiSchema?: UiSchema | object | string;
+    templates?: object;
     customWidgets?: RegistryWidgetsType;
 }
 
