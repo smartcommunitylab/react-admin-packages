@@ -32,16 +32,14 @@ export const StepperForm = (props: StepperFormProps) => {
     };
 
     const goToStep = (index: number) => {
-        setActiveStep(prevActiveStep => index);
+        if (setActiveStep) setActiveStep(prevActiveStep => index);
     };
-    let steps: any[] = [];
-    if (children !== undefined || children !== null) {
-        if (Array.isArray(children)) {
-            steps = children.map(step => step.props);
-        } else {
-            if (children) steps = [children];
-        }
-    }
+    const steps: any[] = children
+        ? Array.isArray(children)
+            ? children.map(step => step.props)
+            : [children]
+        : [];
+
     return (
         <Form {...rest}>
             <StepperContext.Provider
@@ -77,18 +75,15 @@ export const StepperForm = (props: StepperFormProps) => {
                         {toolbar ? (
                             toolbar
                         ) : (
-                            <Toolbar>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        pt: 2,
-                                    }}
-                                >
+                            <Toolbar sx={{ justifyContent: 'space-between' }}>
+                                <Box>
                                     <BackButton />
+                                </Box>
+                                <Box>
                                     <NextButton />
-                                    <Box sx={{ flex: '1 1 auto' }} />
-                                    <SaveButton />
+                                    {activeStep === steps.length - 1 && (
+                                        <SaveButton />
+                                    )}
                                 </Box>
                             </Toolbar>
                         )}
@@ -125,11 +120,11 @@ SimpleForm.propTypes = {
 
 export interface StepperFormProps extends Omit<SimpleFormProps, 'children'> {
     children:
-        | ReactElement<any, React.JSXElementConstructor< Step>>
-        | ReactElement<any, React.JSXElementConstructor< Step>>[];
+        | ReactElement<any, React.JSXElementConstructor<Step>>
+        | ReactElement<any, React.JSXElementConstructor<Step>>[];
 }
 
-const PREFIX = 'RaSimpleForm';
+const PREFIX = 'RaStepperForm';
 
 const DefaultComponent = styled(CardContent, {
     name: PREFIX,
@@ -141,10 +136,10 @@ const DefaultComponent = styled(CardContent, {
 }));
 
 // const DefaultToolbar = <Toolbar />;
-// export const Step = (props: StepProps) => {
-//     const { children, label } = props;
-//     return <>{children}</>;
-// };
+export const StepContent = (props: StepProps) => {
+    const { children, label } = props;
+    return <>{children}</>;
+};
 export interface StepProps {
     label: string;
     children: ReactNode;

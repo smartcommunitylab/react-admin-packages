@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-stepper",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "author": "Matteo Chini & Erica Tomaselli <m.chini@fbk.eu>",
     "contributors": ["Erica Tomaselli", "Matteo Chini"],    
     "repository": {
