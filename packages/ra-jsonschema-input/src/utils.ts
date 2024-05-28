@@ -88,6 +88,7 @@ export const useRJSchema = (props: UseRJSSchemaProps): UseRJSSchemaReturn => {
                 } else {
                     //translate user-provided
                     ui[k]['ui:title'] = translate(ui[k]['ui:title']);
+                    ui[k]['ui:description'] = translate(ui[k]['ui:description']);
                 }
             }
         }
