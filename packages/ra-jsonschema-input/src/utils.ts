@@ -58,8 +58,8 @@ export const useRJSchema = (props: UseRJSSchemaProps): UseRJSSchemaReturn => {
             typeof title === 'string'
                 ? translate(title)
                 : typeof title === 'boolean'
-                ? translate(source)
-                : '';
+                    ? translate(source)
+                    : '';
     }
     if (description && !('ui:description' in ui)) {
         ui['ui:description'] = translate(description);
@@ -88,6 +88,8 @@ export const useRJSchema = (props: UseRJSSchemaProps): UseRJSSchemaReturn => {
                 } else {
                     //translate user-provided
                     ui[k]['ui:title'] = translate(ui[k]['ui:title']);
+                }
+                if (('ui:description' in ui[k])) {
                     ui[k]['ui:description'] = translate(ui[k]['ui:description']);
                 }
             }
