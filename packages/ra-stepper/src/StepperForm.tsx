@@ -139,10 +139,10 @@ const DefaultToolbar = () => {
     return (
         <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Box>
-                <PreviousButton alwaysEnable />
+                <PreviousButton variant={'text'} color="secondary" />
             </Box>
             <Box>
-                <NextButton alwaysEnable />
+                <NextButton />
                 {steps && currentStep === steps.length - 1 && <SaveButton />}
             </Box>
         </Toolbar>
