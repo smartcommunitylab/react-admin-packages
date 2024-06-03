@@ -1,8 +1,12 @@
 {
     "name": "@dslab/ra-stepper",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "author": "Matteo Chini & Erica Tomaselli <m.chini@fbk.eu>",
-    "contributors": ["Erica Tomaselli", "Matteo Chini"],    
+    "contributors": [
+        "Erica Tomaselli",
+        "Matteo Chini",
+        "Matteo Saloni"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
