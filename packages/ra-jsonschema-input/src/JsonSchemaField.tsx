@@ -27,7 +27,7 @@ const ReadOnlyForm = styled(Form)(({ theme }) => ({
                 WebkitTextFillColor: 'inherit',
             },
             '& .MuiFormLabel-colorPrimary.Mui-disabled': {
-                color: 'rgba(0, 0, 0, 0.6)',
+                color: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
                 marginBottom: '0.2em',
             },
         },
