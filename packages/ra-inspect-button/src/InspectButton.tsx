@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useState } from 'react';
+import React, { Fragment, ReactElement, useState, useCallback } from 'react';
 import {
     Button,
     ButtonProps,
@@ -8,10 +8,11 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Breakpoint, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Breakpoint, Dialog, DialogContent, DialogTitle, IconButton, styled } from '@mui/material';
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import { SourceCodeBlock, SourceCodeBlockProps } from './SourceCodeBlock';
 import { toCode } from './utils';
+import CloseIcon from '@mui/icons-material/Close';
 
 const defaultIcon = <TroubleshootIcon />;
 
@@ -52,6 +53,9 @@ export const InspectButton = (props: InspectButtonProps) => {
         setOpen(false);
         e.stopPropagation();
     };
+    const handleClick = useCallback(e => {
+        e.stopPropagation();
+    }, []);
 
     return (
         <Fragment>
@@ -63,19 +67,35 @@ export const InspectButton = (props: InspectButtonProps) => {
             >
                 {icon}
             </Button>
-            <Dialog
+            <InspectDialog
                 open={open}
                 onClose={handleDialogClose}
+                onClick={handleClick}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
                 aria-labelledby="inspect-dialog-title"
             >
+                            <div className={InspectDialogButtonClasses.header}>
+
                 <DialogTitle
                     id="inspect-dialog-title"
-                    sx={{ paddingBottom: 0 }}
+                    className={InspectDialogButtonClasses.title}
+
                 >
                     {translate(label)}
                 </DialogTitle>
+                <IconButton
+                        aria-label={translate('ra.action.close')}
+                        title={translate('ra.action.close')}
+                        onClick={handleDialogClose}
+                        size="small"
+                        className={InspectDialogButtonClasses.closeButton}
+
+                    >
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                    </div>
+
                 <DialogContent>
                     {isLoading ? (
                         <LoadingIndicator />
@@ -90,7 +110,7 @@ export const InspectButton = (props: InspectButtonProps) => {
                         />
                     )}
                 </DialogContent>
-            </Dialog>
+            </InspectDialog>
         </Fragment>
     );
 };
@@ -119,3 +139,30 @@ export type InspectButtonProps<RecordType extends RaRecord = any> =
              */
             maxWidth?: Breakpoint;
         };
+const PREFIX = 'RaInspectDialogButton';
+
+export const InspectDialogButtonClasses = {
+    button: `${PREFIX}-button`,
+    dialog: `${PREFIX}-dialog`,
+    header: `${PREFIX}-header`,
+    title: `${PREFIX}-title`,
+    closeButton: `${PREFIX}-close-button`,
+};
+
+const InspectDialog = styled(Dialog, {
+    name: PREFIX,
+    overridesResolver: (_props, styles) => styles.root,
+})(({ theme }) => ({
+    [`& .${InspectDialogButtonClasses.title}`]: {
+        padding: theme.spacing(0),
+    },
+    [`& .${InspectDialogButtonClasses.header}`]: {
+        padding: theme.spacing(2, 2),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    [`& .${InspectDialogButtonClasses.closeButton}`]: {
+        height: 'fit-content',
+    },
+}));
