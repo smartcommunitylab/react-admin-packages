@@ -42,6 +42,7 @@ export const RootSelectorAppWrapper = (props: RootSelectorParams) => {
         return {
             resource,
             root: current,
+            base: basename,
             selectRoot: handleSelect,
             resetRoot: resetSelect,
         };
@@ -91,6 +92,7 @@ export const RootSelectorInitialWrapper = (props: RootSelectorParams) => {
         return {
             resource,
             root: null,
+            base: basename,
             selectRoot: handleSelect,
             resetRoot: resetSelect,
         };

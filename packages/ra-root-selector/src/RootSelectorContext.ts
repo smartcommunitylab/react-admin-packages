@@ -3,6 +3,7 @@ import { createContext, useContext } from 'react';
 interface RootSelectorContextValue {
     resource: string;
     root: string | undefined;
+    base: string;
     selectRoot: (record: any) => void;
     resetRoot: () => void;
 }
