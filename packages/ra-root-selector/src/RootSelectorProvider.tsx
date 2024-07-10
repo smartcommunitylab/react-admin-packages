@@ -23,7 +23,7 @@ export const RootSelector = (props: RootSelectorParams) => {
 
 export const RootSelectorAppWrapper = (props: RootSelectorParams) => {
     const { resource, basename = '', separator = '-', children } = props;
-    const [selected, setSelected] = useState<string>();
+    const [selected, setSelected] = useState<string | null>(null);
     const { context } = useParams();
     const navigate = useNavigate();
     const current = selected || context;
@@ -34,10 +34,16 @@ export const RootSelectorAppWrapper = (props: RootSelectorParams) => {
             navigate(`${basename}/${separator}/` + resource['id']);
         };
 
+        const resetSelect = () => {
+            setSelected(null);
+            navigate(`${basename}`);
+        };
+
         return {
             resource,
             root: current,
             selectRoot: handleSelect,
+            resetRoot: resetSelect,
         };
     }, [resource, current, navigate, basename, separator]);
 
@@ -79,11 +85,14 @@ export const RootSelectorInitialWrapper = (props: RootSelectorParams) => {
         const handleSelect = (resource: any) => {
             navigate(`${basename}/${separator}/` + resource['id']);
         };
-
+        const resetSelect = () => {
+            navigate(`${basename}`);
+        };
         return {
             resource,
             root: null,
             selectRoot: handleSelect,
+            resetRoot: resetSelect,
         };
     }, [basename, navigate, resource, separator]);
 

@@ -4,6 +4,7 @@ interface RootSelectorContextValue {
     resource: string;
     root: string | undefined;
     selectRoot: (record: any) => void;
+    resetRoot: () => void;
 }
 
 export const RootSelectorContext = createContext<
