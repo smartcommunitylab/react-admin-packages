@@ -43,7 +43,7 @@ export const useRJSchema = (props: UseRJSSchemaProps): UseRJSSchemaReturn => {
         title,
         description,
     } = props;
-    const translate = useTranslate();
+    // const translate = useTranslate();
     const translateLabel = useTranslateLabel();
 
     //parse
@@ -52,49 +52,49 @@ export const useRJSchema = (props: UseRJSSchemaProps): UseRJSSchemaReturn => {
         inputUiSchema
     ) as GenericObjectType;
 
-    //auto-add values from translation to uiSchema if missing
-    if (title && !('ui:title' in ui)) {
-        ui['ui:title'] =
-            typeof title === 'string'
-                ? translate(title)
-                : typeof title === 'boolean'
-                    ? translate(source)
-                    : '';
-    }
-    if (description && !('ui:description' in ui)) {
-        ui['ui:description'] = translate(description);
-    }
+    // //auto-add values from translation to uiSchema if missing
+    // if (title && !('ui:title' in ui)) {
+    //     ui['ui:title'] =
+    //         typeof title === 'string'
+    //             ? translate(title)
+    //             : typeof title === 'boolean'
+    //                 ? translate(source)
+    //                 : '';
+    // }
+    // if (description && !('ui:description' in ui)) {
+    //     ui['ui:description'] = translate(description);
+    // }
 
-    //auto-enrich schema with titles from key when missing
-    if (schema && 'properties' in schema) {
-        for (const k in schema.properties) {
-            const p: GenericObjectType = schema.properties[
-                k
-            ] as GenericObjectType;
-            if (!('title' in p)) {
-                p.title = k;
-            }
-            if (ui) {
-                if (!(k in ui)) {
-                    ui[k] = {};
-                }
+    // //auto-enrich schema with titles from key when missing
+    // if (schema && 'properties' in schema) {
+    //     for (const k in schema.properties) {
+    //         const p: GenericObjectType = schema.properties[
+    //             k
+    //         ] as GenericObjectType;
+    //         if (!('title' in p)) {
+    //             p.title = k;
+    //         }
+    //         if (ui) {
+    //             if (!(k in ui)) {
+    //                 ui[k] = {};
+    //             }
 
-                if (!('ui:title' in ui[k])) {
-                    //auto generate key and translate
-                    ui[k]['ui:title'] = translateLabel({
-                        source: source + '.' + k,
-                        resource: resource,
-                    });
-                } else {
-                    //translate user-provided
-                    ui[k]['ui:title'] = translate(ui[k]['ui:title']);
-                }
-                if (('ui:description' in ui[k])) {
-                    ui[k]['ui:description'] = translate(ui[k]['ui:description']);
-                }
-            }
-        }
-    }
+    //             if (!('ui:title' in ui[k])) {
+    //                 //auto generate key and translate
+    //                 ui[k]['ui:title'] = translateLabel({
+    //                     source: source + '.' + k,
+    //                     resource: resource,
+    //                 });
+    //             } else {
+    //                 // //translate user-provided
+    //                 // ui[k]['ui:title'] = translate(ui[k]['ui:title']);
+    //             }
+    //             // if (('ui:description' in ui[k])) {
+    //             //     ui[k]['ui:description'] = translate(ui[k]['ui:description']);
+    //             // }
+    //         }
+    //     }
+    // }
 
     //convert and return
     const uiSchema: UiSchema = ui as UiSchema;

@@ -15,6 +15,17 @@ import { get } from 'lodash';
 import { useRJSchema } from './utils';
 import BaseInputTemplate from '@rjsf/mui/lib/BaseInputTemplate';
 import { styled } from '@mui/material';
+import ArrayFieldItemTemplate from './templates/ArrayFieldItemTemplate';
+import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
+import TitleFieldTemplate from './templates/TitleFieldTemplate';
+import DescriptionFieldTemplate from './templates/DescriptionFieldTemplate';
+
+const globalTemplates = {
+    ArrayFieldTemplate,
+    ArrayFieldItemTemplate,
+    TitleFieldTemplate,
+    DescriptionFieldTemplate,
+};
 
 const ReadOnlyForm = styled(Form)(({ theme }) => ({
     '& .MuiFormControl-root': {
@@ -27,7 +38,10 @@ const ReadOnlyForm = styled(Form)(({ theme }) => ({
                 WebkitTextFillColor: 'inherit',
             },
             '& .MuiFormLabel-colorPrimary.Mui-disabled': {
-                color: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
+                color:
+                    theme.palette.mode === 'light'
+                        ? 'rgba(0, 0, 0, 0.6)'
+                        : 'rgba(255, 255, 255, 0.6)',
                 marginBottom: '0.2em',
             },
         },
@@ -55,11 +69,27 @@ function ReadOnlyBaseFieldTemplate<
 //TODO add additional widgets for select,radio,checkbox...
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
-    const { schema, uiSchema = {}, label, resource, source, customWidgets,templates
-} = props;
+    const {
+        schema,
+        uiSchema = {},
+        label,
+        resource,
+        source,
+        customWidgets,
+        templates = {},
+    } = props;
 
     const record = useRecordContext(props);
     const value = get(record, source);
+
+    //merge global templates
+    if (templates !== undefined) {
+        for (const k in globalTemplates) {
+            if (!(k in templates)) {
+                templates[k] = globalTemplates[k];
+            }
+        }
+    }
 
     const { schema: rjsSchema, uiSchema: ruiSchema } = useRJSchema({
         resource,
@@ -88,7 +118,7 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
             readonly
             templates={{
                 BaseInputTemplate: ReadOnlyBaseFieldTemplate,
-                ...templates
+                ...templates,
             }}
             className="RaJsonSchemaField-Form"
         >

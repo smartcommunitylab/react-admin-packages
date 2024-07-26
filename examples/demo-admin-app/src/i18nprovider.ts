@@ -11,6 +11,7 @@ const customItalian = {
                 address: {
                     city: 'Citta',
                     zipcode: 'CAP',
+                    addresses: 'Indirizzi'
                 },
             },
         },

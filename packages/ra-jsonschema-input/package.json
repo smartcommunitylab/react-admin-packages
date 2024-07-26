@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-jsonschema-input",
-    "version": "1.3.7",
+    "version": "2.0.0",
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
@@ -9,6 +9,10 @@
         {
             "name": "Nawaz Khurshid",
             "email": "khurshid@fbk.eu"
+        },
+        {
+            "name": "Matteo Chini",
+            "email": "m.chini@fbk.eu"
         }
     ],
     "repository": {

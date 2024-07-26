@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { InputProps, useInput } from 'react-admin';
+import { InputProps, useInput, useResourceContext } from 'react-admin';
 import {
     CustomValidator,
     RJSFSchema,
@@ -15,10 +15,54 @@ import Form from '@rjsf/core';
 import { useRJSchema } from './utils';
 import { withTheme } from '@rjsf/core';
 import { Theme } from '@rjsf/mui';
+import ArrayFieldItemTemplate from './templates/ArrayFieldItemTemplate';
+import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
+import TitleFieldTemplate from './templates/TitleFieldTemplate';
+import { styled } from '@mui/material';
+import ObjectFieldTemplate from './templates/ObjectFieldTemplate';
+import DescriptionFieldTemplate from './templates/DescriptionFieldTemplate';
+import ButtonTemplates from './templates/ButtonsTemplates';
+import SchemaField from './templates/SchemaField';
 
 //build styled form
+Theme.templates = {
+    ...Theme.templates,
+    ObjectFieldTemplate,
+    ArrayFieldTemplate,
+    ArrayFieldItemTemplate,
+    TitleFieldTemplate,
+    DescriptionFieldTemplate,
+    ButtonTemplates,
+};
+Theme.fields = {
+    ...Theme.fields,
+    SchemaField,
+};
 const MuiForm = withTheme(Theme);
 const validator = customizeValidator({ AjvClass: Ajv2020 });
+
+const PREFIX = 'RaJsonSchemaInput';
+
+const StyledForm = styled(MuiForm, {
+    name: PREFIX,
+    overridesResolver: (_props, styles) => styles.root,
+})(({ theme }) => ({
+    [`& .MuiGrid-root`]: {
+        [`& >.MuiGrid-item`]: {
+            paddingTop: 0,
+        },
+    },
+
+    // // fix objectTemplate wrong margin
+    // //DISABLED, we override the template for custom layouts
+    // [`& .field-object`]: {
+    //     [`& >.MuiFormControl-root`]: {
+    //         [`& >.MuiGrid-root.MuiGrid-container`]: {
+    //             marginTop: '-16px !important',
+    //         },
+    //     },
+    // },
+}));
 
 export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     const {
@@ -26,7 +70,6 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         uiSchema = {},
         label,
         helperText,
-        resource,
         source,
         customWidgets,
         customValidate,
@@ -34,6 +77,8 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         fields,
         noHtml5Validate = false,
     } = props;
+
+    const resource = useResourceContext(props);
     const errors = useRef<any[]>(new Array());
 
     const validate = (value: any) => {
@@ -49,15 +94,16 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
 
     const {
         field,
-        formState: { isLoading },
+        fieldState: { error, invalid, isTouched },
+        formState: { isLoading, isSubmitted },
     } = useInput({
         defaultValue: {},
         resource,
         source,
         validate,
     });
-    const data= field.value;
-    const onChange = (e: any, id?:string) => {
+    const data = field.value;
+    const onChange = (e: any, id?: string) => {
         if (isLoading != undefined && !isLoading && id) {
             //validate first
             if (formRef.current) {
@@ -69,9 +115,10 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             }
 
             //update data
-            if (e.formData){
+            if (e.formData) {
                 field.onChange(e.formData);
-          }        }
+            }
+        }
     };
 
     const onError = (values: RJSFValidationError[]) => {
@@ -95,17 +142,25 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
                 : undefined,
     });
 
+    const formContext = {
+        resource,
+        source,
+    };
+    console.log(rjsSchema, ruiSchema);
+
     const formRef = useRef<Form>();
 
     return (
-        <MuiForm
+        <StyledForm
             ref={formRef}
+            className="RaJsonSchemaInput"
             tagName={'div'}
             schema={rjsSchema}
             uiSchema={ruiSchema}
             templates={templates}
             fields={fields}
             formData={data}
+            formContext={formContext}
             validator={validator}
             onChange={onChange}
             onError={onError}
@@ -117,7 +172,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             noHtml5Validate={noHtml5Validate}
         >
             <></>
-        </MuiForm>
+        </StyledForm>
     );
 };
 
