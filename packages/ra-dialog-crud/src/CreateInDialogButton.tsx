@@ -36,6 +36,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
         maxWidth = 'sm',
         fullWidth = false,
         label = 'ra.action.create',
+        variant,
         mutationOptions = {},
         sx,
         ...rest
@@ -67,6 +68,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                 label={label}
                 onClick={handleDialogOpen}
                 className={CreateInDialogButtonClasses.button}
+                variant={variant}
             >
                 {icon}
             </Button>
@@ -170,6 +172,7 @@ export type CreateInDialogButtonProps<
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;
     label?: string;
+    variant?: 'text' | 'outlined' | 'contained';
     icon?: ReactElement;
 };
 

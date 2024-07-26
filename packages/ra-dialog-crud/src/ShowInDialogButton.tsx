@@ -39,6 +39,7 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
         maxWidth = 'sm',
         fullWidth = false,
         label = 'ra.action.show',
+        variant,
         queryOptions = {},
         id: idProps,
         sx,
@@ -72,6 +73,7 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
                 label={label}
                 onClick={handleDialogOpen}
                 className={ShowInDialogButtonClasses.button}
+                variant={variant}
             >
                 {icon}
             </Button>
@@ -189,6 +191,7 @@ export type ShowInDialogButtonProps<RecordType extends RaRecord = RaRecord> =
         maxWidth?: Breakpoint | false;
         fullWidth?: boolean;
         label?: string;
+        variant?: 'text' | 'outlined' | 'contained';
         icon?: ReactElement;
     };
 

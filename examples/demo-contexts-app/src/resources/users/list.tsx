@@ -3,6 +3,7 @@ import {
     EditInDialogButton,
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
+import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     Datagrid,
     EmailField,
@@ -17,6 +18,7 @@ import {
     TopToolbar,
     required,
 } from 'react-admin';
+import { Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 const CreateUserComponent = () => {
@@ -69,56 +71,67 @@ const EmptyComponent = () => {
 };
 
 export const UserList = () => {
+    const { base, root } = useRootSelector();
+    console.log("base",base);
+    console.log("root",root);
+
     return (
-        <List
-            actions={<ListActions />}
-            empty={<EmptyComponent />}
-            sx={{ justifyContent: 'center' }}
-        >
-            <Datagrid>
-                <TextField source="id" />
-                {/* <NumberField source="organization" /> */}
-                <ReferenceField source="organization" reference="organizations">
-                    <TextField source="name" />
-                </ReferenceField>
-                <TextField source="username" />
-                <TextField source="name" />
-                <TextField source="surname" />
-                <EmailField source="email" />
+        <>
+            <Typography variant={'h5'}>org #{root}</Typography>
 
-                <ShowInDialogButton fullWidth={true} maxWidth="sm">
-                    <SimpleShowLayout>
-                        <ReferenceField
-                            source="organization"
-                            reference="organizations"
-                        >
-                            <TextField source="name" />
-                        </ReferenceField>
-                        <TextField source="username" />
+            <List
+                actions={<ListActions />}
+                empty={<EmptyComponent />}
+                sx={{ justifyContent: 'center' }}
+            >
+                <Datagrid>
+                    <TextField source="id" />
+                    {/* <NumberField source="organization" /> */}
+                    <ReferenceField
+                        source="organization"
+                        reference="organizations"
+                    >
                         <TextField source="name" />
-                        <TextField source="surname" />
-                        <EmailField source="email" />
-                        <ShowButton />
-                    </SimpleShowLayout>
-                </ShowInDialogButton>
+                    </ReferenceField>
+                    <TextField source="username" />
+                    <TextField source="name" />
+                    <TextField source="surname" />
+                    <EmailField source="email" />
 
-                <EditInDialogButton
-                    fullWidth={true}
-                    maxWidth="sm"
-                    mutationMode="pessimistic"
-                >
-                    <SimpleForm>
-                        <TextInput
-                            source="username"
-                            fullWidth={true}
-                            validate={required()}
-                        />
-                        <TextInput source="name" fullWidth={true} />
-                        <TextInput source="surname" fullWidth={true} />
-                        <TextInput source="email" fullWidth={true} />
-                    </SimpleForm>
-                </EditInDialogButton>
-            </Datagrid>
-        </List>
+                    <ShowInDialogButton fullWidth={true} maxWidth="sm">
+                        <SimpleShowLayout>
+                            <ReferenceField
+                                source="organization"
+                                reference="organizations"
+                            >
+                                <TextField source="name" />
+                            </ReferenceField>
+                            <TextField source="username" />
+                            <TextField source="name" />
+                            <TextField source="surname" />
+                            <EmailField source="email" />
+                            <ShowButton />
+                        </SimpleShowLayout>
+                    </ShowInDialogButton>
+
+                    <EditInDialogButton
+                        fullWidth={true}
+                        maxWidth="sm"
+                        mutationMode="pessimistic"
+                    >
+                        <SimpleForm>
+                            <TextInput
+                                source="username"
+                                fullWidth={true}
+                                validate={required()}
+                            />
+                            <TextInput source="name" fullWidth={true} />
+                            <TextInput source="surname" fullWidth={true} />
+                            <TextInput source="email" fullWidth={true} />
+                        </SimpleForm>
+                    </EditInDialogButton>
+                </Datagrid>
+            </List>
+        </>
     );
 };

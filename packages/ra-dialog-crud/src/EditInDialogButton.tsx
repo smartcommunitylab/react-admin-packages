@@ -39,6 +39,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         maxWidth = 'sm',
         fullWidth = false,
         label = 'ra.action.edit',
+        variant,
         mutationOptions = {},
         queryOptions = {},
         id: idProps,
@@ -78,6 +79,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                 label={label}
                 onClick={handleDialogOpen}
                 className={EditInDialogButtonClasses.button}
+                variant={variant}
             >
                 {icon}
             </Button>
@@ -228,6 +230,7 @@ export type EditInDialogButtonProps<
     fullWidth?: boolean;
     label?: string;
     icon?: ReactElement;
+    variant?: 'text' | 'outlined' | 'contained';
     emptyWhileLoading?: boolean;
 };
 
