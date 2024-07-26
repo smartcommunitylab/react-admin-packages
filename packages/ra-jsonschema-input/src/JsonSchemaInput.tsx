@@ -47,11 +47,11 @@ const StyledForm = styled(MuiForm, {
     name: PREFIX,
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme }) => ({
-    [`& .MuiGrid-root`]: {
-        [`& >.MuiGrid-item`]: {
-            paddingTop: 0,
-        },
-    },
+    // [`& .MuiGrid-root`]: {
+    //     [`& >.MuiGrid-item`]: {
+    //         paddingTop: 0,
+    //     },
+    // },
 
     // // fix objectTemplate wrong margin
     // //DISABLED, we override the template for custom layouts

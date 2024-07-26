@@ -11,6 +11,8 @@ import {
     UiSchema,
 } from '@rjsf/utils';
 import { Form } from '@rjsf/mui';
+import { withTheme } from '@rjsf/core';
+import { Theme } from '@rjsf/mui';
 import { get } from 'lodash';
 import { useRJSchema } from './utils';
 import BaseInputTemplate from '@rjsf/mui/lib/BaseInputTemplate';
@@ -19,17 +21,32 @@ import ArrayFieldItemTemplate from './templates/ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
 import TitleFieldTemplate from './templates/TitleFieldTemplate';
 import DescriptionFieldTemplate from './templates/DescriptionFieldTemplate';
+import ObjectFieldTemplate from './templates/ObjectFieldTemplate';
+import ButtonTemplates from './templates/ButtonsTemplates';
+import SchemaField from './templates/SchemaField';
 
-const globalTemplates = {
+//build styled form
+Theme.templates = {
+    ...Theme.templates,
+    ObjectFieldTemplate,
     ArrayFieldTemplate,
     ArrayFieldItemTemplate,
     TitleFieldTemplate,
     DescriptionFieldTemplate,
+    ButtonTemplates,
 };
+Theme.fields = {
+    ...Theme.fields,
+    SchemaField,
+};
+const MuiForm = withTheme(Theme);
 
-const ReadOnlyForm = styled(Form)(({ theme }) => ({
+const ReadOnlyForm = styled(MuiForm)(({ theme }) => ({
     '& .MuiFormControl-root': {
         marginTop: 0,
+        '& >.MuiBox-root': {
+            paddingBottom: 22,
+        },
         '& .MuiGrid-root > .MuiGrid-item': {
             paddingTop: 0,
             marginBottom: '0 !important',
@@ -81,15 +98,6 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
 
     const record = useRecordContext(props);
     const value = get(record, source);
-
-    //merge global templates
-    if (templates !== undefined) {
-        for (const k in globalTemplates) {
-            if (!(k in templates)) {
-                templates[k] = globalTemplates[k];
-            }
-        }
-    }
 
     const { schema: rjsSchema, uiSchema: ruiSchema } = useRJSchema({
         resource,

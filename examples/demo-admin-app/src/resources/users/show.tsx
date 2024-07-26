@@ -11,33 +11,34 @@ import {
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { CopyToClipboardButton } from '@dslab/ra-inspect-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { jsonSchema, uiSchema } from './edit';
 
-const uiSchema = {
-    // 'ui:title': 'address details',
-    suite: {
-        'ui:title': 'Primary address',
-    },
-};
+// const uiSchema = {
+//     // 'ui:title': 'address details',
+//     suite: {
+//         'ui:title': 'Primary address',
+//     },
+// };
 
-const jsonSchema = {
-    type: 'object',
-    required: ['street', 'city'],
-    properties: {
-        city: {
-            type: 'string',
-        },
-        street: {
-            type: 'string',
-        },
-        suite: {
-            type: 'string',
-        },
-        zipcode: {
-            type: 'string',
-            pattern: '(^\\d{5}$)|(^\\d{5}-\\d{4}$)',
-        },
-    },
-};
+// const jsonSchema = {
+//     type: 'object',
+//     required: ['street', 'city'],
+//     properties: {
+//         city: {
+//             type: 'string',
+//         },
+//         street: {
+//             type: 'string',
+//         },
+//         suite: {
+//             type: 'string',
+//         },
+//         zipcode: {
+//             type: 'string',
+//             pattern: '(^\\d{5}$)|(^\\d{5}-\\d{4}$)',
+//         },
+//     },
+// };
 
 const ShowActions = () => {
     const notify = useNotify();

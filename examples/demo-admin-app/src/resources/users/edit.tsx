@@ -9,7 +9,7 @@ import {
     TextInput,
 } from 'react-admin';
 
-const uiSchema = {
+export const uiSchema = {
     'ui:title': 'text',
     'ui:layout': [6, 2, 4, 12],
     'ui:order': [
@@ -19,6 +19,7 @@ const uiSchema = {
         'suite',
         'addresses',
         'multipleChoicesList',
+        'complex',
         'entries',
     ],
     suite: {
@@ -33,16 +34,24 @@ const uiSchema = {
         label: false,
     },
     multipleChoicesList: {},
+    complex: {
+        'ui:expandable': true,
+        'ui:layout': [4, 8],
+        additionalProperties: {
+            'ui:title': 'key',
+        },
+    },
     entries: {
         // 'ui:orderable': false,
         // 'ui:inline': true,
         items: {
+            'ui:title': 'test',
             'ui:layout': [4, 8],
             'ui:label': false,
         },
     },
 };
-const jsonSchema = {
+export const jsonSchema = {
     type: 'object',
     required: ['street', 'city'],
     title: 'test',
@@ -77,6 +86,20 @@ const jsonSchema = {
                 enum: ['foo', 'bar', 'fuzz', 'qux'],
             },
             uniqueItems: true,
+        },
+        complex: {
+            type: 'object',
+            properties: {
+                key: {
+                    type: 'string',
+                },
+                value: {
+                    type: 'string',
+                },
+            },
+            additionalProperties: {
+                type: 'string',
+            },
         },
         entries: {
             type: 'array',
