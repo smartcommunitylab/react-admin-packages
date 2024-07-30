@@ -31,6 +31,25 @@
       "url": "http://hc360.com/integer/ac/neque/duis/bibendum/morbi.aspx"
     }
   ],
+  "groups": [
+    {
+      "id": 1,
+      "organization": 1,
+      "name": "Writers",
+      "users": [
+        "28ccd4c0-ecc2-4f5b-b11c-04ae59f8be59",
+        "268478ee-b59a-47f8-b9d6-070759a16597",
+        "27616e7c-ca2c-4833-ad6f-001b7bd06f58",
+        "2799d76e-61d2-4949-b919-a96a9fc5fb66",
+        "2876717e-6ce1-432d-8fec-b7c296e7873d",
+        "2961b2b5-b10e-49de-b708-b7d20463bdab",
+        "2a9225a5-d3fc-42c8-bb72-cf06f6650837",
+        "2ae5ba83-253c-409b-aecb-b2e70a14d7b0",
+        "2c5b3396-a0e2-48cb-a4f5-a9de80be1223",
+        "2c60d890-2a6a-4475-a658-20b7ed4935cc"
+      ]
+    }
+  ],
   "users": [
     {
       "id": "80674b73-2a25-4209-9b0f-e04a383ccd3c",
