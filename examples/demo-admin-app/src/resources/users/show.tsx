@@ -76,7 +76,7 @@ export const UserShow = () => (
                 schema={jsonSchema}
                 uiSchema={uiSchema}
                 source="address"
-                label={false}
+                // label={false}
             />
         </SimpleShowLayout>
     </Show>

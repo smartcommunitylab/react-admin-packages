@@ -52,7 +52,6 @@ const StyledForm = styled(MuiForm, {
     //         paddingTop: 0,
     //     },
     // },
-
     // // fix objectTemplate wrong margin
     // //DISABLED, we override the template for custom layouts
     // [`& .field-object`]: {
@@ -146,14 +145,13 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         resource,
         source,
     };
-    console.log(rjsSchema, ruiSchema);
 
     const formRef = useRef<Form>();
 
     return (
         <StyledForm
             ref={formRef}
-            className="RaJsonSchemaInput"
+            className={PREFIX}
             tagName={'div'}
             schema={rjsSchema}
             uiSchema={ruiSchema}

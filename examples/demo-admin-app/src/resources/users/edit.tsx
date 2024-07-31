@@ -11,6 +11,8 @@ import {
 
 export const uiSchema = {
     'ui:title': 'text',
+    'ui:description':
+        'A very long description of addresses as text fields with schema and widgets',
     'ui:layout': [6, 2, 4, 12],
     'ui:order': [
         'street',

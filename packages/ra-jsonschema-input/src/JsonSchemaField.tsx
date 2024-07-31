@@ -41,15 +41,14 @@ Theme.fields = {
 };
 const MuiForm = withTheme(Theme);
 
-const ReadOnlyForm = styled(MuiForm)(({ theme }) => ({
+const PREFIX = 'RaJsonSchemaField';
+
+const ReadOnlyForm = styled(MuiForm, {
+    name: PREFIX,
+    overridesResolver: (_props, styles) => styles.root,
+})(({ theme }) => ({
     '& .MuiFormControl-root': {
-        marginTop: 0,
-        '& >.MuiBox-root': {
-            paddingBottom: 22,
-        },
         '& .MuiGrid-root > .MuiGrid-item': {
-            paddingTop: 0,
-            marginBottom: '0 !important',
             '& .Mui-disabled': {
                 color: 'inherit',
                 WebkitTextFillColor: 'inherit',
@@ -107,6 +106,11 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
         title: label && typeof label === 'string' ? label : undefined,
     });
 
+    const formContext = {
+        resource,
+        source,
+    };
+
     //cleanup required for view-only render
     const rSchema: GenericObjectType = rjsSchema as GenericObjectType;
     if ('required' in rSchema) {
@@ -114,10 +118,12 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
     }
     return (
         <ReadOnlyForm
+            className={PREFIX}
             tagName={'div'}
             schema={rjsSchema}
             uiSchema={ruiSchema}
             formData={value}
+            formContext={formContext}
             validator={validator}
             omitExtraData={true}
             showErrorList={false}
@@ -128,7 +134,6 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
                 BaseInputTemplate: ReadOnlyBaseFieldTemplate,
                 ...templates,
             }}
-            className="RaJsonSchemaField-Form"
         >
             <></>
         </ReadOnlyForm>

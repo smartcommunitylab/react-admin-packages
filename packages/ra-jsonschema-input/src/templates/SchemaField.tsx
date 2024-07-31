@@ -297,7 +297,6 @@ function SchemaFieldRender<
         props.schema.description ||
         schema.description ||
         '';
-    console.log('schemaf', name, label);
 
     const richDescription = uiOptions.enableMarkdownInDescription ? (
         <Markdown>{description}</Markdown>
