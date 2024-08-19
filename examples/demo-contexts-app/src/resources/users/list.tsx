@@ -2,12 +2,15 @@ import {
     CreateInDialogButton,
     EditInDialogButton,
     ShowInDialogButton,
+    useDialogContext,
 } from '@dslab/ra-dialog-crud';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
+    Button,
     Datagrid,
     EmailField,
     Empty,
+    FunctionField,
     List,
     ReferenceField,
     ShowButton,
@@ -18,7 +21,7 @@ import {
     TopToolbar,
     required,
 } from 'react-admin';
-import { Typography } from '@mui/material';
+import { Typography,DialogActions } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 const CreateUserComponent = () => {
@@ -72,8 +75,8 @@ const EmptyComponent = () => {
 
 export const UserList = () => {
     const { base, root } = useRootSelector();
-    console.log("base",base);
-    console.log("root",root);
+    console.log('base', base);
+    console.log('root', root);
 
     return (
         <>
@@ -111,6 +114,20 @@ export const UserList = () => {
                             <TextField source="surname" />
                             <EmailField source="email" />
                             <ShowButton />
+                            <DialogActions>
+                                <FunctionField
+                                    render={record => {
+                                        const { handleClose } =
+                                            useDialogContext();
+                                        return (
+                                            <Button
+                                                onClick={handleClose}
+                                                label="close"
+                                            />
+                                        );
+                                    }}
+                                />
+                            </DialogActions>
                         </SimpleShowLayout>
                     </ShowInDialogButton>
 

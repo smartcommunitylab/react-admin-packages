@@ -3,6 +3,7 @@ import React, {
     ReactElement,
     ReactNode,
     useState,
+    useMemo,
 } from 'react';
 import {
     Button,
@@ -26,6 +27,8 @@ import {
     styled,
     useTheme,
 } from '@mui/material';
+import { DialogContext, useDialogContext } from './context';
+
 import CloseIcon from '@mui/icons-material/Close';
 import ShowIcon from '@mui/icons-material/RemoveRedEye';
 
@@ -64,6 +67,17 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
         setOpen(false);
         e.stopPropagation();
     };
+
+    const context = useMemo(
+        () => ({
+            isOpen: open,
+            handleOpen: handleDialogOpen,
+            handleClose: handleDialogClose,
+            open: () => setOpen(true),
+            close: () => setOpen(false),
+        }),
+        [handleDialogClose, handleDialogOpen]
+    );
 
     if (!id) return null;
 
@@ -112,13 +126,14 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
                     }}
                     disableAuthentication={disableAuthentication}
                 >
-                    <ShowContent
-                        emptyWhileLoading={emptyWhileLoading}
-                        title={title}
-                        handleClose={handleDialogClose}
-                    >
-                        {children}
-                    </ShowContent>
+                    <DialogContext.Provider value={context}>
+                        <ShowContent
+                            emptyWhileLoading={emptyWhileLoading}
+                            title={title}
+                        >
+                            {children}
+                        </ShowContent>
+                    </DialogContext.Provider>
                 </ShowBase>
             </StyledDialog>
         </>
@@ -129,9 +144,9 @@ const ShowContent = (props: {
     title: string | ReactElement;
     emptyWhileLoading: boolean;
     children: ReactNode;
-    handleClose: MouseEventHandler;
 }) => {
-    const { title, emptyWhileLoading, children, handleClose } = props;
+    const { title, emptyWhileLoading, children } = props;
+    const { handleClose } = useDialogContext();
     const translate = useTranslate();
     const { defaultTitle, error, isLoading } = useShowContext();
     const theme = useTheme();

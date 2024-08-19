@@ -3,6 +3,7 @@ import React, {
     ReactElement,
     ReactNode,
     useState,
+    useMemo,
 } from 'react';
 import {
     Button,
@@ -23,6 +24,8 @@ import {
     IconButton,
     styled,
 } from '@mui/material';
+import { DialogContext, useDialogContext } from './context';
+
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -61,6 +64,17 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
         closeDialog();
         e.stopPropagation();
     };
+
+    const context = useMemo(
+        () => ({
+            isOpen: open,
+            handleOpen: handleDialogOpen,
+            handleClose: handleDialogClose,
+            open: () => setOpen(true),
+            close: () => setOpen(false),
+        }),
+        [handleDialogClose, handleDialogOpen]
+    );
 
     return (
         <>
@@ -103,12 +117,9 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
                         },
                     }}
                 >
-                    <CreateContent
-                        title={title}
-                        handleClose={handleDialogClose}
-                    >
-                        {children}
-                    </CreateContent>
+                    <DialogContext.Provider value={context}>
+                        <CreateContent title={title}>{children}</CreateContent>
+                    </DialogContext.Provider>
                 </CreateBase>
             </CreateDialog>
         </>
@@ -118,9 +129,9 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
 const CreateContent = (props: {
     title: string | ReactElement;
     children: ReactNode;
-    handleClose: MouseEventHandler;
 }) => {
-    const { title, children, handleClose } = props;
+    const { title, children } = props;
+    const { handleClose } = useDialogContext();
     const translate = useTranslate();
     const { defaultTitle } = useCreateContext();
 

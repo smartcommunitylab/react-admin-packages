@@ -3,6 +3,7 @@ import React, {
     ReactElement,
     ReactNode,
     useState,
+    useMemo,
 } from 'react';
 import {
     Button,
@@ -26,6 +27,8 @@ import {
     styled,
     useTheme,
 } from '@mui/material';
+import { DialogContext, useDialogContext } from './context';
+
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Create';
 
@@ -71,6 +74,17 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         closeDialog();
         e.stopPropagation();
     };
+
+    const context = useMemo(
+        () => ({
+            isOpen: open,
+            handleOpen: handleDialogOpen,
+            handleClose: handleDialogClose,
+            open: () => setOpen(true),
+            close: () => setOpen(false),
+        }),
+        [handleDialogClose, handleDialogOpen]
+    );
 
     if (!id) return null;
     return (
@@ -147,13 +161,14 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
                     }}
                     {...rest}
                 >
-                    <EditContent
-                        title={title}
-                        emptyWhileLoading={emptyWhileLoading}
-                        handleClose={handleDialogClose}
-                    >
-                        {children}
-                    </EditContent>
+                    <DialogContext.Provider value={context}>
+                        <EditContent
+                            title={title}
+                            emptyWhileLoading={emptyWhileLoading}
+                        >
+                            {children}
+                        </EditContent>
+                    </DialogContext.Provider>
                 </EditBase>
             </EditDialog>
         </>
@@ -164,9 +179,9 @@ const EditContent = (props: {
     title: string | ReactElement;
     emptyWhileLoading: boolean;
     children: ReactNode;
-    handleClose: MouseEventHandler;
 }) => {
-    const { title, emptyWhileLoading, children, handleClose } = props;
+    const { title, emptyWhileLoading, children } = props;
+    const { handleClose } = useDialogContext();
     const translate = useTranslate();
     const { defaultTitle, error, isLoading } = useEditContext();
     const theme = useTheme();
