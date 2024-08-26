@@ -1,5 +1,3 @@
-import { useInput, InputProps, Labeled, InputHelperText } from 'react-admin';
-
 import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-java';
@@ -21,6 +19,7 @@ import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import { Fragment } from 'react';
 import React from 'react';
+import { useInput, InputProps, Labeled, InputHelperText } from 'react-admin';
 
 const ace = require('ace-builds/src-noconflict/ace');
 
@@ -29,16 +28,22 @@ export const AceEditorInput = (props: AceInputProps) => {
         mode = 'html',
         theme = 'monokai',
         useWorker = false,
+        format = data => data,
+        parse = data => data,
         //pick base from jsDelivr by default
         basePath = 'https://cdn.jsdelivr.net/npm/ace-builds@',
         label,
         helperText,
         fullWidth = false,
+        minLines = 5,
+        maxLines = 25,
         width = '50vw',
         onBlur,
         onChange,
         resource,
         source,
+        disabled = false,
+        ...rest
     } = props;
 
     const {
@@ -48,12 +53,20 @@ export const AceEditorInput = (props: AceInputProps) => {
         formState: { isSubmitted },
         isRequired,
     } = useInput({
+        resource,
+        source,
         // Pass the event handlers to the hook but not the component as the field property already has them.
         // useInput will call the provided onChange and onBlur in addition to the default needed by react-hook-form.
         onChange,
         onBlur,
-        ...props,
+        disabled,
+        ...rest,
     });
+
+    const value = field ? parse(field.value || '') : '';
+    const onValueChange = (data: string) => {
+        field.onChange(format(data));
+    };
 
     const labelProps = {
         fullWidth,
@@ -67,6 +80,9 @@ export const AceEditorInput = (props: AceInputProps) => {
     const aceOptions = {
         useWorker: useWorker,
         showPrintMargin: false,
+        readOnly: disabled,
+        minLines,
+        maxLines,
     };
 
     // import workers (disabled by default)
@@ -77,8 +93,9 @@ export const AceEditorInput = (props: AceInputProps) => {
         <Fragment>
             <Labeled {...labelProps} id={id}>
                 <AceEditor
-                    {...field}
-                    mode={mode}
+                    mode={disabled ? 'text' : mode}
+                    value={value}
+                    onChange={onValueChange}
                     theme={theme}
                     wrapEnabled
                     width={fullWidth ? '100%' : width}
@@ -95,6 +112,8 @@ export const AceEditorInput = (props: AceInputProps) => {
 };
 
 export type AceInputProps = InputProps & {
+    format?: (string) => any | null;
+    parse?: (any) => string | null;
     mode?:
         | 'java'
         | 'javascript'
@@ -114,5 +133,7 @@ export type AceInputProps = InputProps & {
     basePath?: string;
     fullWidth?: boolean;
     width?: string;
+    minLines?: number;
+    maxLines?: number;
     theme?: 'github' | 'monokai' | 'solarized_dark' | 'solarized_light';
 };

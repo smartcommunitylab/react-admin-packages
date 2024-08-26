@@ -25,26 +25,29 @@ import React from 'react';
 export const AceEditorField = (props: AceFieldProps) => {
     const {
         mode = 'html',
+        parse = data => data,
         theme = 'github',
         fullWidth = false,
+        minLines = 5,
+        maxLines = 25,
         width = '50vw',
         source,
     } = props;
-
     const record = useRecordContext(props);
-    const value = get(record, source);
+    const value = get(record, source) || '';
 
-    //TODO let users customize options
     const aceOptions = {
         readOnly: true,
         useWorker: false,
         showPrintMargin: false,
+        minLines,
+        maxLines,
     };
 
     return (
         <Fragment>
             <AceEditor
-                value={value}
+                value={parse(value)}
                 mode={mode}
                 theme={theme}
                 wrapEnabled
@@ -57,6 +60,7 @@ export const AceEditorField = (props: AceFieldProps) => {
 
 export interface AceFieldProps extends FieldProps {
     source: string;
+    parse?: (any) => string | null;
     mode?:
         | 'java'
         | 'javascript'
@@ -71,6 +75,8 @@ export interface AceFieldProps extends FieldProps {
         | 'yaml'
         | 'text';
     fullWidth?: boolean;
+    minLines?: number;
+    maxLines?: number;
     width?: string;
     theme?: 'github' | 'monokai' | 'solarized_dark' | 'solarized_light';
 }
