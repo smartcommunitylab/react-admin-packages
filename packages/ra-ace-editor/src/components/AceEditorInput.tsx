@@ -17,9 +17,10 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
-import { Fragment } from 'react';
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { useInput, InputProps, Labeled, InputHelperText } from 'react-admin';
+import { Alert } from '@mui/material';
 
 const ace = require('ace-builds/src-noconflict/ace');
 
@@ -49,7 +50,7 @@ export const AceEditorInput = (props: AceInputProps) => {
     const {
         id,
         field,
-        fieldState: { isTouched, error },
+        fieldState: { isTouched, error: fieldError },
         formState: { isSubmitted },
         isRequired,
     } = useInput({
@@ -63,9 +64,37 @@ export const AceEditorInput = (props: AceInputProps) => {
         ...rest,
     });
 
-    const value = field ? parse(field.value || '') : '';
+    //keep local state and debounce events from editor
+    const [value, setValue] = useState<string>(
+        field ? parse(field.value || '') : ''
+    );
+    const [error, setError] = useState<string>();
+
+    //we need an effect to synchronize with external changes
+    useEffect(() => {
+        if (field?.value) {
+            setValue(parse(field.value));
+        }
+    }, [field?.value]);
+
+    //keep local value and sync with form after leave
     const onValueChange = (data: string) => {
-        field.onChange(format(data));
+        setValue(data);
+    };
+    const onLeave = () => {
+        try {
+            field.onChange(format(value));
+            setError(undefined);
+        } catch (e: any) {
+            const msg =
+                typeof e === 'string'
+                    ? e
+                    : e instanceof Error
+                    ? e.message
+                    : 'error';
+
+            setError(msg);
+        }
     };
 
     const labelProps = {
@@ -90,29 +119,39 @@ export const AceEditorInput = (props: AceInputProps) => {
     ace.config.set('basePath', basePath + ace.version + '/src-noconflict/');
 
     return (
-        <Fragment>
-            <Labeled {...labelProps} id={id}>
+        <Labeled {...labelProps} id={id} component={'div'}>
+            <>
                 <AceEditor
                     mode={disabled ? 'text' : mode}
                     value={value}
                     onChange={onValueChange}
+                    onBlur={onLeave}
                     theme={theme}
                     wrapEnabled
                     width={fullWidth ? '100%' : width}
                     setOptions={aceOptions}
                 />
-            </Labeled>
-            <InputHelperText
-                touched={isTouched || isSubmitted}
-                error={error?.message}
-                helperText={helperText}
-            />
-        </Fragment>
+                {error || fieldError ? (
+                    <Alert severity="error">
+                        <InputHelperText
+                            touched={true}
+                            error={error ?? fieldError?.message}
+                            helperText={helperText}
+                        />
+                    </Alert>
+                ) : (
+                    <InputHelperText
+                        touched={isTouched || isSubmitted}
+                        helperText={helperText}
+                    />
+                )}
+            </>
+        </Labeled>
     );
 };
 
 export type AceInputProps = InputProps & {
-    format?: (string) => any | null;
+    format?: (string) => any | undefined;
     parse?: (any) => string | null;
     mode?:
         | 'java'
