@@ -7,4 +7,5 @@ export type StepperButtonProps = ButtonProps & {
     label?: string;
     variant?: string;
     alwaysEnable?: boolean;
+    validateBeforeNext?: boolean;
 };

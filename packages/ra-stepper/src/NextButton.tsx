@@ -5,6 +5,7 @@ import { Button, styled } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useTranslate } from 'react-admin';
 import { StepperButtonProps } from './types';
+import { useFormContext } from 'react-hook-form';
 
 const defaultIcon = <NavigateNextIcon />;
 
@@ -17,11 +18,14 @@ export const NextButton = (props: NextButtonProps) => {
         disabled: disabledProp,
         variant = 'contained',
         alwaysEnable = false,
+        validateBeforeNext = true,
         ...rest
     } = props;
     const { steps, currentStep, goToStep } = useStepper();
     const translate = useTranslate();
     const label = labelProp && translate(labelProp, { _: labelProp });
+    const form = useFormContext();
+
     //disabled if requested or no next step
     const disabled =
         disabledProp === true ||
@@ -29,14 +33,21 @@ export const NextButton = (props: NextButtonProps) => {
         currentStep == undefined ||
         currentStep === steps.length;
 
+    const toNextStep = () => {
+        if (currentStep < steps.length) {
+            goToStep(currentStep + 1);
+        }
+    }
+
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
         async event => {
-            if (currentStep < steps.length) {
-                goToStep(currentStep + 1);
-            }
-
             if (onClick) {
                 onClick(event);
+            }
+            if (validateBeforeNext) {
+                await form.handleSubmit(toNextStep)(event);
+            } else {
+                toNextStep();
             }
         },
         [goToStep, currentStep, steps]
