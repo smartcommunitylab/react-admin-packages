@@ -40,12 +40,12 @@ export const NextButton = (props: NextButtonProps) => {
     }
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-        async event => {
+        event => {
             if (onClick) {
                 onClick(event);
             }
             if (validateBeforeNext) {
-                await form.handleSubmit(toNextStep)(event);
+                form.handleSubmit(toNextStep)(event);
             } else {
                 toNextStep();
             }
