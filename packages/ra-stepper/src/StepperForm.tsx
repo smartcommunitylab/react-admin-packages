@@ -76,7 +76,7 @@ export const StepperForm = (props: StepperFormProps) => {
                                 );
                             }
 
-                            const stepLabel = step.label || '#' + index;
+                            const stepLabel = step.label ? translate(step.label) : '#' + index;
                             return (
                                 <MuiStep key={'step_' + index} {...stepProps}>
                                     <StepLabel {...labelProps}>
