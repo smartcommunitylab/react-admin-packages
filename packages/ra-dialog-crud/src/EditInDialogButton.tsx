@@ -49,6 +49,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         mutationMode = 'undoable',
         sx,
         emptyWhileLoading = false,
+        closeOnClickOutside = true,
         ...rest
     } = props;
 
@@ -70,8 +71,10 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         e.stopPropagation();
     };
 
-    const handleDialogClose: MouseEventHandler<HTMLButtonElement> = e => {
-        closeDialog();
+    const handleDialogClose: any = (e,reason) => {
+        if (!reason || (closeOnClickOutside && reason =="backdropClick")){
+            closeDialog();
+        }
         e.stopPropagation();
     };
 
@@ -247,6 +250,7 @@ export type EditInDialogButtonProps<
     icon?: ReactElement;
     variant?: 'text' | 'outlined' | 'contained';
     emptyWhileLoading?: boolean;
+    closeOnClickOutside?: boolean;
 };
 
 const PREFIX = 'RaEditInDialogButton';

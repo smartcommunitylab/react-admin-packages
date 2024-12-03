@@ -42,6 +42,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
         variant,
         mutationOptions = {},
         sx,
+        closeOnClickOutside = true,
         ...rest
     } = props;
 
@@ -60,8 +61,10 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
         e.stopPropagation();
     };
 
-    const handleDialogClose: MouseEventHandler<HTMLButtonElement> = e => {
-        closeDialog();
+    const handleDialogClose: any = (e,reason) => {
+        if (!reason || (closeOnClickOutside && reason =="backdropClick")){
+            closeDialog();
+        }
         e.stopPropagation();
     };
 
@@ -75,7 +78,6 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
         }),
         [handleDialogClose, handleDialogOpen]
     );
-
     return (
         <>
             <Button
@@ -185,6 +187,7 @@ export type CreateInDialogButtonProps<
     label?: string;
     variant?: 'text' | 'outlined' | 'contained';
     icon?: ReactElement;
+    closeOnClickOutside?: boolean;
 };
 
 const PREFIX = 'RaCreateInDialogButton';
