@@ -48,6 +48,7 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
         sx,
         emptyWhileLoading = false,
         disableAuthentication,
+        closeOnClickOutside = true,
     } = props;
 
     const resource = useResourceContext(props);
@@ -63,8 +64,10 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
         e.stopPropagation();
     };
 
-    const handleDialogClose: MouseEventHandler<HTMLButtonElement> = e => {
-        setOpen(false);
+    const handleDialogClose: any = (e,reason) => {
+        if (!reason || (closeOnClickOutside && reason =="backdropClick")){
+            setOpen(false);
+        }
         e.stopPropagation();
     };
 
@@ -208,6 +211,7 @@ export type ShowInDialogButtonProps<RecordType extends RaRecord = RaRecord> =
         label?: string;
         variant?: 'text' | 'outlined' | 'contained';
         icon?: ReactElement;
+        closeOnClickOutside?: boolean;
     };
 
 const PREFIX = 'RaShowInDialogButton';
