@@ -122,7 +122,7 @@ export const RootSelectorInitialWrapper = (props: RootSelectorParams) => {
 
     const initialApp = React.cloneElement(children, {
         basename: `${basename}`,
-        layout,
+        layout: children.props.layout || layout,
         dashboard: dashboard,
     });
 
