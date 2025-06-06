@@ -31,11 +31,11 @@
     "peerDependencies": {
         "@mui/material": "^5.0.2",
         "react": " ^17.0.0 || ^18.0.0",
-        "react-admin": "^4.10.2",
+        "react-admin": "^5.0.0",
         "react-dom": "^17.0.0 || ^18.0.0"
     },
     "dependencies": {
-        "ra-core": "^4.11.0"
+        "ra-core": "^5.0.0"
     },
     "devDependencies": {
         "rimraf": "^3.0.2",
