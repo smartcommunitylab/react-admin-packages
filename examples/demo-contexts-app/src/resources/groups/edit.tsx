@@ -3,9 +3,7 @@ import {
     Edit,
     NumberInput,
     ReferenceArrayInput,
-    SelectArrayInput,
     SimpleForm,
-    TextField,
     TextInput,
 } from 'react-admin';
 

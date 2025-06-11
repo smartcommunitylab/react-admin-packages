@@ -19,15 +19,16 @@ import {
     TextField,
     TextInput,
     TopToolbar,
+    TransformData,
     required,
 } from 'react-admin';
-import { Typography,DialogActions } from '@mui/material';
+import { Typography, DialogActions } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 const CreateUserComponent = () => {
     const { context } = useParams();
 
-    const transform = (data: any) => ({
+    const transform: TransformData = data => ({
         ...data,
         organization: context,
     });
@@ -73,6 +74,30 @@ const EmptyComponent = () => {
     );
 };
 
+const ShowDialogContent = () => {
+    const { handleClose } = useDialogContext();
+
+    return (
+        <SimpleShowLayout>
+            <ReferenceField source="organization" reference="organizations">
+                <TextField source="name" />
+            </ReferenceField>
+            <TextField source="username" />
+            <TextField source="name" />
+            <TextField source="surname" />
+            <EmailField source="email" />
+            <ShowButton />
+            <DialogActions>
+                <FunctionField
+                    render={() => {
+                        return <Button onClick={handleClose} label="close" />;
+                    }}
+                />
+            </DialogActions>
+        </SimpleShowLayout>
+    );
+};
+
 export const UserList = () => {
     const { base, root } = useRootSelector();
     console.log('base', base);
@@ -102,33 +127,7 @@ export const UserList = () => {
                     <EmailField source="email" />
 
                     <ShowInDialogButton fullWidth={true} maxWidth="sm">
-                        <SimpleShowLayout>
-                            <ReferenceField
-                                source="organization"
-                                reference="organizations"
-                            >
-                                <TextField source="name" />
-                            </ReferenceField>
-                            <TextField source="username" />
-                            <TextField source="name" />
-                            <TextField source="surname" />
-                            <EmailField source="email" />
-                            <ShowButton />
-                            <DialogActions>
-                                <FunctionField
-                                    render={record => {
-                                        const { handleClose } =
-                                            useDialogContext();
-                                        return (
-                                            <Button
-                                                onClick={handleClose}
-                                                label="close"
-                                            />
-                                        );
-                                    }}
-                                />
-                            </DialogActions>
-                        </SimpleShowLayout>
+                        <ShowDialogContent />
                     </ShowInDialogButton>
 
                     <EditInDialogButton

@@ -1,6 +1,5 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import {
-    Button,
     EditButton,
     Show,
     SimpleShowLayout,
@@ -43,7 +42,7 @@ import { jsonSchema, uiSchema } from './edit';
 const ShowActions = () => {
     const notify = useNotify();
 
-    const handleClick = e => {
+    const handleClick = () => {
         notify('ra.message.success');
     };
 

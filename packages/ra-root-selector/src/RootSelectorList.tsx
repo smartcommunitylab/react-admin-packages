@@ -16,7 +16,7 @@ const DummyActions = () => <TopToolbar></TopToolbar>;
 
 const RootSelectorListView = (props: RootSelectorListProps) => {
     const { source = 'id', skipToFirst = false } = props;
-    const { data, isLoading } = useListContext(props);
+    const { data, isLoading } = useListContext();
     const { selectRoot } = useRootSelector();
 
     useEffect(() => {

@@ -1,17 +1,12 @@
 import {
-    CreateButton,
     Datagrid,
     DeleteWithConfirmButton,
     EmailField,
     List,
     TextField,
-    TopToolbar,
 } from 'react-admin';
 import yamlExporter from '@dslab/ra-export-yaml';
-import {
-    DeleteWithConfirmDialog,
-    DeleteWithDialogButton,
-} from '@dslab/ra-delete-dialog-button';
+import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 
 export const UserList = () => {
     return (

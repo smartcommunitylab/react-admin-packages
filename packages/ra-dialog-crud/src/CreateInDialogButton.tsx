@@ -129,7 +129,7 @@ export const CreateInDialogButton = (props: CreateInDialogButtonProps) => {
 };
 
 const CreateContent = (props: {
-    title: string | ReactElement;
+    title: string | false | ReactElement;
     children: ReactNode;
 }) => {
     const { title, children } = props;

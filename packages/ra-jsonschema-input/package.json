@@ -38,16 +38,16 @@
         "watch": "tsc --outDir dist/esm --module es2015 --watch"
     },
     "peerDependencies": {
-        "@mui/material": "^5.15.0",
-        "react": "^18.0.0",
-        "react-admin": "^4.16.0",
-        "react-dom": "^18.0.0"
+        "@mui/material": "^7.0.0",
+        "react": "^18.2.0",
+        "react-admin": "^5.8.3",
+        "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@mui/material": "^5.15.0",
+        "@mui/material": "^7.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-admin": "^4.16.0",
+        "react-admin": "^5.8.3",
         "@types/react": "^18.2.25",
         "@types/react-dom": "^18.2.10",
         "@types/json-schema": "^7.0.12"

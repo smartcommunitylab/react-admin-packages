@@ -10,7 +10,6 @@ import {
     StrictRJSFSchema,
     UiSchema,
 } from '@rjsf/utils';
-import { Form } from '@rjsf/mui';
 import { withTheme } from '@rjsf/core';
 import { Theme } from '@rjsf/mui';
 import { get } from 'lodash';

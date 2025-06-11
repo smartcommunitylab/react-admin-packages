@@ -1,6 +1,5 @@
 import { stringify } from 'query-string';
 import { fetchUtils, DataProvider } from 'ra-core';
-import { CreateParams, Identifier, RaRecord } from 'react-admin';
 
 /**
  * Maps react-admin queries to a json-server powered REST API
@@ -39,8 +38,11 @@ export default (
     httpClient = fetchUtils.fetchJson
 ): DataProvider => ({
     getList: (resource, params) => {
-        const { page, perPage } = params.pagination;
-        const { field, order } = params.sort;
+        const { page, perPage } = params.pagination || { page: 1, perPage: 10 };
+        const { field, order } = params.sort || {
+            field: 'id',
+            order: 'ASC',
+        };
         const query = {
             ...fetchUtils.flattenObject(params.filter),
             _sort: field,
@@ -77,8 +79,9 @@ export default (
         })),
 
     getMany: (resource, params) => {
-        const query: any = {
+        const query = {
             id: params.ids,
+            organization: undefined,
         };
         //add org if specified in meta
         if (params.meta?.root) {
@@ -144,7 +147,7 @@ export default (
             method: 'POST',
             body: JSON.stringify(params.data),
         }).then(({ json }) => ({
-            data: { ...params.data, id: json.id },
+            data: json,
         }));
     },
 

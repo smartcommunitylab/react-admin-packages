@@ -50,13 +50,13 @@ export default function ArrayFieldItemTemplate<
 
     return (
         <Grid container={true} alignItems="top">
-            <Grid item={true} xs style={{ overflow: 'auto' }}>
+            <Grid size="grow" style={{ overflow: 'auto' }}>
                 <Box>
                     <Box>{children}</Box>
                 </Box>
             </Grid>
             {hasToolbar && !readonly && (
-                <Grid item={true}>
+                <Grid>
                     {(hasMoveUp || hasMoveDown) && (
                         <MoveUpButton
                             style={btnStyle}

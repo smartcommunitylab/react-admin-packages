@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -110,7 +109,7 @@ export default function ArrayFieldTemplate<
                             )}
                         {canAdd && !readonly && (
                             <Grid container justifyContent="flex-start">
-                                <Grid item={true}>
+                                <Grid>
                                     <Box mt={2}>
                                         <Button
                                             className="array-item-add"
@@ -174,7 +173,7 @@ export default function ArrayFieldTemplate<
                 )}
             {canAdd && !readonly && (
                 <Grid container justifyContent="flex-start">
-                    <Grid item={true}>
+                    <Grid>
                         <Box mt={2}>
                             <Button
                                 className="array-item-add"

@@ -28,21 +28,21 @@
         "watch": "tsc --outDir dist/esm --module es2015 --watch"
     },
     "peerDependencies": {
-        "@mui/material": "^5.0.2",
-        "@mui/icons-material": "^5.0.2",
-        "react": " ^17.0.0 || ^18.0.0",
-        "react-admin": "^4.11.0",
-        "react-dom": "^17.0.0 || ^18.0.0"
+        "@mui/material": "^7.0.0",
+        "@mui/icons-material": "^7.0.0",
+        "react": "^18.2.0",
+        "react-admin": "^5.8.3",
+        "react-dom": "^18.2.0"
     },
     "dependencies": {
-        "ra-core": "^4.11.0",
+        "ra-core": "^5.8.3",
         "yaml": "^2.3.4"
     },
     "devDependencies": {
-        "@mui/material": "^5.0.2",
-        "@mui/icons-material": "^5.0.2",
-        "react-admin": "^4.11.0",
+        "@mui/material": "^7.0.0",
+        "@mui/icons-material": "^7.0.0",
+        "react-admin": "^5.8.3",
         "rimraf": "^3.0.2",
-        "typescript": "^4.4.0"
+        "typescript": "^5.2.2"
     }
 }

@@ -1,5 +1,4 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import {
     Dialog,
@@ -27,7 +26,7 @@ import {
     useTranslate,
     useUnselectAll,
 } from 'react-admin';
-import { UseQueryOptions } from 'react-query';
+import { UseQueryOptions } from '@tanstack/react-query';
 
 export const AddInDialogButton = <RecordType extends RaRecord = any>(
     props: AddInDialogButtonProps<RecordType>

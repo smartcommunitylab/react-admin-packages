@@ -1,12 +1,9 @@
 import { DatagridArrayInput } from '@dslab/ra-datagrid-input';
 import {
     Create,
-    Edit,
     NumberInput,
     ReferenceArrayInput,
-    SelectArrayInput,
     SimpleForm,
-    TextField,
     TextInput,
 } from 'react-admin';
 

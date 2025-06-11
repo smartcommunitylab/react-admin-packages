@@ -134,16 +134,12 @@ export const AceEditorInput = (props: AceInputProps) => {
                 {error || fieldError ? (
                     <Alert severity="error">
                         <InputHelperText
-                            touched={true}
                             error={error ?? fieldError?.message}
                             helperText={helperText}
                         />
                     </Alert>
                 ) : (
-                    <InputHelperText
-                        touched={isTouched || isSubmitted}
-                        helperText={helperText}
-                    />
+                    <InputHelperText helperText={helperText} />
                 )}
             </>
         </Labeled>

@@ -5,21 +5,13 @@ import {
     ReferenceField,
     TextField,
     TopToolbar,
-    downloadCSV,
 } from 'react-admin';
 import { ExportAllButton } from '@dslab/ra-export-all-button';
-import yamlExporter from '@dslab/ra-export-yaml';
-import { yamlExport } from '@dslab/ra-export-yaml';
-import { downloadYaml } from '@dslab/ra-export-yaml';
+import { yamlExport, downloadYaml } from '@dslab/ra-export-yaml';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 
-const listExporter: Exporter = (
-    data,
-    fetchRelatedRecords,
-    dataProvider,
-    resource
-) => {
+const listExporter: Exporter = (data, fetchRelatedRecords, _, resource) => {
     fetchRelatedRecords(data, 'userId', 'users').then(users => {
         const res = data.map(record => ({
             ...record,
@@ -27,17 +19,13 @@ const listExporter: Exporter = (
             user: users[record.userId],
         }));
 
-        const value = yamlExport(res, resource);
-        downloadYaml(value, resource);
+        const key = resource || 'records';
+        const value = yamlExport(res, key);
+        downloadYaml(value, key);
     });
 };
 
-const recordExporter: Exporter = (
-    data,
-    fetchRelatedRecords,
-    dataProvider,
-    resource
-) => {
+const recordExporter: Exporter = (data, fetchRelatedRecords, _, resource) => {
     fetchRelatedRecords(data, 'userId', 'users').then(users => {
         const res = data.map(record => ({
             ...record,
@@ -48,7 +36,7 @@ const recordExporter: Exporter = (
         //single record, list shoud contain 1 element
         const r = res && res.length > 0 ? res[0] : null;
         if (r) {
-            downloadYaml(toYaml(r, resource), `${resource}_${r.id}`);
+            downloadYaml(toYaml(r), `${resource}_${r.id}`);
         }
     });
 };

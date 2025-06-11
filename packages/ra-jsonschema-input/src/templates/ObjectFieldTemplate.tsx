@@ -124,7 +124,7 @@ export default function ObjectFieldTemplate<
                                 return element.hidden ? (
                                     element.content
                                 ) : (
-                                    <Grid item={true} xs={width} key={index}>
+                                    <Grid size={width} key={index}>
                                         {element.content}
                                     </Grid>
                                 );
@@ -132,7 +132,7 @@ export default function ObjectFieldTemplate<
                             {canExpand<T, S, F>(schema, uiSchema, formData) &&
                                 !readonly && (
                                     <Grid container justifyContent="flex-end">
-                                        <Grid item={true}>
+                                        <Grid>
                                             <Button
                                                 className="object-property-expand"
                                                 onClick={onAddClick(schema)}
@@ -204,7 +204,7 @@ export default function ObjectFieldTemplate<
                     return element.hidden ? (
                         element.content
                     ) : (
-                        <Grid item={true} xs={width} key={index}>
+                        <Grid size={width} key={index}>
                             {element.content}
                         </Grid>
                     );
@@ -212,7 +212,7 @@ export default function ObjectFieldTemplate<
                 {canExpand<T, S, F>(schema, uiSchema, formData) &&
                     !readonly && (
                         <Grid container justifyContent="flex-end">
-                            <Grid item={true}>
+                            <Grid>
                                 <Button
                                     className="object-property-expand"
                                     onClick={onAddClick(schema)}
