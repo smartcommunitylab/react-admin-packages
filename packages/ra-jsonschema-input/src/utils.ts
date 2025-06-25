@@ -1,6 +1,5 @@
-import { ReactElement } from 'react';
 import { RJSFSchema, UiSchema, GenericObjectType } from '@rjsf/utils';
-import { useTranslate, useTranslateLabel } from 'react-admin';
+import { useTranslateLabel } from 'react-admin';
 
 export const parseRjsSchema = (schema: RJSFSchema | object | string) => {
     const rjsSchema: RJSFSchema =
