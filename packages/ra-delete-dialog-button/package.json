@@ -34,7 +34,7 @@
         "react": "^18.2.0",
         "react-admin": "^5.8.3",
         "react-dom": "^18.2.0",
-        "inflection": "^1.10.0"
+        "inflection": "^3.0.0"
     },
     "dependencies": {
         "ra-core": "^5.8.3"
@@ -44,7 +44,7 @@
         "@types/react-dom": "^18.2.0",
         "@mui/material": "^7.0.0",
         "@mui/icons-material": "^7.0.0",
-        "inflection": "^1.10.0",
+        "inflection": "^3.0.0",
         "rimraf": "^3.0.2",
         "typescript": "^5.2.2"
     }
