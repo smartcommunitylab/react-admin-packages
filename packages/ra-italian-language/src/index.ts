@@ -98,35 +98,35 @@ const italianMessages: TranslationMessages = {
             auth_error:
                 'Si è verificato un errore durante la convalida del token di autenticazione.',
             bulk_delete_content:
-                'Sei sicuro di voler rimuovere questo %{name}? |||| Sei sicuro di voler rimuovere questi %{smart_count} elementi?',
+                'Sei sicuro di voler rimuovere questo elemento? |||| Sei sicuro di voler rimuovere questi %{smart_count} elementi?',
             bulk_delete_title:
                 'Rimuovi %{name} |||| Rimuovi %{smart_count} %{name}',
             bulk_update_content:
-                'Sei sicuro di voler aggiornare questo %{name}? |||| Sei sicuro di voler aggiornare questi %{smart_count} elementi?',
+                "Sei sicuro di voler aggiornare l'elemento %{recordRepresentation}? |||| Sei sicuro di voler aggiornare questi %{smart_count} elementi?",
             bulk_update_title:
-                'Aggiorna %{name} |||| Aggiorna %{smart_count} %{name}',
+                'Aggiorna %{name} %{recordRepresentation} |||| Aggiorna %{smart_count} %{name}',
             clear_array_input: "Sei sicuro di voler cancellare l'intera lista?",
             delete_content: 'Sei sicuro di voler rimuovere questo elemento?',
-            delete_title: 'Rimuovi %{name} #%{id}',
+            delete_title: 'Rimuovi %{name} %{recordRepresentation}',
             details: 'Dettagli',
             error: 'Si è verificato un errore del client e non è stato possibile completare la tua richiesta.',
             invalid_form:
                 'Il modulo non è valido. Si prega di verificare la presenza di errori',
-            loading: 'La pagina si sta caricando, solo un momento per favore',
+            loading: 'Attendere, per favore',
             no: 'No',
             not_found:
                 'O hai digitato un URL sbagliato o hai seguito un link non valido.',
             select_all_limit_reached:
                 'Ci sono troppi elementi per selezionarli tutti. Sono stati selezionati solo i primi %{max} elementi.',
-            yes: 'Si',
             unsaved_changes:
                 'Alcune delle tue modifiche non sono state salvate. Sei sicuro di volerle ignorare?',
+            yes: 'Si',
             placeholder_data_warning: 'Problema di rete: aggiornamento dei dati fallito.'
         },
         navigation: {
             clear_filters: 'Rimuovi i filtri',
-            no_filtered_results: 'Nessun %{name} trovato con i filtri correnti.',
-            no_results: 'Nessun risultato trovato',
+            no_filtered_results: 'Nessun elemento trovato con i filtri correnti.',
+            no_results: 'Nessun elemento trovato',
             no_more_results:
                 'Il numero di pagina %{page} è fuori dai limiti. Prova la pagina precedente.',
             page_out_of_boundaries:
@@ -147,7 +147,7 @@ const italianMessages: TranslationMessages = {
             skip_nav: 'Salta al contenuto',
         },
         sort: {
-            sort_by: 'Ordina per %{field} %{order}',
+            sort_by: 'Ordina per %{field_lower_first} %{order}',
             ASC: 'crescente',
             DESC: 'decrescente',
         },
@@ -189,6 +189,7 @@ const italianMessages: TranslationMessages = {
             email: 'Deve essere una email valida',
             oneOf: 'Deve essere uno tra: %{options}',
             regex: 'Deve corrispondere al formato (regexp): %{pattern}',
+            unique: 'Deve essere unico',
         },
         saved_queries: {
             label: 'Ricerche salvate',
