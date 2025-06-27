@@ -1,11 +1,21 @@
 {
     "name": "@dslab/ra-ace-editor",
-    "version": "1.2.0",
+    "version": "2.0.0",
     "description": "",
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
     },
+    "contributors": [
+        {
+            "name": "Matteo Chini",
+            "email": "matteo.chini@fbk.eu"
+        },
+        {
+            "name": "Erica Tomaselli",
+            "email": "ertomaselli@fbk.eu"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/smartcommunitylab/react-admin-packages"

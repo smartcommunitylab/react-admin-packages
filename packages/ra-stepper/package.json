@@ -1,11 +1,19 @@
 {
     "name": "@dslab/ra-stepper",
-    "version": "1.1.5",
-    "author": "Matteo Chini & Erica Tomaselli <m.chini@fbk.eu>",
+    "version": "2.0.0",
+    "author": {
+        "name": "Matteo Chini",
+        "email": "m.chini@fbk.eu"
+    },
     "contributors": [
-        "Erica Tomaselli",
-        "Matteo Chini",
-        "Matteo Saloni"
+        {
+            "name": "Matteo Saloni",
+            "email": "msaloni@fbk.eu"
+        },
+        {
+            "name": "Erica Tomaselli",
+            "email": "ertomaselli@fbk.eu"
+        }
     ],
     "repository": {
         "type": "git",

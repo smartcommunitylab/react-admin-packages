@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-dialog-crud",
-    "version": "1.0.3",
+    "version": "2.0.0",
     "author": {
         "name": "Claudio Ballardini",
         "email": "cballardini@fbk.eu"
@@ -9,6 +9,10 @@
         {
             "name": "Matteo Saloni",
             "email": "msaloni@fbk.eu"
+        },
+        {
+            "name": "Erica Tomaselli",
+            "email": "ertomaselli@fbk.eu"
         }
     ],
     "repository": {
