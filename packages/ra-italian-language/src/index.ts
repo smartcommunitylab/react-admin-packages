@@ -26,6 +26,7 @@ const italianMessages: TranslationMessages = {
             save: 'Salva',
             search: 'Ricerca',
             select_all: 'Seleziona tutto',
+            select_all_button: 'Seleziona tutto',
             select_row: 'Seleziona riga',
             show: 'Mostra',
             sort: 'Ordina',
@@ -59,6 +60,8 @@ const italianMessages: TranslationMessages = {
             show: '%{name} %{recordRepresentation}',
             empty: 'Ancora nessun %{name}.',
             invite: 'Vuoi aggiungerne uno?',
+            access_denied: 'Accesso negato',
+            authentication_error: 'Errore di autenticazione',
         },
         input: {
             file: {
@@ -87,34 +90,43 @@ const italianMessages: TranslationMessages = {
         },
         message: {
             about: 'About',
+            access_denied:
+                'Non hai i permessi necessari per accedere a questa pagina',
             are_you_sure: 'Sei sicuro?',
+            authentication_error:
+                'Il server di autenticazione ha restituito un errore e non è stato possibile verificare le tue credenziali.',
             auth_error:
                 'Si è verificato un errore durante la convalida del token di autenticazione.',
             bulk_delete_content:
-                'Sei sicuro di voler rimuovere questo %{name}? |||| Sei sicuro di voler rimuovere questi %{smart_count} elementi?',
+                'Sei sicuro di voler rimuovere questo elemento? |||| Sei sicuro di voler rimuovere questi %{smart_count} elementi?',
             bulk_delete_title:
                 'Rimuovi %{name} |||| Rimuovi %{smart_count} %{name}',
             bulk_update_content:
-                'Sei sicuro di voler aggiornare questo %{name}? |||| Sei sicuro di voler aggiornare questi %{smart_count} elementi?',
+                "Sei sicuro di voler aggiornare l'elemento %{recordRepresentation}? |||| Sei sicuro di voler aggiornare questi %{smart_count} elementi?",
             bulk_update_title:
-                'Aggiorna %{name} |||| Aggiorna %{smart_count} %{name}',
+                'Aggiorna %{name} %{recordRepresentation} |||| Aggiorna %{smart_count} %{name}',
             clear_array_input: "Sei sicuro di voler cancellare l'intera lista?",
             delete_content: 'Sei sicuro di voler rimuovere questo elemento?',
-            delete_title: 'Rimuovi %{name} #%{id}',
+            delete_title: 'Rimuovi %{name} %{recordRepresentation}',
             details: 'Dettagli',
             error: 'Si è verificato un errore del client e non è stato possibile completare la tua richiesta.',
             invalid_form:
                 'Il modulo non è valido. Si prega di verificare la presenza di errori',
-            loading: 'La pagina si sta caricando, solo un momento per favore',
+            loading: 'Attendere, per favore',
             no: 'No',
             not_found:
                 'O hai digitato un URL sbagliato o hai seguito un link non valido.',
-            yes: 'Si',
+            select_all_limit_reached:
+                'Ci sono troppi elementi per selezionarli tutti. Sono stati selezionati solo i primi %{max} elementi.',
             unsaved_changes:
                 'Alcune delle tue modifiche non sono state salvate. Sei sicuro di volerle ignorare?',
+            yes: 'Si',
+            placeholder_data_warning: 'Problema di rete: aggiornamento dei dati fallito.'
         },
         navigation: {
-            no_results: 'Nessun risultato trovato',
+            clear_filters: 'Rimuovi i filtri',
+            no_filtered_results: 'Nessun elemento trovato con i filtri correnti.',
+            no_results: 'Nessun elemento trovato',
             no_more_results:
                 'Il numero di pagina %{page} è fuori dai limiti. Prova la pagina precedente.',
             page_out_of_boundaries:
@@ -135,7 +147,7 @@ const italianMessages: TranslationMessages = {
             skip_nav: 'Salta al contenuto',
         },
         sort: {
-            sort_by: 'Ordina per %{field} %{order}',
+            sort_by: 'Ordina per %{field_lower_first} %{order}',
             ASC: 'crescente',
             DESC: 'decrescente',
         },
@@ -144,6 +156,7 @@ const italianMessages: TranslationMessages = {
             user_menu: 'Profilo',
             username: 'Nome utente',
             password: 'Password',
+            email: 'Email',
             sign_in: 'Login',
             sign_in_error: 'Autenticazione non riuscita, riprova',
             logout: 'Logout',
@@ -176,6 +189,7 @@ const italianMessages: TranslationMessages = {
             email: 'Deve essere una email valida',
             oneOf: 'Deve essere uno tra: %{options}',
             regex: 'Deve corrispondere al formato (regexp): %{pattern}',
+            unique: 'Deve essere unico',
         },
         saved_queries: {
             label: 'Ricerche salvate',

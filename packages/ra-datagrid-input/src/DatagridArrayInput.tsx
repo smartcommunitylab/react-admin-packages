@@ -64,7 +64,7 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
     const isFirstRender = useRef(true);
     const [data, setData] = useState<RecordType[] | undefined>(undefined);
     const [selectedIds, { select, toggle, clearSelection, unselect }] =
-        useRecordSelection<RecordType>(`${resource}-${source}`);
+        useRecordSelection<RecordType>({ resource: `${resource}-${source}` });
 
     useEffect(() => {
         if (
@@ -74,7 +74,7 @@ export const DatagridArrayInput = <RecordType extends RaRecord = RaRecord>(
             selectedChoices
         ) {
             isFirstRender.current = false;
-            setData(selectedChoices);
+            setData(selectedChoices as RecordType[]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedChoices]);

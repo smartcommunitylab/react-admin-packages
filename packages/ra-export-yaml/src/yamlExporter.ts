@@ -32,7 +32,7 @@ export const yamlExport = (
 };
 
 export const yamlExporter: Exporter = (data, _, __, resource) => {
-    let obj = data;
+    let obj = data as any;
     const key = resource || 'records';
     if (data instanceof Array) {
         //convert data to a nested yaml with the list set as array under the `resource` key

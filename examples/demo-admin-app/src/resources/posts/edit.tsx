@@ -1,5 +1,5 @@
 import { StepperForm } from '@dslab/ra-stepper';
-import { Edit, ReferenceInput, SimpleForm, TextInput } from 'react-admin';
+import { Edit, ReferenceInput, TextInput } from 'react-admin';
 
 export const PostEdit = () => (
     <Edit>
@@ -12,7 +12,9 @@ export const PostEdit = () => (
                 <TextInput source="title" />
                 <TextInput source="body" />
             </StepperForm.Step>
-            <StepperForm.Step label="recap"></StepperForm.Step>
+            <StepperForm.Step label="recap">
+                <></>
+            </StepperForm.Step>
         </StepperForm>
     </Edit>
 );

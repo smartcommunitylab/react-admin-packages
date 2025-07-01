@@ -12,7 +12,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import inflection from 'inflection';
+import { singularize, humanize } from 'inflection';
 
 import ActionDelete from '@mui/icons-material/Delete';
 import { DialogContentText } from '@mui/material';
@@ -40,7 +40,8 @@ export const DeleteWithDialogButton = <RecordType extends RaRecord = any>(
         mutationMode = 'pessimistic',
         onClick,
         redirect = 'list',
-        translateOptions: extraTranslateOptions = {},
+        titleTranslateOptions: titleTranslateOptionsFromProps = {},
+        contentTranslateOptions: contentTranslateOptionsFromProps = {},
         mutationOptions,
         color = 'error',
         source = 'id',
@@ -89,19 +90,27 @@ export const DeleteWithDialogButton = <RecordType extends RaRecord = any>(
 
     const name = translate(`resources.${resource}.forcedCaseName`, {
         smart_count: 1,
-        _: inflection.humanize(
+        _: humanize(
             translate(`resources.${resource}.name`, {
                 smart_count: 1,
-                _: inflection.singularize(resource),
+                _: singularize(resource),
             }),
             true
         ),
     });
 
-    const translateOptions = {
+    const titleTranslateOptions = {
         name,
         id: record.id,
-        ...extraTranslateOptions,
+        recordRepresentation: record.id,
+        ...titleTranslateOptionsFromProps,
+    };
+
+    const contentTranslateOptions = {
+        name,
+        id: record.id,
+        recordRepresentation: record.id,
+        ...contentTranslateOptionsFromProps,
     };
 
     return (
@@ -122,11 +131,13 @@ export const DeleteWithDialogButton = <RecordType extends RaRecord = any>(
                     <DeleteWithConfirmDialog
                         {...props}
                         onUpdate={handleUpdate}
-                        translateOptions={translateOptions}
+                        titleTranslateOptions={titleTranslateOptions}
+                        contentTranslateOptions={contentTranslateOptions}
                     />
                 }
                 confirmColor={getConfirmColor()}
-                translateOptions={translateOptions}
+                titleTranslateOptions={titleTranslateOptions}
+                contentTranslateOptions={contentTranslateOptions}
                 onConfirm={handleConfirm}
                 onClose={handleDialogClose}
             />
@@ -148,6 +159,7 @@ export const DeleteWithConfirmDialog = (
         source = 'id',
         confirmContent = 'ra.message.delete_content',
         onUpdate,
+        contentTranslateOptions,
     } = props;
     const record = useRecordContext(props);
     const translate = useTranslate();
@@ -178,7 +190,7 @@ export const DeleteWithConfirmDialog = (
         <>
             {typeof confirmContent === 'string' ? (
                 <DialogContentText>
-                    {translate(confirmContent)}
+                    {translate(confirmContent, contentTranslateOptions)}
                 </DialogContentText>
             ) : (
                 confirmContent

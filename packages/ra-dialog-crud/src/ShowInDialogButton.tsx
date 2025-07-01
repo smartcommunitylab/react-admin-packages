@@ -144,7 +144,7 @@ export const ShowInDialogButton = (props: ShowInDialogButtonProps) => {
 };
 
 const ShowContent = (props: {
-    title: string | ReactElement;
+    title: string | false | ReactElement;
     emptyWhileLoading: boolean;
     children: ReactNode;
 }) => {

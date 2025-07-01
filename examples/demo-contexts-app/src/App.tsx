@@ -1,34 +1,23 @@
 import {
     Admin,
     Resource,
-    ListGuesser,
     AppBar,
     Layout,
     TitlePortal,
-    Datagrid,
-    List,
-    TextField,
     ShowGuesser,
-    EditGuesser,
-    CreateButton,
-    TopToolbar,
+    LayoutProps,
 } from 'react-admin';
-import { BrowserRouter, useParams } from 'react-router-dom';
 import {
     RootResourceSelectorMenu,
     RootSelector,
 } from '@dslab/ra-root-selector';
-import jsonServerProvider from 'ra-data-json-server';
 import { i18nProvider } from './i18nprovider';
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { UserList } from './resources/users';
 import {
     OrganizationCreate,
     OrganizationEdit,
-    OrganizationList,
     OrganizationSelectorList,
 } from './resources/organizations';
-import { RootSelectorButton } from '@dslab/ra-root-selector';
 import dataProvider from './dataProvider';
 import { GroupCreate, GroupEdit, GroupList } from './resources/groups';
 
@@ -40,7 +29,9 @@ const MyAppBar = () => (
         <RootResourceSelectorMenu source="name" showSelected={false} />
     </AppBar>
 );
-const MyLayout = props => <Layout {...props} appBar={MyAppBar} />;
+const MyLayout = (props: LayoutProps) => (
+    <Layout {...props} appBar={MyAppBar} />
+);
 
 const App = () => {
     return (

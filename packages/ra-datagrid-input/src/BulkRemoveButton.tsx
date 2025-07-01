@@ -1,10 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
-import { BulkActionProps, Button, Identifier } from 'react-admin';
+import { Button, Identifier, useListContext } from 'react-admin';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 export const BulkRemoveButton = (props: BulkRemoveButtonProps) => {
-    const { onRemove, selectedIds } = props;
+    const { onRemove } = props;
+    const { selectedIds } = useListContext();
 
     const handleClick = (e: any) => {
         if (selectedIds) {
@@ -26,7 +27,7 @@ export const BulkRemoveButton = (props: BulkRemoveButtonProps) => {
 
 export type BulkRemoveButtonProps = {
     onRemove: (selectedIds: Identifier[]) => void;
-} & BulkActionProps;
+};
 
 const PREFIX = 'RaBulkRemoveButton';
 

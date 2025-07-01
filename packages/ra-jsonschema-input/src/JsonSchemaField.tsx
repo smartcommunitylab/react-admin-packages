@@ -10,12 +10,10 @@ import {
     StrictRJSFSchema,
     UiSchema,
 } from '@rjsf/utils';
-import { Form } from '@rjsf/mui';
 import { withTheme } from '@rjsf/core';
-import { Theme } from '@rjsf/mui';
+import { Templates, Theme } from '@rjsf/mui';
 import { get } from 'lodash';
 import { useRJSchema } from './utils';
-import BaseInputTemplate from '@rjsf/mui/lib/BaseInputTemplate';
 import { styled } from '@mui/material';
 import ArrayFieldItemTemplate from './templates/ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
@@ -48,7 +46,7 @@ const ReadOnlyForm = styled(MuiForm, {
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme }) => ({
     '& .MuiFormControl-root': {
-        '& .MuiGrid-root > .MuiGrid-item': {
+        '.MuiFormControl-root': {
             '& .Mui-disabled': {
                 color: 'inherit',
                 WebkitTextFillColor: 'inherit',
@@ -70,8 +68,8 @@ function ReadOnlyBaseFieldTemplate<
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
 >(props: BaseInputTemplateProps<T, S, F>) {
-    return BaseInputTemplate({
-        ...props,
+    const { BaseInputTemplate } = Templates;
+    const customProps = {
         variant: 'standard',
         margin: 'dense',
         InputLabelProps: { focused: true, shrink: true },
@@ -79,7 +77,8 @@ function ReadOnlyBaseFieldTemplate<
             readOnly: true,
             disableUnderline: true,
         },
-    });
+    };
+    return <BaseInputTemplate {...props} {...customProps} />;
 }
 
 //TODO add additional widgets for select,radio,checkbox...

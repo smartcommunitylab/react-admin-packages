@@ -1,11 +1,21 @@
 {
     "name": "react-admin-packages",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "private": true,
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
     },
+    "contributors": [
+        {
+            "name": "Matteo Chini",
+            "email": "matteo.chini@fbk.eu"
+        },
+        {
+            "name": "Erica Tomaselli",
+            "email": "ertomaselli@fbk.eu"
+        }
+    ],
     "repository": "https://github.com/smartcommunitylab/react-admin-packages",
     "license": "MIT",
     "workspaces": [

@@ -53,7 +53,7 @@ export const EditInDialogButton = (props: EditInDialogButtonProps) => {
         ...rest
     } = props;
 
-    const resource = useResourceContext(props);
+    const resource = useResourceContext(rest);
     const record = useRecordContext(props);
 
     const id = idProps || record?.id;

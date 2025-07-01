@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -16,7 +15,7 @@ import {
     getTemplate,
     getUiOptions,
     ArrayFieldTemplateProps,
-    ArrayFieldTemplateItemType,
+    ArrayFieldItemTemplateType,
     FormContextType,
     RJSFSchema,
     StrictRJSFSchema,
@@ -26,7 +25,7 @@ import { useTranslate } from 'react-admin';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldTemplate<
     T = any,
@@ -101,7 +100,7 @@ export default function ArrayFieldTemplate<
                                 ({
                                     key,
                                     ...itemProps
-                                }: ArrayFieldTemplateItemType<T, S, F>) => (
+                                }: ArrayFieldItemTemplateType<T, S, F>) => (
                                     <ArrayFieldItemTemplate
                                         key={key}
                                         {...itemProps}
@@ -110,7 +109,7 @@ export default function ArrayFieldTemplate<
                             )}
                         {canAdd && !readonly && (
                             <Grid container justifyContent="flex-start">
-                                <Grid item={true}>
+                                <Grid>
                                     <Box mt={2}>
                                         <Button
                                             className="array-item-add"
@@ -168,13 +167,13 @@ export default function ArrayFieldTemplate<
                     ({
                         key,
                         ...itemProps
-                    }: ArrayFieldTemplateItemType<T, S, F>) => (
+                    }: ArrayFieldItemTemplateType<T, S, F>) => (
                         <ArrayFieldItemTemplate key={key} {...itemProps} />
                     )
                 )}
             {canAdd && !readonly && (
                 <Grid container justifyContent="flex-start">
-                    <Grid item={true}>
+                    <Grid>
                         <Box mt={2}>
                             <Button
                                 className="array-item-add"

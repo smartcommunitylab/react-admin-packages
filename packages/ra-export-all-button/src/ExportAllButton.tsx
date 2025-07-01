@@ -37,7 +37,7 @@ export const ExportAllButton = (props: ExportAllButtonProps) => {
         exporter: exporterFromContext,
         total,
         perPage: perPageFromContext,
-    } = useListContext(props);
+    } = useListContext();
 
     const resource = useResourceContext(props);
     const exporter = customExporter || exporterFromContext;
