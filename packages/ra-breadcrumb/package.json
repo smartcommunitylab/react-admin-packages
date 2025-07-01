@@ -21,6 +21,7 @@
         "url": "https://github.com/smartcommunitylab/react-admin-packages"
     },
     "publishConfig": {
+        "access": "public",
         "public": true
     },
     "license": "MIT",
