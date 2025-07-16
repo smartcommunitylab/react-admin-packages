@@ -22,8 +22,6 @@ import React, { useEffect, useState } from 'react';
 import { useInput, InputProps, Labeled, InputHelperText } from 'react-admin';
 import { Alert } from '@mui/material';
 
-import ace from 'ace-builds/src-noconflict/ace';
-
 export const AceEditorInput = (props: AceInputProps) => {
     const {
         mode = 'html',
@@ -31,8 +29,7 @@ export const AceEditorInput = (props: AceInputProps) => {
         useWorker = false,
         format = data => data,
         parse = data => data,
-        //pick base from jsDelivr by default
-        basePath = 'https://cdn.jsdelivr.net/npm/ace-builds@',
+
         label,
         helperText,
         fullWidth = false,
@@ -114,10 +111,6 @@ export const AceEditorInput = (props: AceInputProps) => {
         maxLines,
     };
 
-    // import workers (disabled by default)
-    // NOTE: this should match *exactly* the included ace version
-    ace.config.set('basePath', basePath + ace.version + '/src-noconflict/');
-
     return (
         <Labeled {...labelProps} id={id} component={'div'}>
             <>
@@ -165,7 +158,6 @@ export type AceInputProps = InputProps & {
     //use a worker for syntax check
     //disabled by default, loads from external cdn
     useWorker?: boolean;
-    basePath?: string;
     fullWidth?: boolean;
     width?: string;
     minLines?: number;
