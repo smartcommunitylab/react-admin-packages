@@ -22,7 +22,7 @@ import React, { useEffect, useState } from 'react';
 import { useInput, InputProps, Labeled, InputHelperText } from 'react-admin';
 import { Alert } from '@mui/material';
 
-const ace = require('ace-builds/src-noconflict/ace');
+import ace from 'ace-builds/src-noconflict/ace';
 
 export const AceEditorInput = (props: AceInputProps) => {
     const {
