@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-breadcrumb",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "author": "Matteo Saloni <msaloni@fbk.eu>",
     "contributors": [
         {
@@ -41,17 +41,17 @@
     "peerDependencies": {
         "@mui/material": "^7.0.0",
         "react": "^18.2.0",
-        "react-admin": "^5.8.3",
-        "react-router-dom": "^7.6.2",
+        "react-admin": "^5.11.4",
+        "react-router-dom": "^7.1.1",
         "react-dom": "^18.2.0"
     },
     "dependencies": {
-        "ra-core": "^5.8.3"
+        "ra-core": "^5.11.4"
     },
     "devDependencies": {
         "rimraf": "^3.0.2",
         "typescript": "^5.2.2",
         "@mui/material": "^7.0.0",
-        "react-router-dom": "^7.6.2"
+        "react-router-dom": "^7.1.1"
     }
 }

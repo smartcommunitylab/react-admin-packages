@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-ace-editor",
-    "version": "2.0.1",
+    "version": "3.0.0",
     "description": "",
     "author": {
         "name": "Matteo Saloni",
@@ -41,21 +41,21 @@
     "peerDependencies": {
         "@mui/material": "^7.0.0",
         "react": "^18.2.0",
-        "react-admin": "^5.8.3",
+        "react-admin": "^5.11.4",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
+        "@mui/material": "^7.0.0",
         "@types/react": "^18.2.0",
         "@types/react-dom": "^18.2.0",
-        "@mui/material": "^7.0.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "rimraf": "^3.0.2",
-        "typescript": "^5.2.2",
         "eslint": "^8.56.0",
         "eslint-config-prettier": "^8.10.0",
         "lerna": "^6.3.0",
         "prettier": "^2.8.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "rimraf": "^3.0.2",
+        "typescript": "^5.2.2",
         "webpack": "^5.70.0"
     },
     "dependencies": {

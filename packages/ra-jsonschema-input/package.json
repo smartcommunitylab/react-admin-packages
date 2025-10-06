@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-jsonschema-input",
-    "version": "3.0.0",
+    "version": "4.0.0",
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
@@ -44,14 +44,14 @@
     "peerDependencies": {
         "@mui/material": "^7.0.0",
         "react": "^18.2.0",
-        "react-admin": "^5.8.3",
+        "react-admin": "^5.11.4",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
         "@mui/material": "^7.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-admin": "^5.8.3",
+        "react-admin": "^5.11.4",
         "@types/react": "^18.2.25",
         "@types/react-dom": "^18.2.10",
         "@types/json-schema": "^7.0.12"
@@ -59,9 +59,9 @@
     "dependencies": {
         "ajv": "^8.12.0",
         "ajv-formats": "^2.1.1",
-        "@rjsf/core": "^6.0.0-beta.11",
-        "@rjsf/mui": "^6.0.0-beta.11",
-        "@rjsf/utils": "^6.0.0-beta.11",
-        "@rjsf/validator-ajv8": "^6.0.0-beta.11"
+        "@rjsf/core": "6.0.0-beta.11",
+        "@rjsf/mui": "6.0.0-beta.11",
+        "@rjsf/utils": "6.0.0-beta.11",
+        "@rjsf/validator-ajv8": "6.0.0-beta.11"
     }
 }

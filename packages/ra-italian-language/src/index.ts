@@ -25,6 +25,7 @@ const italianMessages: TranslationMessages = {
             remove: 'Rimuovi',
             save: 'Salva',
             search: 'Ricerca',
+            search_columns: 'Ricerca colonne',
             select_all: 'Seleziona tutto',
             select_all_button: 'Seleziona tutto',
             select_row: 'Seleziona riga',
@@ -178,6 +179,7 @@ const italianMessages: TranslationMessages = {
             not_authorized: 'Non sei autorizzato ad accedere a questa risorsa.',
             application_update_available:
                 'Aggiornamento applicazione disponibile',
+            offline: 'Nessuna connessione. Impossibile recuperare i dati.'
         },
         validation: {
             required: 'Campo obbligatorio',

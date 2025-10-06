@@ -8,7 +8,14 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Breakpoint, Dialog, DialogContent, DialogTitle, IconButton, styled } from '@mui/material';
+import {
+    Breakpoint,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    styled,
+} from '@mui/material';
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import { SourceCodeBlock, SourceCodeBlockProps } from './SourceCodeBlock';
 import { toCode } from './utils';
@@ -75,26 +82,23 @@ export const InspectButton = (props: InspectButtonProps) => {
                 maxWidth={maxWidth}
                 aria-labelledby="inspect-dialog-title"
             >
-                            <div className={InspectDialogButtonClasses.header}>
-
-                <DialogTitle
-                    id="inspect-dialog-title"
-                    className={InspectDialogButtonClasses.title}
-
-                >
-                    {translate(label)}
-                </DialogTitle>
-                <IconButton
+                <div className={InspectDialogButtonClasses.header}>
+                    <DialogTitle
+                        id="inspect-dialog-title"
+                        className={InspectDialogButtonClasses.title}
+                    >
+                        {typeof label === 'string' ? translate(label) : label}
+                    </DialogTitle>
+                    <IconButton
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
                         size="small"
                         className={InspectDialogButtonClasses.closeButton}
-
                     >
                         <CloseIcon fontSize="small" />
                     </IconButton>
-                    </div>
+                </div>
 
                 <DialogContent>
                     {isLoading ? (

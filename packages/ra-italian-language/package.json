@@ -1,6 +1,6 @@
 {
     "name": "@dslab/ra-language-italian",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "author": {
         "name": "Matteo Saloni",
         "email": "msaloni@fbk.eu"
@@ -38,7 +38,7 @@
         "watch": "tsc --outDir dist/esm --module es2015 --watch"
     },
     "dependencies": {
-        "ra-core": "^5.8.3"
+        "ra-core": "^5.11.4"
     },
     "devDependencies": {
         "rimraf": "^3.0.2",
