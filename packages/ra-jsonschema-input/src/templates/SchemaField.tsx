@@ -1,11 +1,10 @@
-import { useCallback, Component } from 'react';
+import { useCallback, Component, ComponentType } from 'react';
 import {
     ADDITIONAL_PROPERTY_FLAG,
     deepEquals,
     descriptionId,
     ErrorSchema,
     FieldProps,
-    Field,
     FieldTemplateProps,
     FormContextType,
     getSchemaType,
@@ -23,7 +22,6 @@ import {
 } from '@rjsf/utils';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
-import Markdown from 'markdown-to-jsx';
 import React from 'react';
 import { useTranslate, useTranslateLabel } from 'react-admin';
 
@@ -57,14 +55,14 @@ function getFieldComponent<
     uiOptions: UIOptionsType<T, S, F>,
     idSchema: IdSchema<T>,
     registry: Registry<T, S, F>
-) {
+): ComponentType<FieldProps<T, S, F>> {
     const field = uiOptions.field;
     const { fields, translateString } = registry;
     if (typeof field === 'function') {
         return field;
     }
     if (typeof field === 'string' && field in fields) {
-        return fields[field];
+        return fields[field] as ComponentType<FieldProps<T, S, F>>;
     }
 
     const schemaType = getSchemaType(schema);
@@ -195,13 +193,11 @@ function SchemaFieldRender<
         uiOptions,
         idSchema,
         registry
-    ) as Field;
-    const disabled = Boolean(props.disabled || uiOptions.disabled);
+    );
+    const disabled = Boolean(uiOptions.disabled ?? props.disabled);
     const readonly = Boolean(
-        props.readonly ||
-            uiOptions.readonly ||
-            props.schema.readOnly ||
-            schema.readOnly
+        uiOptions.readonly ??
+            (props.readonly || props.schema.readOnly || schema.readOnly)
     );
     const uiSchemaHideError = uiOptions.hideError;
     // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
@@ -209,7 +205,7 @@ function SchemaFieldRender<
         uiSchemaHideError === undefined
             ? props.hideError
             : Boolean(uiSchemaHideError);
-    const autofocus = Boolean(props.autofocus || uiOptions.autofocus);
+    const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
     if (Object.keys(schema).length === 0) {
         return null;
     }
@@ -283,7 +279,7 @@ function SchemaFieldRender<
             readonly={readonly}
             hideError={hideError}
             autofocus={autofocus}
-            errorSchema={fieldErrorSchema}
+            errorSchema={fieldErrorSchema as ErrorSchema}
             formContext={formContext}
             rawErrors={__errors}
             title={label}
@@ -298,30 +294,12 @@ function SchemaFieldRender<
         schema.description ||
         '';
 
-    const richDescription = uiOptions.enableMarkdownInDescription ? (
-        <Markdown>{description}</Markdown>
-    ) : (
-        description
-    );
-
     const help = uiOptions.help;
     const hidden = uiOptions.widget === 'hidden';
 
-    const classNames = [
-        'form-group',
-        'field',
-        `field-${getSchemaType(schema)}`,
-    ];
+    const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
     if (!hideError && __errors && __errors.length > 0) {
-        classNames.push('field-error has-error has-danger');
-    }
-    if (uiSchema?.classNames) {
-        if (process.env.NODE_ENV !== 'production') {
-            console.warn(
-                "'uiSchema.classNames' is deprecated and may be removed in a major release; Use 'ui:classNames' instead."
-            );
-        }
-        classNames.push(uiSchema.classNames);
+        classNames.push('rjsf-field-error');
     }
     if (uiOptions.classNames) {
         classNames.push(uiOptions.classNames);
@@ -358,7 +336,7 @@ function SchemaFieldRender<
         description: (
             <DescriptionFieldTemplate
                 id={descriptionId<T>(id)}
-                description={richDescription}
+                description={description}
                 schema={schema}
                 uiSchema={uiSchema}
                 registry={registry}
@@ -430,6 +408,7 @@ function SchemaFieldRender<
                                 )
                             )}
                             registry={registry}
+                            required={required}
                             schema={schema}
                             uiSchema={uiSchema}
                         />
@@ -460,6 +439,7 @@ function SchemaFieldRender<
                                 )
                             )}
                             registry={registry}
+                            required={required}
                             schema={schema}
                             uiSchema={uiSchema}
                         />
