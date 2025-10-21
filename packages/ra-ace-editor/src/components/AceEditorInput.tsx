@@ -12,6 +12,7 @@ import 'ace-builds/src-noconflict/mode-typescript';
 import 'ace-builds/src-noconflict/mode-css';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/mode-text';
+import 'ace-builds/src-noconflict/mode-sh';
 
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
@@ -154,7 +155,8 @@ export type AceInputProps = InputProps & {
         | 'typescript'
         | 'css'
         | 'yaml'
-        | 'text';
+        | 'text'
+        | 'sh';
     //use a worker for syntax check
     //disabled by default, loads from external cdn
     useWorker?: boolean;
