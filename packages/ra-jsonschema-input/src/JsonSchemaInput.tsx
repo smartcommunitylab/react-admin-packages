@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { InputProps, useInput, useResourceContext } from 'react-admin';
+import { InputProps, useInput, useResourceContext, useTranslate } from 'react-admin';
 import Form, { IChangeEvent } from '@rjsf/core';
 import {
     CustomValidator,
@@ -78,6 +78,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     } = props;
 
     const resource = useResourceContext(props);
+    const translate = useTranslate(); 
     const errors = useRef<any[]>(new Array());
     const { schema: rjsSchema, uiSchema: ruiSchema } = useRJSchema({
         resource,
@@ -94,6 +95,12 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     useEffect(() => {
         schemaRef.current = rjsSchema;
     }, [rjsSchema]);
+    const translateErrorString = (str?: string) => {
+        if (!str) return str;
+        return str.replace(/'([^']+)'/g, (match, key) => {
+            return `'${translate(key, { _: key })}'`;
+        });
+    };
     const validate = (value: any) => {
         if (schemaRef.current) {
             const result = validator.validateFormData(
@@ -101,21 +108,21 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
                 schemaRef.current
             );
             if (result && result.errors && result.errors.length > 0) {
-                return result.errors.map(e => e.stack || e.message).join('\n');
+                const errorMsg = result.errors[0].message || result.errors[0].stack;
+                return translateErrorString(errorMsg);
             }
         }
 
-        // Fallback per vecchi errori rjsf nativi
         if (errors.current && errors.current.length > 0) {
             return errors.current
-                .map((e: any) =>
-                    typeof e === 'string' ? e : e.stack || e.message
-                )
+                .map((e: any) => {
+                    const msg = typeof e === 'string' ? e : e.stack || e.message;
+                    return translateErrorString(msg);
+                })
                 .join('\n');
-            }
+        }
 
-            //no errors
-            return undefined;
+        return undefined;
     };
 
     const {
@@ -155,7 +162,17 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             values.forEach(e => errors.current.push(e));
         }
     };
-
+    const transformErrors = (errors: RJSFValidationError[]) => {
+        return errors.map(error => {
+            if (error.message) {
+                error.message = translateErrorString(error.message) as string;
+            }
+            if (error.stack) {
+                error.stack = translateErrorString(error.stack) as string;
+            }
+            return error;
+        });
+    };
 
 
     const formContext = {
@@ -181,6 +198,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             validator={validator}
             onChange={onChange}
             onError={onError}
+            transformErrors={transformErrors}
             omitExtraData={true}
             liveValidate={invalid || isTouched}
             showErrorList={false}
