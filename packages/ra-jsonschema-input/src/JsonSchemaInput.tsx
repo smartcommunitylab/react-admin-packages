@@ -1,28 +1,29 @@
-import React, { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { InputProps, useInput, useResourceContext } from 'react-admin';
+import Form, { IChangeEvent } from '@rjsf/core';
 import {
     CustomValidator,
-    RJSFSchema,
-    RJSFValidationError,
     RegistryFieldsType,
     RegistryWidgetsType,
+    RJSFSchema,
+    RJSFValidationError,
     UiSchema,
 } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2020 from 'ajv/dist/2020';
-
-import Form from '@rjsf/core';
-import { useRJSchema } from './utils';
 import { withTheme } from '@rjsf/core';
 import { Theme } from '@rjsf/mui';
-import ArrayFieldItemTemplate from './templates/ArrayFieldItemTemplate';
-import ArrayFieldTemplate from './templates/ArrayFieldTemplate';
-import TitleFieldTemplate from './templates/TitleFieldTemplate';
-import { styled } from '@mui/material';
-import ObjectFieldTemplate from './templates/ObjectFieldTemplate';
-import DescriptionFieldTemplate from './templates/DescriptionFieldTemplate';
-import ButtonTemplates from './templates/ButtonsTemplates';
-import SchemaField from './templates/SchemaField';
+import { styled } from '@mui/system';
+import TitleFieldTemplate from './templates/TitleFieldTemplate'; // il tuo template custom
+import React from 'react';
+import {
+    ObjectFieldTemplate,
+    ArrayFieldTemplate,
+    ArrayFieldItemTemplate,
+    DescriptionFieldTemplate,
+    SchemaField,
+} from './templates';
+import { useRJSchema } from './utils';
 
 //build styled form
 Theme.templates = {
@@ -32,7 +33,6 @@ Theme.templates = {
     ArrayFieldItemTemplate,
     TitleFieldTemplate,
     DescriptionFieldTemplate,
-    ButtonTemplates,
 };
 Theme.fields = {
     ...Theme.fields,
@@ -79,16 +79,43 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
 
     const resource = useResourceContext(props);
     const errors = useRef<any[]>(new Array());
-
+    const { schema: rjsSchema, uiSchema: ruiSchema } = useRJSchema({
+        resource,
+        source,
+        schema,
+        uiSchema,
+        title: label && typeof label === 'string' ? label : undefined,
+        description:
+            helperText && typeof helperText === 'string'
+                ? helperText
+                : undefined,
+    });
+    const schemaRef = useRef(rjsSchema);
+    useEffect(() => {
+        schemaRef.current = rjsSchema;
+    }, [rjsSchema]);
     const validate = (value: any) => {
-        if (errors && errors.current.length > 0) {
-            //expose first error
-            const e: any = errors.current.find(i => true);
-            return typeof e === 'string' ? e : e.stack;
+        if (schemaRef.current) {
+            const result = validator.validateFormData(
+                value ?? {},
+                schemaRef.current
+            );
+            if (result && result.errors && result.errors.length > 0) {
+                return result.errors.map(e => e.stack || e.message).join('\n');
+            }
         }
 
-        //no errors
-        return undefined;
+        // Fallback per vecchi errori rjsf nativi
+        if (errors.current && errors.current.length > 0) {
+            return errors.current
+                .map((e: any) =>
+                    typeof e === 'string' ? e : e.stack || e.message
+                )
+                .join('\n');
+            }
+
+            //no errors
+            return undefined;
     };
 
     const {
@@ -129,17 +156,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         }
     };
 
-    const { schema: rjsSchema, uiSchema: ruiSchema } = useRJSchema({
-        resource,
-        source,
-        schema,
-        uiSchema,
-        title: label && typeof label === 'string' ? label : undefined,
-        description:
-            helperText && typeof helperText === 'string'
-                ? helperText
-                : undefined,
-    });
+
 
     const formContext = {
         resource,
@@ -147,6 +164,8 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     };
 
     const formRef = useRef<Form>();
+
+
 
     return (
         <StyledForm
@@ -163,7 +182,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             onChange={onChange}
             onError={onError}
             omitExtraData={true}
-            liveValidate={false}
+            liveValidate={invalid || isTouched}
             showErrorList={false}
             widgets={customWidgets}
             customValidate={customValidate}
